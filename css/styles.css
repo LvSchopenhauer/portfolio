@@ -115,6 +115,7 @@ body.loaded .site-header {
   inset: 0;
   z-index: 2;
   background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.08) 48%, rgba(0,0,0,0.38));
+  opacity: var(--hero-overlay-opacity, 1);
 }
 
 .scanlines {
@@ -192,6 +193,7 @@ main,
 .project-card button {
   display: block;
   width: 100%;
+  aspect-ratio: 16 / 9;
   padding: 0;
   border: 0;
   background: #25282b;
@@ -205,7 +207,7 @@ main,
 
 .thumb {
   display: block;
-  min-height: clamp(290px, 42vw, 520px);
+  height: 100%;
   background-image: url("../assets/project-sheet.png");
   background-size: 200% 200%;
   background-repeat: no-repeat;
@@ -414,7 +416,8 @@ main,
 }
 
 .case-grid .thumb {
-  min-height: clamp(260px, 32vw, 460px);
+  height: auto;
+  aspect-ratio: 16 / 9;
 }
 
 .site-footer {
@@ -490,10 +493,6 @@ main,
   .project-card:nth-child(3),
   .project-card:nth-child(5) {
     margin-top: 0;
-  }
-
-  .thumb {
-    min-height: 320px;
   }
 
   .site-footer {

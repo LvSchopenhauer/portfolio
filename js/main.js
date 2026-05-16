@@ -61,10 +61,11 @@ function updateHeader() {
   header.classList.toggle("on-paper", onPaper);
 
   if (heroMedia) {
-    const fadeEnd = Math.max(1, heroHeight * 0.9);
+    const fadeEnd = Math.max(1, heroHeight * 0.6);
     const progress = Math.min(1, Math.max(0, window.scrollY / fadeEnd));
     heroMedia.style.opacity = String(1 - progress);
     heroMedia.style.transform = `translateY(${progress * -18}px)`;
+    hero.style.setProperty("--hero-overlay-opacity", String(1 - progress));
   }
 }
 
