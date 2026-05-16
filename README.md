@@ -2,6 +2,10 @@
 
 一个受 FutureDeluxe 站点布局和动效语言启发的个人作品集模板。它没有复制对方品牌、素材或文案，而是使用原创生成视觉和可替换的个人项目内容。
 
+## Live Site
+
+https://lvschopenhauer.github.io/portfolio/
+
 ## Run
 
 ```powershell
@@ -22,3 +26,7 @@ http://127.0.0.1:4176
 - Hero image: `assets/hero.png`
 - Project cover sheet: `assets/project-sheet.png`
 - Visual system and responsive layout: `css/styles.css`
+
+## GitHub Pages
+
+This project is a static site and works with branch-based GitHub Pages deployment. The red status icon shown beside a commit can come from an older workflow/check and does not necessarily mean the current Pages deployment failed. Check the repository's Deployments panel for the `github-pages` result.

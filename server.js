@@ -15,11 +15,22 @@ const types = {
 };
 
 http.createServer((req, res) => {
-  const urlPath = decodeURIComponent(req.url.split("?")[0]);
-  const safePath = path.normalize(urlPath).replace(/^([/\\])+/, "").replace(/^(\.\.[/\\])+/, "");
-  const filePath = path.join(root, safePath === "" ? "index.html" : safePath);
+  let urlPath;
 
-  if (!filePath.startsWith(root)) {
+  try {
+    urlPath = decodeURIComponent(req.url.split("?")[0]);
+  } catch {
+    res.writeHead(400);
+    res.end("Bad request");
+    return;
+  }
+
+  const safePath = path.normalize(urlPath).replace(/^([/\\])+/, "").replace(/^(\.\.[/\\])+/, "");
+  const filePath = path.resolve(root, safePath === "" ? "index.html" : safePath);
+  const relativePath = path.relative(root, filePath);
+  const insideRoot = relativePath === "" || (!relativePath.startsWith("..") && !path.isAbsolute(relativePath));
+
+  if (!insideRoot) {
     res.writeHead(403);
     res.end("Forbidden");
     return;
