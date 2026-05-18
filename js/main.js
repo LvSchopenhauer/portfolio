@@ -1,4 +1,6 @@
 const header = document.querySelector("[data-header]");
+const menuToggle = document.querySelector("[data-menu-toggle]");
+const siteNav = document.querySelector("[data-site-nav]");
 const hero = document.querySelector(".hero");
 const heroMedia = document.querySelector("[data-hero-media]");
 const introCopy = document.querySelector(".intro p");
@@ -67,6 +69,28 @@ const projects = {
 };
 
 const projectSlugs = new Set(Object.keys(projects));
+
+function setMenuOpen(open) {
+  header.classList.toggle("menu-open", open);
+  menuToggle?.setAttribute("aria-expanded", String(open));
+  document.body.classList.toggle("menu-open", open);
+}
+
+menuToggle?.addEventListener("click", () => {
+  setMenuOpen(!header.classList.contains("menu-open"));
+});
+
+siteNav?.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => setMenuOpen(false));
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setMenuOpen(false);
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 1024) setMenuOpen(false);
+});
 
 window.addEventListener("load", () => {
   document.body.classList.add("loaded");
@@ -173,6 +197,7 @@ function showProjectPage(slug) {
   const project = projects[slug];
   if (!project) return false;
 
+  setMenuOpen(false);
   homePage.hidden = true;
   homeFooter.hidden = true;
   projectPage.hidden = false;
@@ -195,6 +220,7 @@ function showProjectPage(slug) {
 }
 
 function showHomePage() {
+  setMenuOpen(false);
   homePage.hidden = false;
   homeFooter.hidden = false;
   projectPage.hidden = true;
