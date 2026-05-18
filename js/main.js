@@ -4,7 +4,9 @@ const heroMedia = document.querySelector("[data-hero-media]");
 const homePage = document.querySelector("[data-home-page]");
 const homeFooter = document.querySelector("[data-home-footer]");
 const projectPage = document.querySelector("[data-project-page]");
+const projectHero = document.querySelector(".project-hero");
 const projectVisual = document.querySelector("[data-project-visual]");
+const projectScroll = document.querySelector(".project-scroll");
 const projectTitle = document.querySelector("[data-project-title]");
 const projectService = document.querySelector("[data-project-service]");
 const projectClient = document.querySelector("[data-project-client]");
@@ -73,9 +75,71 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach((item) => revealObserver.observe(item));
 
+function updateProjectHero() {
+  if (!projectHero || !projectVisual) return;
+
+  const fadeEnd = window.innerWidth > 1024 ? 300 : Math.max(1, projectHero.offsetHeight * 0.72);
+  const opacity = Math.max(0, 1 - window.scrollY / fadeEnd);
+  const progress = 1 - opacity;
+
+  projectVisual.style.opacity = String(opacity);
+  projectHero.style.setProperty("--project-overlay-opacity", String(opacity));
+
+  if (projectScroll) {
+    projectScroll.style.opacity = String(Math.max(0, 1 - progress * 1.6));
+    projectScroll.style.transform = `translateX(-50%) translateY(${progress * 12}px) rotate(45deg)`;
+  }
+}
+
+let projectScrollAnimation = null;
+
+function swing(progress) {
+  return 0.5 - Math.cos(progress * Math.PI) / 2;
+}
+
+function scrollToProjectStory(event) {
+  const hash = projectScroll?.getAttribute("href");
+  const target = hash ? document.querySelector(hash) : null;
+  if (!target) return;
+
+  event.preventDefault();
+  if (projectScrollAnimation) cancelAnimationFrame(projectScrollAnimation);
+
+  const start = window.scrollY;
+  const end = target.getBoundingClientRect().top + window.scrollY;
+  const distance = end - start;
+  const duration = 700;
+  const startedAt = performance.now();
+  const htmlScrollBehavior = document.documentElement.style.scrollBehavior;
+  const bodyScrollBehavior = document.body.style.scrollBehavior;
+
+  document.documentElement.style.scrollBehavior = "auto";
+  document.body.style.scrollBehavior = "auto";
+
+  function tick(now) {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    window.scrollTo(0, start + distance * swing(progress));
+
+    if (progress < 1) {
+      projectScrollAnimation = requestAnimationFrame(tick);
+      return;
+    }
+
+    projectScrollAnimation = null;
+    document.documentElement.style.scrollBehavior = htmlScrollBehavior;
+    document.body.style.scrollBehavior = bodyScrollBehavior;
+    window.location.hash = hash;
+  }
+
+  projectScrollAnimation = requestAnimationFrame(tick);
+}
+
+projectScroll?.addEventListener("click", scrollToProjectStory);
+
 function updateHeader() {
   if (document.body.classList.contains("project-active")) {
     header.classList.remove("on-paper");
+    updateProjectHero();
     return;
   }
 
@@ -110,6 +174,9 @@ function showProjectPage(slug) {
   projectCopy.textContent = project.copy;
   projectSecondary.textContent = project.secondary;
   projectVisual.className = `project-visual ${project.visual}`;
+  projectVisual.removeAttribute("style");
+  projectHero?.style.removeProperty("--project-overlay-opacity");
+  if (projectScroll) projectScroll.removeAttribute("style");
   document.title = `${project.client} - ${project.title}`;
   window.scrollTo(0, 0);
   updateHeader();
@@ -122,6 +189,9 @@ function showHomePage() {
   homeFooter.hidden = false;
   projectPage.hidden = true;
   document.body.classList.remove("project-active");
+  projectVisual?.removeAttribute("style");
+  projectHero?.style.removeProperty("--project-overlay-opacity");
+  if (projectScroll) projectScroll.removeAttribute("style");
   document.title = "LvSchopenhauer - Creative Portfolio";
   updateHeader();
 }
