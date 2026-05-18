@@ -35,6 +35,7 @@ body.project-active {
   background: #000;
 }
 
+html.menu-open,
 body.menu-open {
   overflow: hidden;
 }
@@ -731,7 +732,8 @@ main,
     justify-content: center;
     gap: clamp(18px, 4vw, 32px);
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
     padding: 96px 24px;
     background: #363a3e;
     color: var(--white);

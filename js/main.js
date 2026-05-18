@@ -73,6 +73,7 @@ const projectSlugs = new Set(Object.keys(projects));
 function setMenuOpen(open) {
   header.classList.toggle("menu-open", open);
   menuToggle?.setAttribute("aria-expanded", String(open));
+  document.documentElement.classList.toggle("menu-open", open);
   document.body.classList.toggle("menu-open", open);
 }
 
