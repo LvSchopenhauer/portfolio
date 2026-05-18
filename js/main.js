@@ -1,11 +1,13 @@
 const header = document.querySelector("[data-header]");
 const hero = document.querySelector(".hero");
 const heroMedia = document.querySelector("[data-hero-media]");
+const introCopy = document.querySelector(".intro p");
 const homePage = document.querySelector("[data-home-page]");
 const homeFooter = document.querySelector("[data-home-footer]");
 const projectPage = document.querySelector("[data-project-page]");
 const projectHero = document.querySelector(".project-hero");
 const projectVisual = document.querySelector("[data-project-visual]");
+const projectImage = document.querySelector("[data-project-image]");
 const projectScroll = document.querySelector(".project-scroll");
 const projectTitle = document.querySelector("[data-project-title]");
 const projectService = document.querySelector("[data-project-service]");
@@ -15,44 +17,50 @@ const projectSecondary = document.querySelector("[data-project-secondary]");
 
 const projects = {
   veil: {
-    title: "Motion Identity",
-    client: "Veil Systems",
+    title: "Supernova Rise",
+    client: "Adidas",
     visual: "project-visual-a",
-    copy: "A cinematic identity system built from translucent materials, slow pressure changes and a restrained typographic rhythm.",
-    secondary: "The work moves like a veil opening and closing: transparent layers, quiet pressure shifts and a motion language that lets the brand feel precise without becoming cold."
+    image: "/assets/covers/cover_1.png",
+    copy: "A close product study built around texture, compression and a controlled flash of green.",
+    secondary: "The direction holds the object at a monumental scale, letting material detail and light gradients carry the rhythm before the wider brand system opens up."
   },
   artifact: {
-    title: "Product Film",
-    client: "Artifact One",
+    title: "Material Flight",
+    client: "Terrain",
     visual: "project-visual-b",
-    copy: "A launch sequence for a fictional hardware object, using reflective surfaces, precise macro framing and quiet interface details.",
-    secondary: "Every shot is built around controlled reflections and small mechanical reveals, turning the product into something discovered rather than simply displayed."
+    image: "/assets/covers/cover_2.png",
+    copy: "A floating footwear composition set against an impossible landscape, balancing product clarity with a surreal environmental read.",
+    secondary: "The frame keeps the silhouette legible while the reflected terrain adds a sense of movement, depth and outdoor performance without becoming literal."
   },
   tempo: {
-    title: "Performance Study",
-    client: "Tempo Lab",
+    title: "Replasty",
+    client: "Helena Rubinstein",
     visual: "project-visual-c",
-    copy: "A visual research project exploring speed, breath and athletic movement through fog, light and compressed editorial cuts.",
-    secondary: "The system studies how motion feels before it becomes legible: breath, acceleration and friction are translated into a compact editorial rhythm."
+    image: "/assets/covers/cover_3.png",
+    copy: "A premium beauty still exploring black gloss, soft refraction and luminous product staging.",
+    secondary: "The composition leans on contrast rather than decoration: pale liquid forms, sharp packaging edges and small spark highlights create a clean luxury atmosphere."
   },
   glacier: {
-    title: "Immersive Environment",
+    title: "Particle Field",
     client: "Glacier Index",
     visual: "project-visual-d",
-    copy: "An environmental concept where glass-like terrain, data motion and spatial sound form a calm but monumental digital world.",
-    secondary: "Spatial cues, reflective terrain and measured data movement give the environment a slow, monumental presence without losing its interface clarity."
+    image: "/assets/covers/cover_4.png",
+    copy: "An abstract frozen system where particles gather into a circular field and dissolve back into depth.",
+    secondary: "The image works as an atmospheric counterpoint to the product-led pieces, adding a colder research note to the homepage rhythm."
   },
   signal: {
-    title: "Research Prototype",
-    client: "Signal Room",
+    title: "Performance Film",
+    client: "Waterform",
     visual: "project-visual-e",
-    copy: "A prototype interface for sensing weak patterns: layered gradients, pulse motion and a modular information architecture.",
-    secondary: "The prototype treats information as a field of weak signals, making subtle pattern changes feel visible through pulse, density and layered color."
+    image: "/assets/covers/cover_5.png",
+    copy: "A monochrome performance detail built from water, texture and high-contrast product material.",
+    secondary: "Small droplets and dark negative space give the frame an editorial charge while still keeping the surface detail readable."
   },
   nocturne: {
     title: "Launch Visuals",
     client: "Nocturne",
     visual: "project-visual-f",
+    image: "/assets/covers/cover_6.png",
     copy: "A nocturnal visual package for a premium launch, balancing black-space composition with sharp metallic highlights.",
     secondary: "The launch direction leans into black space, reflection and restraint, creating a quiet premium atmosphere around a sharp reveal sequence."
   }
@@ -71,7 +79,7 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+}, { threshold: 0.08, rootMargin: "0px 0px -4% 0px" });
 
 document.querySelectorAll(".reveal").forEach((item) => revealObserver.observe(item));
 
@@ -148,11 +156,12 @@ function updateHeader() {
   header.classList.toggle("on-paper", onPaper);
 
   if (heroMedia) {
-    const fadeEnd = Math.max(1, heroHeight * 0.6);
-    const progress = Math.min(1, Math.max(0, window.scrollY / fadeEnd));
-    heroMedia.style.opacity = String(1 - progress);
-    heroMedia.style.transform = `translateY(${progress * -18}px)`;
-    hero.style.setProperty("--hero-overlay-opacity", String(1 - progress));
+    const introCopyBottom = introCopy
+      ? introCopy.getBoundingClientRect().bottom + window.scrollY
+      : heroHeight * 1.85;
+    const fadeEnd = Math.max(1, introCopyBottom - heroHeight);
+    const opacity = Math.max(0, 1 - window.scrollY / fadeEnd);
+    heroMedia.style.setProperty("--hero-media-opacity", String(opacity));
   }
 }
 
@@ -173,6 +182,7 @@ function showProjectPage(slug) {
   projectService.textContent = project.title;
   projectCopy.textContent = project.copy;
   projectSecondary.textContent = project.secondary;
+  if (projectImage && project.image) projectImage.src = project.image;
   projectVisual.className = `project-visual ${project.visual}`;
   projectVisual.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
