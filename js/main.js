@@ -16,37 +16,42 @@ const projectService = document.querySelector("[data-project-service]");
 const projectClient = document.querySelector("[data-project-client]");
 const projectCopy = document.querySelector("[data-project-copy]");
 const projectSecondary = document.querySelector("[data-project-secondary]");
+const projectVideo = document.querySelector("[data-project-video]");
 
 const projects = {
-  veil: {
-    title: "Supernova Rise",
-    client: "Adidas",
+  eqlz: {
+    title: "2023 Multidimensional",
+    client: "EQLZ",
     visual: "project-visual-a",
     image: "/assets/covers/cover_1.png",
+    video: "https://player.vimeo.com/video/1022825186?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
     copy: "A close product study built around texture, compression and a controlled flash of green.",
     secondary: "The direction holds the object at a monumental scale, letting material detail and light gradients carry the rhythm before the wider brand system opens up."
   },
-  artifact: {
-    title: "Material Flight",
-    client: "Terrain",
+  supernova: {
+    title: "Supernova 2024",
+    client: "Adidas",
     visual: "project-visual-b",
     image: "/assets/covers/cover_2.png",
+    video: "https://player.vimeo.com/video/1078557961?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
     copy: "A floating footwear composition set against an impossible landscape, balancing product clarity with a surreal environmental read.",
     secondary: "The frame keeps the silhouette legible while the reflected terrain adds a sense of movement, depth and outdoor performance without becoming literal."
   },
-  tempo: {
+  kolon: {
     title: "Replasty",
     client: "Helena Rubinstein",
     visual: "project-visual-c",
     image: "/assets/covers/cover_3.png",
+    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
     copy: "A premium beauty still exploring black gloss, soft refraction and luminous product staging.",
     secondary: "The composition leans on contrast rather than decoration: pale liquid forms, sharp packaging edges and small spark highlights create a clean luxury atmosphere."
   },
-  glacier: {
-    title: "Particle Field",
-    client: "Glacier Index",
+  auto: {
+    title: "ID.CODE",
+    client: "Auto China",
     visual: "project-visual-d",
     image: "/assets/covers/cover_4.png",
+    video: "https://player.vimeo.com/video/1079755480?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
     copy: "An abstract frozen system where particles gather into a circular field and dissolve back into depth.",
     secondary: "The image works as an atmospheric counterpoint to the product-led pieces, adding a colder research note to the homepage rhythm."
   },
@@ -55,6 +60,7 @@ const projects = {
     client: "Waterform",
     visual: "project-visual-e",
     image: "/assets/covers/cover_5.png",
+    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
     copy: "A monochrome performance detail built from water, texture and high-contrast product material.",
     secondary: "Small droplets and dark negative space give the frame an editorial charge while still keeping the surface detail readable."
   },
@@ -63,6 +69,7 @@ const projects = {
     client: "Nocturne",
     visual: "project-visual-f",
     image: "/assets/covers/cover_6.png",
+    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
     copy: "A nocturnal visual package for a premium launch, balancing black-space composition with sharp metallic highlights.",
     secondary: "The launch direction leans into black space, reflection and restraint, creating a quiet premium atmosphere around a sharp reveal sequence."
   }
@@ -95,18 +102,43 @@ window.addEventListener("resize", () => {
 
 window.addEventListener("load", () => {
   document.body.classList.add("loaded");
+  showRepeatRevealsInsideViewport();
 });
+
+const repeatRevealSelector = '[data-reveal="repeat-from-top"]';
+const revealViewportPadding = 8;
 
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       entry.target.classList.add("visible");
-      revealObserver.unobserve(entry.target);
+      if (!entry.target.matches(repeatRevealSelector)) {
+        revealObserver.unobserve(entry.target);
+      }
     }
   });
 }, { threshold: 0.08, rootMargin: "0px 0px -4% 0px" });
 
 document.querySelectorAll(".reveal").forEach((item) => revealObserver.observe(item));
+
+function isTopEdgeInsideCurrentViewport(item) {
+  const rect = item.getBoundingClientRect();
+  return rect.top >= revealViewportPadding && rect.top <= window.innerHeight - revealViewportPadding;
+}
+
+function showRepeatRevealsInsideViewport() {
+  document.querySelectorAll(repeatRevealSelector).forEach((item) => {
+    if (isTopEdgeInsideCurrentViewport(item)) item.classList.add("visible");
+  });
+}
+
+function resetRepeatRevealsAtTop() {
+  if (document.body.classList.contains("project-active") || window.scrollY > 12) return;
+
+  document.querySelectorAll(`${repeatRevealSelector}.visible`).forEach((item) => {
+    if (!isTopEdgeInsideCurrentViewport(item)) item.classList.remove("visible");
+  });
+}
 
 function updateProjectHero() {
   if (!projectHero || !projectVisual) return;
@@ -170,6 +202,9 @@ function scrollToProjectStory(event) {
 projectScroll?.addEventListener("click", scrollToProjectStory);
 
 function updateHeader() {
+  showRepeatRevealsInsideViewport();
+  resetRepeatRevealsAtTop();
+
   if (document.body.classList.contains("project-active")) {
     header.classList.remove("on-paper");
     updateProjectHero();
@@ -209,6 +244,7 @@ function showProjectPage(slug) {
   projectCopy.textContent = project.copy;
   projectSecondary.textContent = project.secondary;
   if (projectImage && project.image) projectImage.src = project.image;
+  if (projectVideo && project.video) projectVideo.src = project.video;
   projectVisual.className = `project-visual ${project.visual}`;
   projectVisual.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");

@@ -55,7 +55,7 @@ img {
   inset: 0 0 auto;
   z-index: 30;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 28px;
   padding: clamp(24px, 4vw, 42px) clamp(20px, 4vw, 52px);
@@ -85,18 +85,23 @@ body.project-active .site-header {
 }
 
 .brand {
-  display: inline-block;
-  font-size: clamp(22px, 2.1vw, 30px);
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
+  display: block;
+  width: clamp(54px, 5vw, 82px);
   position: relative;
   z-index: 32;
   transition: opacity 300ms ease;
 }
 
-.brand span {
-  border-bottom: 2px solid currentColor;
+.brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: invert(1);
+  transition: filter 350ms ease;
+}
+
+.site-header.on-paper .brand img {
+  filter: none;
 }
 
 .site-nav {
@@ -218,6 +223,7 @@ main,
 }
 
 .intro {
+  font-family: "PingFang SC", "PingFang TC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
   padding: clamp(76px, 8.8vw, 116px) 4vw clamp(64px, 8.2vw, 108px);
 }
 
@@ -245,16 +251,15 @@ main,
   flex-wrap: wrap;
   align-items: flex-start;
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  column-gap: clamp(20px, 2.25vw, 34px);
+  margin: 0;
+  column-gap: clamp(20px, 2.25vw, 72px);
   row-gap: 0;
   padding: clamp(72px, 8vw, 118px) 4vw clamp(54px, 7vw, 92px);
   overflow: visible;
 }
 
 .project-card {
-  flex: 0 0 calc((100% - clamp(20px, 2.25vw, 34px)) / 2);
+  flex: 0 0 calc((100% - clamp(20px, 2.25vw, 72px)) / 2);
   min-width: 0;
   padding: 0;
 }
@@ -512,8 +517,8 @@ main,
 }
 
 .project-visual-b img { filter: hue-rotate(22deg) saturate(0.75) contrast(1.15) brightness(0.86); }
-.project-visual-c img { filter: hue-rotate(148deg) saturate(0.55) contrast(1.22) brightness(0.82); }
-.project-visual-d img { filter: hue-rotate(190deg) saturate(0.5) contrast(1.18) brightness(0.94); }
+.project-visual-c img { filter: none; }
+.project-visual-d img { filter: none; }
 .project-visual-e img { filter: hue-rotate(295deg) saturate(0.78) contrast(1.18) brightness(0.84); }
 .project-visual-f img { filter: grayscale(0.25) saturate(0.45) contrast(1.32) brightness(0.72); }
 
