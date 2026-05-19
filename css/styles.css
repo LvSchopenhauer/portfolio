@@ -520,7 +520,7 @@ main,
 .project-visual-b img { filter: hue-rotate(22deg) saturate(0.75) contrast(1.15) brightness(0.86); }
 .project-visual-c img { filter: none; }
 .project-visual-d img { filter: none; }
-.project-visual-e img { filter: hue-rotate(295deg) saturate(0.78) contrast(1.18) brightness(0.84); }
+.project-visual-e img { filter: none; }
 .project-visual-f img { filter: grayscale(0.25) saturate(0.45) contrast(1.32) brightness(0.72); }
 
 .project-scroll {

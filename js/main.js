@@ -55,12 +55,12 @@ const projects = {
     copy: "An abstract frozen system where particles gather into a circular field and dissolve back into depth.",
     secondary: "The image works as an atmospheric counterpoint to the product-led pieces, adding a colder research note to the homepage rhythm."
   },
-  signal: {
-    title: "Performance Film",
-    client: "Waterform",
+  helena: {
+    title: "Countdown Gift Box",
+    client: "Helena Rubinstein",
     visual: "project-visual-e",
     image: "/assets/covers/cover_5.png",
-    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
+    video: "https://player.vimeo.com/video/1079682226?title=0&byline=0&portrait=0&badge=0",
     copy: "A monochrome performance detail built from water, texture and high-contrast product material.",
     secondary: "Small droplets and dark negative space give the frame an editorial charge while still keeping the surface detail readable."
   },
