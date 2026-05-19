@@ -2,9 +2,6 @@
 
 一个受 FutureDeluxe 站点布局和动效语言启发的个人作品集模板。它没有复制对方品牌、素材或文案，而是使用原创生成视觉和可替换的个人项目内容。
 
-## Live Site
-
-https://lvschopenhauer.github.io/portfolio/
 
 ## Run
 
