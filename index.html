@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/assets/sphr.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
@@ -23,6 +24,7 @@
       <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation" data-site-nav>
         <a href="/#moving">Work</a>
         <a href="/#immersive">About</a>
+        <a href="/origin">Origin</a>
       </nav>
     </header>
 
@@ -118,6 +120,20 @@
 
     </main>
 
+    <main class="origin-page" data-origin-page hidden>
+      <section class="origin-hero" aria-label="sphr origin">
+        <p class="origin-index">Why Sphr</p>
+        <div class="origin-hero-copy">
+          <h1>
+            <span class="latin">sphr</span> 来自 <span class="latin">Schopenhauer</span>。对我来说，他不只是一个我读过的哲学家。他更像是一个入口——让我第一次意识到，世界可以被用另一种角度观看。通过他，我开始重新理解欲望、痛苦、死亡和艺术。很多原本抽象的东西，变得更近、更重，也更真实。
+          </h1>
+        </div>
+        <figure class="origin-hero-figure">
+          <img src="/assets/origin/schopenhauer-portrait.jpg" alt="Arthur Schopenhauer portrait photograph by J. Schaefer, 1859">
+        </figure>
+      </section>
+    </main>
+
     <main class="project-page" data-project-page hidden>
       <section class="project-hero" aria-label="Project motion preview">
         <div class="project-visual" data-project-visual>
@@ -148,13 +164,12 @@
           <iframe
             title="vimeo-player"
             data-project-video
-            src="https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0"
+            src="about:blank"
             width="640"
             height="360"
             frameborder="0"
             referrerpolicy="strict-origin-when-cross-origin"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            allowfullscreen></iframe>
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"></iframe>
         </div>
       </section>
 

@@ -6,6 +6,7 @@ const heroMedia = document.querySelector("[data-hero-media]");
 const introCopy = document.querySelector(".intro p");
 const homePage = document.querySelector("[data-home-page]");
 const homeFooter = document.querySelector("[data-home-footer]");
+const originPage = document.querySelector("[data-origin-page]");
 const projectPage = document.querySelector("[data-project-page]");
 const projectHero = document.querySelector(".project-hero");
 const projectVisual = document.querySelector("[data-project-visual]");
@@ -78,6 +79,7 @@ const projects = {
 const projectSlugs = new Set(Object.keys(projects));
 
 function setMenuOpen(open) {
+  if (window.innerWidth >= 1024) open = false;
   header.classList.toggle("menu-open", open);
   menuToggle?.setAttribute("aria-expanded", String(open));
   document.documentElement.classList.toggle("menu-open", open);
@@ -96,8 +98,14 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setMenuOpen(false);
 });
 
+let resizeAnimationFrame = null;
+
 window.addEventListener("resize", () => {
-  if (window.innerWidth >= 1024) setMenuOpen(false);
+  if (resizeAnimationFrame) cancelAnimationFrame(resizeAnimationFrame);
+  resizeAnimationFrame = requestAnimationFrame(() => {
+    resizeAnimationFrame = null;
+    setMenuOpen(false);
+  });
 });
 
 window.addEventListener("load", () => {
@@ -205,6 +213,11 @@ function updateHeader() {
   showRepeatRevealsInsideViewport();
   resetRepeatRevealsAtTop();
 
+  if (document.body.classList.contains("origin-active")) {
+    header.classList.add("on-paper");
+    return;
+  }
+
   if (document.body.classList.contains("project-active")) {
     header.classList.remove("on-paper");
     updateProjectHero();
@@ -236,8 +249,10 @@ function showProjectPage(slug) {
   setMenuOpen(false);
   homePage.hidden = true;
   if (homeFooter) homeFooter.hidden = true;
+  if (originPage) originPage.hidden = true;
   projectPage.hidden = false;
   document.body.classList.add("project-active");
+  document.body.classList.remove("origin-active");
   projectClient.textContent = project.title;
   projectTitle.textContent = project.client;
   projectService.textContent = project.title;
@@ -256,21 +271,47 @@ function showProjectPage(slug) {
   return true;
 }
 
+function showOriginPage() {
+  setMenuOpen(false);
+  homePage.hidden = true;
+  if (homeFooter) homeFooter.hidden = true;
+  projectPage.hidden = true;
+  if (originPage) originPage.hidden = false;
+  document.body.classList.remove("project-active");
+  document.body.classList.add("origin-active");
+  projectVisual?.removeAttribute("style");
+  projectHero?.style.removeProperty("--project-overlay-opacity");
+  if (projectScroll) projectScroll.removeAttribute("style");
+  if (projectVideo) projectVideo.src = "about:blank";
+  if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
+  document.title = "Origin - LvSchopenhauer";
+  window.scrollTo(0, 0);
+  updateHeader();
+}
+
 function showHomePage() {
   setMenuOpen(false);
   homePage.hidden = false;
   if (homeFooter) homeFooter.hidden = false;
+  if (originPage) originPage.hidden = true;
   projectPage.hidden = true;
   document.body.classList.remove("project-active");
+  document.body.classList.remove("origin-active");
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
+  if (projectVideo) projectVideo.src = "about:blank";
   document.title = "LvSchopenhauer - Creative Portfolio";
   updateHeader();
 }
 
 function routeFromLocation() {
   const slug = window.location.pathname.replace(/^\/+|\/+$/g, "");
+
+  if (slug === "origin") {
+    showOriginPage();
+    return;
+  }
 
   if (projectSlugs.has(slug)) {
     showProjectPage(slug);
