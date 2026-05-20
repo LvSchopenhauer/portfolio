@@ -77,6 +77,22 @@ const projects = {
 };
 
 const projectSlugs = new Set(Object.keys(projects));
+const appRoutes = new Set(["", "origin", ...projectSlugs]);
+
+function getSlugFromPath(pathname = window.location.pathname) {
+  return pathname.replace(/^\/+|\/+$/g, "");
+}
+
+function scrollToHash(hash) {
+  if (!hash) {
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  const target = document.querySelector(hash);
+  if (!target) return;
+  requestAnimationFrame(() => target.scrollIntoView());
+}
 
 function setMenuOpen(open) {
   if (window.innerWidth >= 1024) open = false;
@@ -92,6 +108,30 @@ menuToggle?.addEventListener("click", () => {
 
 siteNav?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => setMenuOpen(false));
+});
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link || event.defaultPrevented) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (link.target && link.target !== "_self") return;
+
+  const url = new URL(link.href, window.location.href);
+  if (url.origin !== window.location.origin) return;
+
+  const slug = getSlugFromPath(url.pathname);
+  if (!appRoutes.has(slug)) return;
+
+  event.preventDefault();
+  setMenuOpen(false);
+
+  const next = `${url.pathname}${url.search}${url.hash}`;
+  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (next !== current) {
+    window.history.pushState({}, "", next);
+  }
+
+  routeFromLocation();
 });
 
 window.addEventListener("keydown", (event) => {
@@ -306,7 +346,7 @@ function showHomePage() {
 }
 
 function routeFromLocation() {
-  const slug = window.location.pathname.replace(/^\/+|\/+$/g, "");
+  const slug = getSlugFromPath();
 
   if (slug === "origin") {
     showOriginPage();
@@ -319,6 +359,8 @@ function routeFromLocation() {
   }
 
   showHomePage();
+  scrollToHash(window.location.hash);
 }
 
+window.addEventListener("popstate", routeFromLocation);
 routeFromLocation();
