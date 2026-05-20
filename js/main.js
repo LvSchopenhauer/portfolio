@@ -7,6 +7,7 @@ const introCopy = document.querySelector(".intro p");
 const homePage = document.querySelector("[data-home-page]");
 const homeFooter = document.querySelector("[data-home-footer]");
 const originPage = document.querySelector("[data-origin-page]");
+const infoPage = document.querySelector("[data-info-page]");
 const projectPage = document.querySelector("[data-project-page]");
 const projectHero = document.querySelector(".project-hero");
 const projectVisual = document.querySelector("[data-project-visual]");
@@ -77,7 +78,7 @@ const projects = {
 };
 
 const projectSlugs = new Set(Object.keys(projects));
-const appRoutes = new Set(["", "origin", ...projectSlugs]);
+const appRoutes = new Set(["", "origin", "info", ...projectSlugs]);
 
 function getSlugFromPath(pathname = window.location.pathname) {
   return pathname.replace(/^\/+|\/+$/g, "");
@@ -258,6 +259,11 @@ function updateHeader() {
     return;
   }
 
+  if (document.body.classList.contains("info-active")) {
+    header.classList.add("on-paper");
+    return;
+  }
+
   if (document.body.classList.contains("project-active")) {
     header.classList.remove("on-paper");
     updateProjectHero();
@@ -290,9 +296,11 @@ function showProjectPage(slug) {
   homePage.hidden = true;
   if (homeFooter) homeFooter.hidden = true;
   if (originPage) originPage.hidden = true;
+  if (infoPage) infoPage.hidden = true;
   projectPage.hidden = false;
   document.body.classList.add("project-active");
   document.body.classList.remove("origin-active");
+  document.body.classList.remove("info-active");
   projectClient.textContent = project.title;
   projectTitle.textContent = project.client;
   projectService.textContent = project.title;
@@ -316,9 +324,31 @@ function showOriginPage() {
   homePage.hidden = true;
   if (homeFooter) homeFooter.hidden = true;
   projectPage.hidden = true;
+  if (infoPage) infoPage.hidden = true;
   if (originPage) originPage.hidden = false;
   document.body.classList.remove("project-active");
+  document.body.classList.remove("info-active");
   document.body.classList.add("origin-active");
+  projectVisual?.removeAttribute("style");
+  projectHero?.style.removeProperty("--project-overlay-opacity");
+  if (projectScroll) projectScroll.removeAttribute("style");
+  if (projectVideo) projectVideo.src = "about:blank";
+  if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
+  document.title = "sphr";
+  window.scrollTo(0, 0);
+  updateHeader();
+}
+
+function showInfoPage() {
+  setMenuOpen(false);
+  homePage.hidden = true;
+  if (homeFooter) homeFooter.hidden = true;
+  if (originPage) originPage.hidden = true;
+  projectPage.hidden = true;
+  if (infoPage) infoPage.hidden = false;
+  document.body.classList.remove("project-active");
+  document.body.classList.remove("origin-active");
+  document.body.classList.add("info-active");
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
@@ -334,9 +364,11 @@ function showHomePage() {
   homePage.hidden = false;
   if (homeFooter) homeFooter.hidden = false;
   if (originPage) originPage.hidden = true;
+  if (infoPage) infoPage.hidden = true;
   projectPage.hidden = true;
   document.body.classList.remove("project-active");
   document.body.classList.remove("origin-active");
+  document.body.classList.remove("info-active");
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
@@ -350,6 +382,11 @@ function routeFromLocation() {
 
   if (slug === "origin") {
     showOriginPage();
+    return;
+  }
+
+  if (slug === "info") {
+    showInfoPage();
     return;
   }
 
