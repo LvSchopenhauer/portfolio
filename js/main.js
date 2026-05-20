@@ -235,7 +235,7 @@ function showProjectPage(slug) {
 
   setMenuOpen(false);
   homePage.hidden = true;
-  homeFooter.hidden = true;
+  if (homeFooter) homeFooter.hidden = true;
   projectPage.hidden = false;
   document.body.classList.add("project-active");
   projectClient.textContent = project.title;
@@ -259,7 +259,7 @@ function showProjectPage(slug) {
 function showHomePage() {
   setMenuOpen(false);
   homePage.hidden = false;
-  homeFooter.hidden = false;
+  if (homeFooter) homeFooter.hidden = false;
   projectPage.hidden = true;
   document.body.classList.remove("project-active");
   projectVisual?.removeAttribute("style");

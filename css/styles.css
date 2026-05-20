@@ -217,6 +217,7 @@ main,
 .intro,
 .work-grid,
 .statement,
+.social-links,
 .research-block,
 .contact-cta,
 .site-footer {
@@ -234,7 +235,7 @@ main,
   max-width: 790px;
   margin: 0;
   font-size: clamp(30px, 3.55vw, 44px);
-  line-height: 1.14;
+  line-height: 1.22;
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -396,10 +397,19 @@ main,
 }
 
 .statement {
+  font-family: "PingFang SC", "PingFang TC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
   padding: clamp(52px, 7.4vw, 96px) 4vw;
 }
 
-.statement h2,
+.statement h2 {
+  max-width: 790px;
+  margin: 0;
+  font-size: clamp(30px, 3.55vw, 44px);
+  line-height: 1.22;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
 .contact-cta h2 {
   max-width: 920px;
   margin: 0;
@@ -412,6 +422,37 @@ main,
   display: block;
   color: var(--muted);
   font-weight: 300;
+}
+
+.social-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 18px;
+  padding: 0 4vw clamp(28px, 4vw, 52px);
+}
+
+.social-links a {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  color: var(--ink);
+}
+
+.social-links img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.social-link-instagram img {
+  transform: scale(1.12);
+}
+
+.social-links a:hover,
+.social-links a:focus-visible {
+  opacity: 0.62;
 }
 
 .research-block {
@@ -703,7 +744,7 @@ main,
   }
 
   .site-header.menu-open {
-    color: var(--white);
+    color: var(--ink);
   }
 
   .site-header.menu-open .brand {
@@ -742,8 +783,8 @@ main,
     height: 100vh;
     height: 100dvh;
     padding: 96px 24px;
-    background: #363a3e;
-    color: var(--white);
+    background: #e0dede;
+    color: var(--ink);
     font-size: clamp(28px, 7vw, 48px);
     font-weight: 500;
     line-height: 1.08;
