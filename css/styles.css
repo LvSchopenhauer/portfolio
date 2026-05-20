@@ -108,8 +108,9 @@ body.project-active .site-header {
   display: flex;
   gap: clamp(18px, 2.2vw, 34px);
   pointer-events: auto;
+  font-family: "Gothic A1", Arial, sans-serif;
   font-size: clamp(14px, 1.2vw, 17px);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
 }
 

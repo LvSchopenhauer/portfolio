@@ -64,12 +64,12 @@ const projects = {
     copy: "A monochrome performance detail built from water, texture and high-contrast product material.",
     secondary: "Small droplets and dark negative space give the frame an editorial charge while still keeping the surface detail readable."
   },
-  nocturne: {
-    title: "Launch Visuals",
-    client: "Nocturne",
+  361: {
+    title: "Breathing underwater",
+    client: "361",
     visual: "project-visual-f",
     image: "/assets/covers/cover_6.png",
-    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
+    video: "https://player.vimeo.com/video/1076680357?title=0&byline=0&portrait=0&badge=0",
     copy: "A nocturnal visual package for a premium launch, balancing black-space composition with sharp metallic highlights.",
     secondary: "The launch direction leans into black space, reflection and restraint, creating a quiet premium atmosphere around a sharp reveal sequence."
   }
