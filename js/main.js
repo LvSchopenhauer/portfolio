@@ -324,7 +324,7 @@ function showOriginPage() {
   if (projectScroll) projectScroll.removeAttribute("style");
   if (projectVideo) projectVideo.src = "about:blank";
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
-  document.title = "Origin - LvSchopenhauer";
+  document.title = "sphr";
   window.scrollTo(0, 0);
   updateHeader();
 }
@@ -341,7 +341,7 @@ function showHomePage() {
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
   if (projectVideo) projectVideo.src = "about:blank";
-  document.title = "LvSchopenhauer - Creative Portfolio";
+  document.title = "sphr";
   updateHeader();
 }
 
