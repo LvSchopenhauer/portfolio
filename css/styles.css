@@ -1051,6 +1051,70 @@ main,
   padding: 0 4vw clamp(80px, 10vw, 130px);
 }
 
+
+.project-custom-blocks {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 32px);
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 4vw clamp(70px, 9vw, 120px);
+  background: #000;
+}
+
+.project-custom-blocks[hidden] {
+  display: none;
+}
+
+.project-custom-block {
+  grid-column: span var(--block-span, 2);
+  max-width: 980px;
+  width: var(--block-width, 100%);
+  margin: 0 auto;
+  color: rgba(255,255,255,0.82);
+}
+
+.project-custom-block.image,
+.project-custom-block.video {
+  width: 100%;
+}
+
+.project-custom-block.image.wide-image,
+.project-custom-block.image.centered-image,
+.project-custom-block.video.wide-image,
+.project-custom-block.video.centered-image {
+  grid-column: 1 / -1;
+  width: var(--block-width, 100%);
+}
+
+.project-custom-block.text {
+  grid-column: 1 / -1;
+  max-width: 680px;
+  font-family: "PingFang SC", "PingFang TC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+  font-size: var(--text-size, 24px);
+  font-weight: var(--text-weight, 400);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.project-custom-block.text p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.project-custom-block.image img,
+.project-custom-block.video video {
+  width: 100%;
+  aspect-ratio: var(--image-ratio, 16 / 9);
+  height: auto;
+  display: block;
+  object-fit: cover;
+  background: #111;
+}
+
 .project-frame {
   aspect-ratio: 16 / 9;
   overflow: hidden;

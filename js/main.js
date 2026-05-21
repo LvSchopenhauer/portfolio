@@ -19,6 +19,8 @@ const projectClient = document.querySelector("[data-project-client]");
 const projectCopy = document.querySelector("[data-project-copy]");
 const projectSecondary = document.querySelector("[data-project-secondary]");
 const projectVideo = document.querySelector("[data-project-video]");
+const projectBlocks = document.querySelector("[data-project-blocks]");
+const editableProjectData = {};
 
 const projects = {
   eqlz: {
@@ -79,6 +81,112 @@ const projects = {
 
 const projectSlugs = new Set(Object.keys(projects));
 const appRoutes = new Set(["", "origin", "info", ...projectSlugs]);
+
+async function loadEditableProject() {
+  const entries = await Promise.all(
+    [...projectSlugs].map(async (slug) => {
+      try {
+        const response = await fetch(`/data/${slug}.json`, { cache: "no-store" });
+        if (!response.ok) return [slug, null];
+        const data = await response.json();
+        return [slug, data && Object.keys(data).length ? data : null];
+      } catch {
+        return [slug, null];
+      }
+    })
+  );
+
+  entries.forEach(([slug, data]) => {
+    if (data) editableProjectData[slug] = data;
+  });
+}
+
+function getProject(slug) {
+  const custom = editableProjectData[slug] || {};
+  return { ...projects[slug], ...custom };
+}
+
+function getMediaLayout(block) {
+  if (block.type !== "image" && block.type !== "video") return "full";
+  return block.layout === "half" ? "half" : "full";
+}
+
+function getBlockSpan(block) {
+  return (block.type === "image" || block.type === "video") && getMediaLayout(block) === "half" ? 1 : 2;
+}
+
+function getBlockWidth(block) {
+  if (block.type !== "image" && block.type !== "video") return "100%";
+  return `${Math.min(100, Math.max(50, Number(block.size) || 100))}%`;
+}
+
+function shouldCenterHalfMedia(block, index, blocks) {
+  if ((block.type !== "image" && block.type !== "video") || getBlockSpan(block) !== 1) return false;
+  const halfMediaBefore = blocks
+    .slice(0, index)
+    .filter((candidate) => (candidate.type === "image" || candidate.type === "video") && getBlockSpan(candidate) === 1).length;
+  const halfMediaAfter = blocks
+    .slice(index + 1)
+    .filter((candidate) => (candidate.type === "image" || candidate.type === "video") && getBlockSpan(candidate) === 1).length;
+  return halfMediaAfter === 0 && halfMediaBefore % 2 === 0;
+}
+
+function getTextFontSize(block) {
+  return Math.min(72, Math.max(14, Number(block.fontSize) || 24));
+}
+
+function getTextFontWeight(block) {
+  return Math.min(700, Math.max(300, Number(block.fontWeight) || 400));
+}
+
+function getImageRatio(block) {
+  return block.ratio || "16 / 9";
+}
+
+function renderProjectBlocks(blocks = []) {
+  if (!projectBlocks) return;
+  projectBlocks.innerHTML = "";
+
+  const visibleBlocks = blocks.filter((block) => block.content);
+  projectBlocks.hidden = visibleBlocks.length === 0;
+
+  visibleBlocks.forEach((block, index) => {
+    const item = document.createElement("article");
+    item.className = `project-custom-block ${block.type}`;
+    if ((block.type === "image" || block.type === "video") && getMediaLayout(block) === "full") item.classList.add("wide-image");
+    if (shouldCenterHalfMedia(block, index, visibleBlocks)) item.classList.add("centered-image");
+    item.style.setProperty("--block-span", String(getBlockSpan(block)));
+    item.style.setProperty("--block-width", getBlockWidth(block));
+    item.style.setProperty("--text-size", `${getTextFontSize(block)}px`);
+    item.style.setProperty("--text-weight", String(getTextFontWeight(block)));
+    item.style.setProperty("--image-ratio", getImageRatio(block));
+
+    if (block.type === "text") {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = block.content;
+      item.append(paragraph);
+    }
+
+    if (block.type === "image") {
+      const image = document.createElement("img");
+      image.src = block.content;
+      image.alt = "";
+      item.append(image);
+    }
+
+    if (block.type === "video") {
+      const video = document.createElement("video");
+      video.src = block.content;
+      video.muted = true;
+      video.loop = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      item.append(video);
+    }
+
+    projectBlocks.append(item);
+  });
+}
 
 function getSlugFromPath(pathname = window.location.pathname) {
   return pathname.replace(/^\/+|\/+$/g, "");
@@ -289,7 +397,7 @@ window.addEventListener("resize", updateHeader);
 updateHeader();
 
 function showProjectPage(slug) {
-  const project = projects[slug];
+  const project = getProject(slug);
   if (!project) return false;
 
   setMenuOpen(false);
@@ -308,6 +416,7 @@ function showProjectPage(slug) {
   projectSecondary.textContent = project.secondary;
   if (projectImage && project.image) projectImage.src = project.image;
   if (projectVideo && project.video) projectVideo.src = project.video;
+  renderProjectBlocks(project.blocks);
   projectVisual.className = `project-visual ${project.visual}`;
   projectVisual.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
@@ -333,6 +442,7 @@ function showOriginPage() {
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
   if (projectVideo) projectVideo.src = "about:blank";
+  renderProjectBlocks();
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
   document.title = "sphr";
   window.scrollTo(0, 0);
@@ -353,6 +463,7 @@ function showInfoPage() {
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
   if (projectVideo) projectVideo.src = "about:blank";
+  renderProjectBlocks();
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
   document.title = "sphr";
   window.scrollTo(0, 0);
@@ -373,6 +484,7 @@ function showHomePage() {
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
   if (projectVideo) projectVideo.src = "about:blank";
+  renderProjectBlocks();
   document.title = "sphr";
   updateHeader();
 }
@@ -399,5 +511,10 @@ function routeFromLocation() {
   scrollToHash(window.location.hash);
 }
 
-window.addEventListener("popstate", routeFromLocation);
-routeFromLocation();
+async function initRoute() {
+  await loadEditableProject();
+  routeFromLocation();
+}
+
+window.addEventListener("popstate", initRoute);
+initRoute();
