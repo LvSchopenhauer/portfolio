@@ -68,7 +68,7 @@ body.origin-active {
 }
 
 body.info-active {
-  background: #fd480c;
+  background: #191919;
 }
 
 html.menu-open,
@@ -162,23 +162,19 @@ body.origin-active .brand::after {
   pointer-events: none;
 }
 
+body.info-active .site-header.on-paper .brand img,
 body.info-active .brand img {
-  opacity: 0;
+  opacity: 1;
+  filter: invert(1);
 }
 
 body.info-active .brand::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--white);
-  mask: url("/assets/sphr.svg") center / contain no-repeat;
-  -webkit-mask: url("/assets/sphr.svg") center / contain no-repeat;
-  pointer-events: none;
+  content: none;
 }
 
 .info-page {
   min-height: 100vh;
-  background: #fd480c;
+  background: #191919;
 }
 
 .site-nav {
