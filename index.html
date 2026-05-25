@@ -109,14 +109,17 @@
         </h2>
       </section>
 
-      <nav class="social-links" aria-label="Social links">
-        <a class="social-link-instagram" href="https://www.instagram.com/fbmarkkk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <img src="/assets/ins.png" alt="">
-        </a>
-        <a href="https://www.xiaohongshu.com/user/profile/5e8050a6000000000100a435" target="_blank" rel="noopener noreferrer" aria-label="Xiaohongshu">
-          <img src="/assets/xhs.svg" alt="">
-        </a>
-      </nav>
+      <footer class="home-footer" data-home-footer>
+        <p class="credit">Website built by sphr with Codex</p>
+        <nav class="social-links" aria-label="Social links">
+          <a class="social-link-instagram" href="https://www.instagram.com/fbmarkkk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="/assets/ins.png" alt="">
+          </a>
+          <a href="https://www.xiaohongshu.com/user/profile/5e8050a6000000000100a435" target="_blank" rel="noopener noreferrer" aria-label="Xiaohongshu">
+            <img src="/assets/xhs.svg" alt="">
+          </a>
+        </nav>
+      </footer>
 
     </main>
 
@@ -136,6 +139,55 @@
 
     <main class="info-page" data-info-page hidden></main>
 
+    <main class="admin-page" data-admin-page hidden>
+      <section class="admin-shell" aria-label="Project editor">
+        <div class="admin-heading">
+          <div class="admin-toolbox">
+            <p data-admin-editor-title>Project editor</p>
+            <div class="admin-project-tabs" data-admin-project-tabs aria-label="Select project"></div>
+            <button type="button" data-admin-add-text>Add text</button>
+            <button type="button" data-admin-add-image>Add image</button>
+            <button type="button" data-admin-add-video>Add video</button>
+            <button type="submit" form="admin-project-form">Save</button>
+            <button type="button" data-admin-reset>Reset</button>
+            <a href="/eqlz">View project</a>
+            <p class="admin-status" data-admin-status aria-live="polite"></p>
+          </div>
+        </div>
+        <form class="admin-form" data-admin-form id="admin-project-form">
+          <div class="admin-canvas">
+            <div class="admin-canvas-hero">
+              <img src="/assets/covers/cover_1.png" alt="" data-admin-preview>
+              <button type="button" data-admin-hero-trigger>Change hero image</button>
+            </div>
+            <section class="admin-canvas-story">
+              <h2>
+                <span contenteditable="true" data-admin-live-client></span>
+                <em contenteditable="true" data-admin-live-title></em>
+              </h2>
+              <div class="admin-canvas-copy">
+                <p contenteditable="true" data-admin-live-copy></p>
+                <p contenteditable="true" data-admin-live-secondary></p>
+              </div>
+            </section>
+            <section class="admin-block-editor" aria-label="Custom content blocks">
+              <div class="admin-block-header">
+                <span>Click this area to place a selected block</span>
+              </div>
+              <div class="admin-block-list" data-admin-block-list></div>
+            </section>
+          </div>
+          <div class="admin-fields" aria-hidden="true">
+            <input type="text" name="client" data-admin-client autocomplete="off" tabindex="-1">
+            <input type="text" name="title" data-admin-title autocomplete="off" tabindex="-1">
+            <textarea name="copy" data-admin-copy rows="4" tabindex="-1"></textarea>
+            <textarea name="secondary" data-admin-secondary rows="5" tabindex="-1"></textarea>
+            <input type="file" name="image" data-admin-image accept="image/*" tabindex="-1">
+          </div>
+        </form>
+      </section>
+    </main>
+
     <main class="project-page" data-project-page hidden>
       <section class="project-hero" aria-label="Project motion preview">
         <div class="project-visual" data-project-visual>
@@ -146,7 +198,6 @@
       </section>
 
       <section id="project-story" class="project-story">
-        <p class="eyebrow" data-project-client>Client</p>
         <h1>
           <span data-project-title>Project Title</span>
           <em data-project-service>Project Type</em>
@@ -177,14 +228,10 @@
 
       <section class="project-custom-blocks" data-project-blocks hidden></section>
 
-      <section class="project-gallery" aria-label="Project stills">
-        <div class="project-frame">
-          <span class="thumb cover-1"></span>
-        </div>
-        <div class="project-frame">
-          <span class="thumb cover-2"></span>
-        </div>
-      </section>
+      <nav class="project-return" aria-label="Project navigation">
+        <a href="/">回到主页</a>
+      </nav>
+
     </main>
 
     <script src="/js/main.js"></script>
