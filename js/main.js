@@ -137,11 +137,37 @@ function getEditableProjectApi(slug = "") {
   return slug ? `/api/projects/${slug}` : "/api/projects";
 }
 
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error("Project data request failed");
+
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("text/html")) {
+    throw new Error("Project data response was not JSON");
+  }
+
+  return response.json();
+}
+
+async function loadStaticProjectFiles() {
+  const entries = await Promise.all(
+    editableProjectSlugs.map(async (slug) => {
+      try {
+        return [slug, await fetchJson(`/data/${slug}.json`)];
+      } catch {
+        return [slug, {}];
+      }
+    })
+  );
+
+  entries.forEach(([slug, project]) => {
+    if (project && Object.keys(project).length) editableProjectData[slug] = project;
+  });
+}
+
 async function loadEditableProject() {
   try {
-    const response = await fetch(getEditableProjectApi(), { cache: "no-store" });
-    if (!response.ok) throw new Error("Project data request failed");
-    const data = await response.json();
+    const data = await fetchJson(getEditableProjectApi());
     Object.keys(editableProjectData).forEach((slug) => delete editableProjectData[slug]);
     if (data && typeof data === "object") {
       Object.entries(data).forEach(([slug, project]) => {
@@ -150,6 +176,7 @@ async function loadEditableProject() {
     }
   } catch {
     Object.keys(editableProjectData).forEach((slug) => delete editableProjectData[slug]);
+    await loadStaticProjectFiles();
   }
 }
 
