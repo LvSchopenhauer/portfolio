@@ -1,0 +1,10 @@
+.git/
+.github/
+.playwright-cli/
+.tools/
+.vs/
+dev-server.log
+dev-server.err.log
+assets/00086400.gif
+assets/hero-new-video
+assets/hero_new.mp4
