@@ -1,6 +1,8 @@
 import { renderTypography } from './typography.js';
 import { blockRowSpacing, normalizeBlockSpacing } from './block-spacing.js';
 
+if (window.__sphrStartup) window.__sphrStartup.stage = 'module-evaluating';
+
 const header = document.querySelector("[data-header]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
@@ -665,6 +667,7 @@ async function routeFromLocation() {
 async function initRoute() {
   await loadEditableProject();
   await routeFromLocation();
+  if (window.__sphrStartup) window.__sphrStartup.stage = 'route-ready';
   if (window.parent !== window && new URLSearchParams(location.search).has('editor-preview')) window.parent.postMessage({ type: 'sphr:preview-ready' }, location.origin);
 }
 

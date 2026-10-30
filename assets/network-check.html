@@ -19,14 +19,16 @@
     button { min-height: 44px; padding: 10px 18px; border: 1px solid #777; border-radius: 4px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
     button:focus-visible { outline: 2px solid #eee; outline-offset: 4px; }
     pre { padding: 18px; border: 1px solid #444; color: #ccc; font: 12px/1.8 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    iframe { display: block; width: 100%; height: 360px; border: 1px solid #444; background: white; }
     a { color: inherit; }
   </style>
 </head>
 <body>
   <main>
     <h1>连接检查</h1>
-    <p>请保持联通 5G 和当前浏览器。检查会自动开始，约 30 秒内结束；把下方结果文字发给我即可。</p>
+    <p>请保持联通 5G 和当前浏览器。检查会自动开始，先检查文件，再验证真实首页的启动情况，约 1 分钟内结束；把下方结果文字发给我即可。</p>
     <p id="summary" role="status" aria-live="polite">正在准备检查…</p>
+    <div id="app-preview" hidden></div>
     <ul id="checks" aria-label="检查结果"></ul>
     <button id="copy" type="button" disabled>复制结果</button>
     <pre id="report">等待检查结果…</pre>
@@ -37,10 +39,10 @@
   <script>
     const tests = [
       { name: 'Cloudflare 连接', url: '/cdn-cgi/trace', kind: 'trace' },
-      { name: '首页文件', url: '/?network-check=20261030', kind: 'html' },
+      { name: '首页文件', url: '/?network-check=20261030-v2', kind: 'html' },
       { name: '页面样式', url: '/css/styles.css?v=20261030-release', kind: 'css' },
       { name: '排版样式', url: '/css/typography.css?v=20261030-release', kind: 'css' },
-      { name: '主脚本', url: '/js/main.js?v=20261030-mobile-startup', kind: 'js' },
+      { name: '主脚本', url: '/js/main.js?v=20261030-safari-startup', kind: 'js' },
       { name: '排版脚本', url: '/js/typography.js', kind: 'js' },
       { name: '布局脚本', url: '/js/block-spacing.js', kind: 'js' },
       { name: '项目资料', url: '/data/eqlz.json', kind: 'json' },
@@ -60,17 +62,19 @@
     const startedAt = new Date().toISOString();
     let colo = '未取得';
     let active = 0;
+    let appResult = null;
     function updateReport() {
       const finished = results.filter(Boolean).length;
       const failures = results.filter(result => result && !result.ok).length;
       document.querySelector('#summary').textContent = finished === tests.length
-        ? `检查结束：${finished - failures} 项通过，${failures} 项失败。`
+        ? (appResult ? `检查结束：资源 ${finished - failures} 项通过，${failures} 项失败；首页启动${appResult.ok ? '通过' : '需排查'}。` : '资源检查结束，正在验证真实首页启动…')
         : `已完成 ${finished} / ${tests.length} 项检查…`;
       document.querySelector('#report').textContent = [
-        'sphr 连接检查 v1', `时间：${startedAt}`, `服务节点：${colo}`,
-        ...results.filter(Boolean).map(result => `${result.name}：${result.message}`)
+        'sphr 连接检查 v2', `时间：${startedAt}`, `服务节点：${colo}`,
+        ...results.filter(Boolean).map(result => `${result.name}：${result.message}`),
+        ...(appResult ? appResult.lines : [])
       ].join('\n');
-      document.querySelector('#copy').disabled = finished !== tests.length;
+      document.querySelector('#copy').disabled = finished !== tests.length || !appResult;
     }
     async function run(test, index) {
       const controller = new AbortController();
@@ -95,7 +99,7 @@
             detail = `，节点 ${colo}`;
           }
           if (test.kind === 'json') JSON.parse(text);
-          if (test.kind === 'html') detail = text.includes('20261030-mobile-startup') ? '，已是修复版本' : '，未检测到修复版本';
+          if (test.kind === 'html') detail = text.includes('20261030-safari-startup') ? '，已是 v2 修复版本' : '，未检测到 v2 修复版本';
         }
         const message = `通过，${((performance.now() - start) / 1000).toFixed(2)} 秒${detail}`;
         results[index] = { name: test.name, ok: true, message };
@@ -112,12 +116,52 @@
       }
     }
     // Keep concurrency bounded so this check does not itself flood a slow connection.
+    function checkHomepage() {
+      const holder = document.querySelector('#app-preview');
+      const frame = document.createElement('iframe');
+      frame.title = '实际首页启动预览';
+      frame.src = '/?startup-check=20261030-v2';
+      holder.append(frame);
+      holder.hidden = false;
+      const start = performance.now();
+      const timer = setInterval(() => {
+        try {
+          const win = frame.contentWindow;
+          const doc = frame.contentDocument;
+          const state = win.__sphrStartup;
+          const elapsed = performance.now() - start;
+          if (!state && elapsed < 25000) return;
+          const errors = state ? state.errors : [];
+          if (state && state.stage !== 'route-ready' && errors.length === 0 && elapsed < 25000) return;
+          const opacity = doc.body ? win.getComputedStyle(doc.body).opacity : '未取得';
+          if (state && state.stage === 'route-ready' && Number(opacity) < 0.99 && elapsed < 25000) return;
+          clearInterval(timer);
+          const video = doc.querySelector('.hero video');
+          const loaded = !!doc.body && doc.body.classList.contains('loaded');
+          appResult = {
+            ok: !!state && state.stage === 'route-ready' && loaded && Number(opacity) > 0 && errors.length === 0,
+            lines: [
+              `首页启动阶段：${state ? state.stage : '未检测到启动保护脚本'}`,
+              `首页整页透明度：${opacity}（1 为可见，0 为透明）`,
+              `超时显示兜底：${state && state.fallback ? '已触发' : '未触发'}`,
+              `首页视频：${video ? `画面就绪 ${video.readyState}，${video.paused ? '暂停或未开始' : '播放中'}${video.error ? '，错误 ' + video.error.code : ''}` : '未取得'}`,
+              `启动错误：${errors.length ? errors.map(error => error.message + (error.source ? ' @ ' + error.source : '')).join('；') : '未记录到'}`
+            ]
+          };
+          updateReport();
+        } catch (error) {
+          clearInterval(timer);
+          appResult = { ok: false, lines: [`首页启动检查失败：${error.message}`] };
+          updateReport();
+        }
+      }, 250);
+    }
     Promise.all(Array.from({ length: 5 }, async () => {
       while (active < tests.length) {
         const index = active++;
         await run(tests[index], index);
       }
-    }));
+    })).then(checkHomepage);
     document.querySelector('#copy').addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(document.querySelector('#report').textContent);

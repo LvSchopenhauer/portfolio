@@ -29,7 +29,7 @@
     <main id="top" data-home-page>
       <section class="hero" aria-label="Portfolio hero">
         <div class="hero-media" data-hero-media aria-hidden="true">
-          <video muted loop playsinline preload="none">
+          <video muted loop playsinline preload="none" poster="/assets/hero-poster.jpg">
             <source data-src="/assets/hero_new_compressed.mp4" type="video/mp4">
           </video>
           <div class="scanlines"></div>
@@ -205,6 +205,33 @@
 
     </main>
 
-    <script type="module" src="/js/main.js?v=20261030-mobile-startup"></script>
+    <script id="startup-guard">
+      (function () {
+        var state = window.__sphrStartup = { version: '20261030-safari-startup', stage: 'html-ready', errors: [], fallback: false };
+        function record(message, source) {
+          if (state.errors.length >= 6) return;
+          state.errors.push({ message: String(message || 'Unknown script error').slice(0, 240), source: source || '' });
+        }
+        window.addEventListener('error', function (event) {
+          var target = event.target;
+          if (target && target.tagName === 'SCRIPT') {
+            record('Script resource failed', (target.getAttribute('src') || '').split('?')[0]);
+          } else if (event.message) {
+            record(event.message, event.filename && event.filename.indexOf(location.origin) === 0 ? event.filename.slice(location.origin.length).split('?')[0] : '');
+          }
+        }, true);
+        window.addEventListener('unhandledrejection', function (event) {
+          record(event.reason && event.reason.message ? event.reason.message : event.reason);
+        });
+        setTimeout(function () {
+          if (document.body.classList.contains('loaded')) return;
+          state.fallback = true;
+          document.body.classList.add('loaded');
+          var reveals = document.querySelectorAll('[data-home-page] .reveal');
+          for (var index = 0; index < reveals.length; index++) reveals[index].classList.add('visible');
+        }, 8000);
+      }());
+    </script>
+    <script type="module" src="/js/main.js?v=20261030-safari-startup"></script>
   </body>
 </html>

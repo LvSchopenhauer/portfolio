@@ -40,3 +40,49 @@ test('initial HTML has no unused external Google font stylesheet', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
   assert.doesNotMatch(html, /fonts\.(googleapis|gstatic)\.com/);
 });
+
+function guardFixture(loaded = false) {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const script = html.match(/<script id="startup-guard">([\s\S]*?)<\/script>/)[1];
+  const classes = new Set(loaded ? ['loaded'] : []);
+  const revealed = [];
+  const handlers = {};
+  let timeout;
+  const window = { addEventListener: (name, fn) => { handlers[name] = fn; } };
+  vm.runInNewContext(script, {
+    window,
+    location: { origin: 'https://sphr.top' },
+    document: {
+      body: { classList: { contains: name => classes.has(name), add: name => classes.add(name) } },
+      querySelectorAll: () => [0, 1].map(index => ({ classList: { add: name => revealed.push([index, name]) } }))
+    },
+    setTimeout: (fn, ms) => { assert.equal(ms, 8000); timeout = fn; }
+  });
+  return { window, classes, revealed, handlers, timeout };
+}
+
+test('failed or stalled module cannot keep static homepage content invisible', () => {
+  const fixture = guardFixture();
+  fixture.timeout();
+  assert.ok(fixture.classes.has('loaded'));
+  assert.equal(fixture.window.__sphrStartup.fallback, true);
+  assert.deepEqual(fixture.revealed, [[0, 'visible'], [1, 'visible']]);
+});
+
+test('successful startup retains normal reveal effects without triggering fallback', () => {
+  const fixture = guardFixture(true);
+  fixture.timeout();
+  assert.equal(fixture.window.__sphrStartup.fallback, false);
+  assert.deepEqual(fixture.revealed, []);
+});
+
+test('startup errors are recorded locally with bounded messages and source paths', () => {
+  const fixture = guardFixture();
+  fixture.handlers.error({ message: 'SyntaxError', filename: 'https://sphr.top/js/main.js?v=example' });
+  fixture.handlers.unhandledrejection({ reason: new Error('Initialization failed') });
+  assert.equal(fixture.window.__sphrStartup.errors[0].source, '/js/main.js');
+  assert.equal(fixture.window.__sphrStartup.errors[1].message, 'Initialization failed');
+  for (let index = 0; index < 10; index++) fixture.handlers.error({ message: 'x'.repeat(500) });
+  assert.equal(fixture.window.__sphrStartup.errors.length, 6);
+  assert.equal(fixture.window.__sphrStartup.errors[5].message.length, 240);
+});
