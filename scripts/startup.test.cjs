@@ -86,3 +86,11 @@ test('startup errors are recorded locally with bounded messages and source paths
   assert.equal(fixture.window.__sphrStartup.errors.length, 6);
   assert.equal(fixture.window.__sphrStartup.errors[5].message.length, 240);
 });
+
+test('optional third-party analytics failure does not count as application startup failure', () => {
+  const fixture = guardFixture();
+  fixture.handlers.error({ target: { tagName: 'SCRIPT', src: 'https://static.cloudflareinsights.com/beacon.min.js' } });
+  assert.equal(fixture.window.__sphrStartup.errors.length, 0);
+  assert.equal(fixture.window.__sphrStartup.warnings.length, 1);
+  assert.equal(fixture.window.__sphrStartup.warnings[0].source, 'static.cloudflareinsights.com');
+});

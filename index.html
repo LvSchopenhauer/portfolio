@@ -207,17 +207,21 @@
 
     <script id="startup-guard">
       (function () {
-        var state = window.__sphrStartup = { version: '20261030-safari-startup', stage: 'html-ready', errors: [], fallback: false };
-        function record(message, source) {
-          if (state.errors.length >= 6) return;
-          state.errors.push({ message: String(message || 'Unknown script error').slice(0, 240), source: source || '' });
+        var state = window.__sphrStartup = { version: '20261030-safari-startup', stage: 'html-ready', errors: [], warnings: [], fallback: false };
+        function record(message, source, optional) {
+          var bucket = optional ? state.warnings : state.errors;
+          if (bucket.length >= 6) return;
+          bucket.push({ message: String(message || 'Unknown script error').slice(0, 240), source: source || '' });
         }
         window.addEventListener('error', function (event) {
           var target = event.target;
           if (target && target.tagName === 'SCRIPT') {
-            record('Script resource failed', (target.getAttribute('src') || '').split('?')[0]);
+            var src = target.src || '';
+            var external = src && src.indexOf(location.origin + '/') !== 0;
+            record('Script resource failed', external ? src.split('/')[2] : (target.getAttribute('src') || '').split('?')[0], external);
           } else if (event.message) {
-            record(event.message, event.filename && event.filename.indexOf(location.origin) === 0 ? event.filename.slice(location.origin.length).split('?')[0] : '');
+            var externalError = event.filename && event.filename.indexOf(location.origin + '/') !== 0;
+            record(event.message, externalError ? 'third-party' : event.filename ? event.filename.slice(location.origin.length).split('?')[0] : '', externalError);
           }
         }, true);
         window.addEventListener('unhandledrejection', function (event) {

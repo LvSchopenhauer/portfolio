@@ -145,7 +145,8 @@
               `首页整页透明度：${opacity}（1 为可见，0 为透明）`,
               `超时显示兜底：${state && state.fallback ? '已触发' : '未触发'}`,
               `首页视频：${video ? `画面就绪 ${video.readyState}，${video.paused ? '暂停或未开始' : '播放中'}${video.error ? '，错误 ' + video.error.code : ''}` : '未取得'}`,
-              `启动错误：${errors.length ? errors.map(error => error.message + (error.source ? ' @ ' + error.source : '')).join('；') : '未记录到'}`
+              `启动错误：${errors.length ? errors.map(error => error.message + (error.source ? ' @ ' + error.source : '')).join('；') : '未记录到'}`,
+              `第三方脚本提示（单独记录）：${state && state.warnings && state.warnings.length ? state.warnings.map(warning => warning.message + ' @ ' + warning.source).join('；') : '无'}`
             ]
           };
           updateReport();
