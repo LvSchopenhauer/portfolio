@@ -86,7 +86,7 @@ const projects = {
     client: "361",
     visual: "project-visual-f",
     image: "/portfolio/network-test/assets/covers/cover_6.png",
-    video: "https://player.vimeo.com/video/1076680357?title=0&byline=0&portrait=0&badge=0",
+    video: "https://player.bilibili.com/player.html?bvid=BV1Pexe6uE9q&p=1&autoplay=0&danmaku=0",
     copy: "本项目为 361° 第八代防水跑鞋制作数字影像，以“水下呼吸”为视觉概念，将鞋款置于悬浮的水立方中，通过水体包裹与破水亮相的过程，呈现产品兼顾防水与透气的特性。",
     secondary: "我负责雨滴落在鞋面的相关镜头制作，涵盖雨滴模拟、材质、灯光、渲染与合成。主要使用 Houdini、Redshift 和 After Effects，重点控制雨滴的真实质感，以及落点与溅落节奏。"
   }
@@ -189,7 +189,7 @@ function readEditableProject(slug) {
 
 function getProject(slug) {
   const project = { ...projects[slug], ...readEditableProject(slug) };
-  if (project.video === '') project.videoFallback = '';
+  if (project.video === '' || /^https:\/\/player\.bilibili\.com\//.test(project.video)) project.videoFallback = '';
   if (typeof project.image === "string") {
     project.image = project.image.replace(/^https?:\/\/(?:127\.0\.0\.1|localhost):\d+(\/assets\/)/, "$1");
     // Full-frame derivatives preserve the detail hero's crop at every viewport.
@@ -671,6 +671,7 @@ function showProjectPage(slug) {
     projectPlayer.hidden = !project.video && !project.videoFallback;
     projectVideoSwitch.hidden = !project.videoFallback || !project.video;
     projectNative.poster = project.image || '';
+    projectVideo.title = `${project.client} - ${project.title} 主片`;
     if (playbackChanged) selectProjectPlayback(project.video ? 'vimeo' : 'backup');
   }
   renderProjectBlocks(project.blocks);
@@ -741,7 +742,7 @@ async function showAdminPage() {
   resetProjectPlayback();
   document.querySelector('.hero video')?.pause();
   document.title = '作品编辑器 · sphr';
-  const editor = await import('/portfolio/network-test/js/editor.js?v=20261027');
+  const editor = await import('/portfolio/network-test/js/editor.js?v=20261030-bilibili');
   await editor.mountEditor(adminPage, { projects, initialSlug: new URLSearchParams(location.search).get('project') || getLastViewedProjectSlug() });
   updateHeader();
 }

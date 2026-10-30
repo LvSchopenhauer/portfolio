@@ -95,8 +95,26 @@ function typographyControls(scope, value, defaults = typographyDefaults(), open 
 }
 function normalizeVideo(value) {
   if (!value.trim()) return '';
-  const url = new URL(value.trim());
+  let text = value.trim();
+  const iframe = text.match(/^<iframe\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1[^>]*>[\s\S]*<\/iframe>$/i);
+  if (iframe) text = iframe[2].replaceAll('&amp;', '&');
+  if (/^BV[A-Za-z0-9]{10}$/.test(text)) text = `https://player.bilibili.com/player.html?bvid=${text}`;
+  const url = new URL(text.startsWith('//') ? `https:${text}` : text);
   if (url.protocol !== 'https:') throw new Error('影片地址需要使用 HTTPS。');
+  if (url.username || url.password) throw new Error('影片地址不能包含账号信息。');
+  if (['player.bilibili.com', 'www.bilibili.com', 'bilibili.com'].includes(url.hostname)) {
+    const bvid = url.hostname === 'player.bilibili.com' && url.pathname === '/portfolio/network-test/player.html'
+      ? url.searchParams.get('bvid') : url.pathname.match(/^\/video\/(BV[A-Za-z0-9]{10})\/?$/)?.[1];
+    const page = url.searchParams.get('p') || url.searchParams.get('page') || '1';
+    if (/^BV[A-Za-z0-9]{10}$/.test(bvid || '') && /^[1-9]\d*$/.test(page)) {
+      const player = new URL('https://player.bilibili.com/player.html');
+      player.searchParams.set('bvid', bvid);
+      player.searchParams.set('p', page);
+      player.searchParams.set('autoplay', '0');
+      player.searchParams.set('danmaku', '0');
+      return player.href;
+    }
+  }
   if (url.hostname === 'player.vimeo.com' && /^\/video\/\d+$/.test(url.pathname)) return url.href;
   if (['vimeo.com', 'www.vimeo.com'].includes(url.hostname)) {
     const parts = url.pathname.split('/portfolio/network-test/').filter(Boolean);
@@ -107,7 +125,7 @@ function normalizeVideo(value) {
       return player.href;
     }
   }
-  throw new Error('请填写有效的 Vimeo 影片或嵌入地址。');
+  throw new Error('请填写有效的 Vimeo 或哔哩哔哩影片地址、BV 号或嵌入代码。');
 }
 
 class PortfolioEditor {
@@ -232,7 +250,7 @@ class PortfolioEditor {
   }
   renderContent() {
     this.content.innerHTML = `<section class="ed-card"><div class="ed-section-title"><h3>项目介绍</h3><span>01</span></div><div class="ed-field-pair">${field('品牌 / 客户', 'client', this.data.client, { max: 160 })}${field('项目名称', 'title', this.data.title, { max: 240 })}</div>${field('项目背景', 'copy', this.data.copy, { multiline: true, hint: '介绍项目背景、产品与视觉方向。' })}${typographyControls('copy', this.data.typography?.copy)}${field('我的参与', 'secondary', this.data.secondary, { multiline: true, hint: '说明你的制作内容与贡献，也可以用于第二段项目介绍。' })}${typographyControls('secondary', this.data.typography?.secondary)}</section>
-      <section class="ed-card"><div class="ed-section-title"><h3>封面与主影片</h3><span>02</span></div><div class="ed-cover" data-drop-cover><img src="${esc(this.data.image)}" alt="当前项目封面"><label class="ed-upload-button">更换封面<input type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif" data-cover-upload></label></div><p class="ed-help">拖入图片更换封面。支持 JPG、PNG、WebP、AVIF 和 GIF。</p>${field('主影片 · Vimeo', 'video', this.data.video || '', { hint: '可粘贴 Vimeo 影片链接或嵌入地址。留空将隐藏主播放器。' })}</section>
+      <section class="ed-card"><div class="ed-section-title"><h3>封面与主影片</h3><span>02</span></div><div class="ed-cover" data-drop-cover><img src="${esc(this.data.image)}" alt="当前项目封面"><label class="ed-upload-button">更换封面<input type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif" data-cover-upload></label></div><p class="ed-help">拖入图片更换封面。支持 JPG、PNG、WebP、AVIF 和 GIF。</p>${field('主影片 · Vimeo / 哔哩哔哩', 'video', this.data.video || '', { hint: '可粘贴影片链接、B 站 BV 号或 iframe 嵌入代码。留空将隐藏主播放器。' })}</section>
       <section class="ed-card ed-blocks-section"><div class="ed-section-title"><h3>内容区块 <small data-block-count>${this.data.blocks.length}</small></h3><span>03</span></div><p class="ed-help">按展示顺序排列。使用上下移动，或拖动区块顶部的排序手柄。</p><div class="ed-block-list" data-block-list></div><div class="ed-add-bar"><button data-add="text">＋ 文字</button><button data-add="image">＋ 图片</button><button data-add="video">＋ 视频</button></div><div class="ed-dropzone" data-drop-files tabindex="0" role="button" aria-label="批量上传图片和视频">将图片或视频拖到这里，或点击批量添加<input type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif,video/*" multiple data-multi-upload hidden></div></section>
       <div class="ed-content-footer"><span>草稿自动保护，保存后写入本地项目。</span><button data-action="reload">恢复到最新保存版</button></div>`;
     this.renderBlocks();
