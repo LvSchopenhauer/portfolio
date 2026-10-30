@@ -1,0 +1,189 @@
+{
+  "client": "361°",
+  "title": "Breathing Underwater",
+  "copy": "本项目为 361° 第八代防水跑鞋制作数字影像，以“水下呼吸”为视觉概念，将鞋款置于悬浮的水立方中，通过水体包裹与破水亮相的过程，呈现产品兼顾防水与透气的特性。",
+  "secondary": "",
+  "image": "/portfolio/network-test/assets/covers/cover_6.png",
+  "blocks": [
+    {
+      "id": "361-film-visual",
+      "type": "image",
+      "content": "/portfolio/network-test/assets/projects/361/05-c71e0c223952027.680233fb21590.webp",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "影片中的水体、鞋款与材质画面",
+      "caption": "",
+      "spacingAfter": 128
+    },
+    {
+      "id": "361-rain-title",
+      "type": "text",
+      "content": "Raindrop Interaction",
+      "size": 100,
+      "fontSize": 40,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "spacingAfter": 24,
+      "typography": {
+        "fontSize": 40,
+        "cnWeight": 300,
+        "enWeight": 300,
+        "lineHeight": 115,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "361-rain-copy",
+      "type": "text",
+      "content": "雨滴模拟的重点是表面张力与场景尺度的匹配。我通过调整相关参数控制雨滴的形态与动态，同时精心设计雨滴落在鞋面的位置和溅落节奏，让模拟既具有真实感，也符合画面的表现需求。",
+      "size": 100,
+      "fontSize": 18,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "spacingAfter": 48,
+      "typography": {
+        "fontSize": 18,
+        "cnWeight": 300,
+        "enWeight": 100,
+        "lineHeight": 150,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "361-rain-final",
+      "type": "image",
+      "content": "/portfolio/network-test/assets/projects/361/04-ee1c3e223952027.680233fb20de0.webp",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "成片中的鞋面雨滴特写与鞋款画面",
+      "caption": "",
+      "spacingAfter": 30
+    },
+    {
+      "id": "361-rain-process",
+      "type": "image",
+      "content": "/portfolio/network-test/assets/projects/361/08-29a2d5223952027.68023ff1d5417.gif",
+      "size": 60,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "带蓝紫色发射点的雨滴制作过程",
+      "caption": "",
+      "spacingAfter": 128
+    },
+    {
+      "id": "361-lighting-title",
+      "type": "text",
+      "content": "Lighting & Rendering",
+      "size": 100,
+      "fontSize": 40,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "spacingAfter": 24,
+      "typography": {
+        "fontSize": 40,
+        "cnWeight": 300,
+        "enWeight": 300,
+        "lineHeight": 115,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "361-lighting-copy",
+      "type": "text",
+      "content": "在雨滴模拟的基础上，我完成相关镜头的材质、灯光与 Redshift 渲染，并在 After Effects 中完成合成，让雨滴与鞋面材质在最终画面中协调呈现。",
+      "size": 100,
+      "fontSize": 18,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "spacingAfter": 48,
+      "typography": {
+        "fontSize": 18,
+        "cnWeight": 300,
+        "enWeight": 100,
+        "lineHeight": 150,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "361-upper-detail",
+      "type": "image",
+      "content": "/portfolio/network-test/assets/projects/361/02-06e8ae223952027.680233fb223ee.webp",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "成片中的鞋面织物与结构细节",
+      "caption": "",
+      "spacingAfter": 128
+    },
+    {
+      "id": "361-brand-ending",
+      "type": "image",
+      "content": "/portfolio/network-test/assets/projects/361/06-1f254f223952027.680233fb23016.webp",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "361° RUNNING 片尾画面",
+      "caption": "",
+      "spacingAfter": 0
+    }
+  ],
+  "video": "https://player.vimeo.com/video/1076680357?title=0&byline=0&portrait=0&badge=0",
+  "typography": {
+    "copy": {
+      "fontSize": 18,
+      "cnWeight": 300,
+      "enWeight": 100,
+      "lineHeight": 150,
+      "lineHeightUnit": "%",
+      "letterSpacing": 0,
+      "letterSpacingUnit": "px",
+      "align": "center"
+    },
+    "secondary": {
+      "fontSize": 18,
+      "cnWeight": 300,
+      "enWeight": 100,
+      "lineHeight": 150,
+      "lineHeightUnit": "%",
+      "letterSpacing": 0,
+      "letterSpacingUnit": "px",
+      "align": "center"
+    }
+  }
+}

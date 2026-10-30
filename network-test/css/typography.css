@@ -1,0 +1,22 @@
+/* Installed fonts only: no Apple font files are redistributed with the website. */
+@font-face { font-family: 'Portfolio PingFang'; src: local('PingFangSC-Ultralight'), local('苹方_特细'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio PingFang'; src: local('PingFangSC-Light'), local('苹方_细体'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio PingFang'; src: local('PingFangSC-Regular'), local('苹方_常规'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio PingFang'; src: local('PingFangSC-Medium'), local('苹方_中等'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio PingFang'; src: local('PingFangSC-Semibold'), local('苹方_粗体'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio PingFang'; src: local('苹方_特粗'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Portfolio SF Pro'; src: local('SF Pro'), local('SFPro-Regular'); font-weight: 100 900; font-style: normal; font-display: swap; }
+.mixed-typography { white-space: pre-wrap; overflow-wrap: break-word; font-kerning: normal; font-optical-sizing: auto; font-synthesis: none; }
+.mixed-typography .type-cjk { font-family: 'Portfolio PingFang', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.mixed-typography .type-latin { font-family: 'Portfolio SF Pro', 'SF Pro', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+/* Override heading spans used by the original title layout: runs remain inline. */
+.project-story h1 .mixed-typography > span { display: inline; margin: 0; font-size: inherit; color: inherit; }
+
+/* Override saved desktop pixel values only in the project page at narrow widths. */
+@media (max-width: 1023px) {
+  .project-page .has-responsive-typography {
+    font-size: var(--responsive-font-size) !important;
+    line-height: var(--responsive-line-height) !important;
+    letter-spacing: var(--responsive-letter-spacing) !important;
+  }
+}
