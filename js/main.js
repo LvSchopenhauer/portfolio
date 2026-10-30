@@ -357,10 +357,19 @@ window.addEventListener("resize", () => {
   });
 });
 
-window.addEventListener("load", () => {
+function revealPage() {
   document.body.classList.add("loaded");
-  showRepeatRevealsInsideViewport();
-});
+  requestAnimationFrame(showRepeatRevealsInsideViewport);
+}
+
+// The module runs after HTML parsing. Slow media must not keep the whole page invisible.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", revealPage, { once: true });
+} else {
+  revealPage();
+}
+
+window.addEventListener("load", showRepeatRevealsInsideViewport, { once: true });
 
 const repeatRevealSelector = '[data-reveal="repeat-from-top"]';
 const revealViewportPadding = 8;

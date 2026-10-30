@@ -16,7 +16,7 @@
 | 本地编辑 | Node 内置 http/fs/path/child_process；CommonJS 项目存储；zlib/crypto/stream 提供传输层，无数据库服务 |
 | 草稿与预览 | IndexedDB、sessionStorage、同源 iframe 与 postMessage |
 | 媒体 | PNG/JPEG/GIF、本地 MP4、Vimeo iframe；部分图片仍为 JSON 内 base64 |
-| 字体 | 本地 Satoshi WOFF2、Google Gothic A1、设备已安装的 PingFang/SF Pro 及回退字体 |
+| 字体 | 本地 Satoshi WOFF2、设备已安装的 PingFang/SF Pro 及回退字体；未使用的 Google Gothic A1 外链已移除 |
 | 环境与依赖 | 根目录没有 package.json、lockfile 或统一构建命令；视频转码依赖本机 `.tools/` 中 FFmpeg；启动脚本依赖 Windows PowerShell/Node |
 | 部署 | 预期公开端只部署静态文件；本地 server.js 与写入 API 不属于公开端能力 |
 
@@ -97,7 +97,7 @@ flowchart TD
 | 详情视频区块 | 渲染时设置全部 src，preload=metadata；静音、playsInline，默认 autoplay/loop | 没有基于可见区域的媒体观察器；metadata 不保证 autoplay 时只取元信息 |
 | 主片 Vimeo | 进入作品时立即设置 iframe src；初始为 about:blank | 无点击后加载或视口加载；大部分离页路径清空该 iframe |
 | 编辑器预览 | 同源详情页 iframe 接受整份草稿 | 复用前台渲染，布局一致；同时增加媒体资源与解码工作 |
-| 字体 | Satoshi WOFF2 使用 swap；Google Fonts 外部 CSS；混排字体只用 local() | 有回退；用户未安装 Apple 字体时无法保证与维护机完全一致 |
+| 字体 | Satoshi WOFF2 使用 swap；混排字体只用 local()；无 Google Fonts 外部 CSS | 有回退；用户未安装 Apple 字体时无法保证与维护机完全一致 |
 | 3D | 在 index、js、css、server 与资产清单中未发现 Three.js、WebGL、GLTFLoader、model-viewer、GLB/GLTF 等运行入口 | 当前是 3D 作品的图像/影片展示，无实时模型加载、GPU 场景或纹理解码链路；不扩展此结论到排除的 outputs |
 
 初次审查（2026-10-27）的磁盘统计快照（十进制 MB；不是网络实测；不包含后续 KOLON 内容与素材更新）：
