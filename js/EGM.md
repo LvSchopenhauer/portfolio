@@ -19,6 +19,8 @@
 
 ## Interface
 
+首屏阻塞对照实验：`node scripts/build-startup-comparison.cjs` 从当前 index.html、两份公开 CSS 及三个启动模块生成 `assets/startup-comparison.html`。该入口内联同一份代码和样式，保留原布局及延迟载入的编辑器，不另外请求首屏 CSS/启动模块；媒体和项目数据仍使用原地址。它是 noindex 的独立诊断快照，重建后才包含后续源码修改，不替代正式入口，也不能在手机实测前视为修复结论。
+
 ### 前台入口与路由
 
 `main.js` 没有模块导出，其对外接口是页面的 `data-*` DOM 标记、URL、浏览器事件和消息协议。
