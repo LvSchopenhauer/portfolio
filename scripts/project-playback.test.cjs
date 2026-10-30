@@ -46,5 +46,6 @@ test('full-frame detail covers retain custom images and explicit video hiding',(
  assert.equal(get({}).image,'/assets/covers/cover_1.detail.webp');
  assert.equal(get({image:'/assets/uploads/custom.png'}).image,'/assets/uploads/custom.png');
  assert.equal(get({video:''}).videoFallback,'');
+ assert.equal(get({video:'https://player.bilibili.com/player.html?bvid=BV1Pexe6uE9q'}).videoFallback,'');
  assert.equal(get({image:'http://127.0.0.1:4173/assets/covers/cover_1.png'}).image,'/assets/covers/cover_1.detail.webp');
 });

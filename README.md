@@ -36,4 +36,6 @@ Each main film retains its original Vimeo embed and adds a manual “备用播�
 
 ## Production
 
+361 currently uses the owner's Bilibili upload `BV1Pexe6uE9q` as its main embed, with autoplay and danmaku disabled. Bilibili projects hide the experimental MP4 backup switch. The editor accepts Bilibili video/player links, BV IDs and iframe snippets, normalizing them to a validated HTTPS player URL. Other project players retain their existing sources.
+
 The production site is https://sphr.top/. Push `main` to `LvSchopenhauer/portfolio` to trigger the existing Cloudflare Pages deployment. Production serves static project JSON; the editor's writable API runs locally. See [GITHUB_PUSH.md](GITHUB_PUSH.md) for release checks. Local archives and QA evidence in `outputs/` are excluded from Git and deployment.

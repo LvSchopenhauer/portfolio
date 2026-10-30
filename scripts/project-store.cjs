@@ -33,9 +33,19 @@ function mediaUrl(value, { embed = false } = {}) {
   try {
     const url = new URL(text);
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error();
-    if (embed && url.hostname !== 'player.vimeo.com') throw new Error();
+    if (embed && url.hostname !== 'player.vimeo.com') {
+      if (url.hostname !== 'player.bilibili.com' || url.pathname !== '/player.html' || !/^BV[A-Za-z0-9]{10}$/.test(url.searchParams.get('bvid') || '')) throw new Error();
+      const player = new URL('https://player.bilibili.com/player.html');
+      player.searchParams.set('bvid', url.searchParams.get('bvid'));
+      const page = url.searchParams.get('p') || url.searchParams.get('page') || '1';
+      if (!/^[1-9]\d*$/.test(page)) throw new Error();
+      player.searchParams.set('p', page);
+      player.searchParams.set('autoplay', '0');
+      player.searchParams.set('danmaku', '0');
+      return player.href;
+    }
     return url.href;
-  } catch { throw new StoreError(422, embed ? '主影片请使用 Vimeo 嵌入地址。' : '素材地址无效，请使用本地素材或 HTTPS 地址。'); }
+  } catch { throw new StoreError(422, embed ? '主影片请使用有效的 Vimeo 或哔哩哔哩嵌入地址。' : '素材地址无效，请使用本地素材或 HTTPS 地址。'); }
 }
 
 function normalizeProject(input) {
