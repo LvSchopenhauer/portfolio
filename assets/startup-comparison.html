@@ -7,6 +7,7 @@
     <title>sphr</title>
     <meta name="description" content="LvSchopenhauer's cinematic personal portfolio for design, technology and moving image work.">
     <link rel="icon" href="/assets/sphr.svg" type="image/svg+xml">
+    <link rel="preload" as="image" href="/assets/hero-poster.jpg" fetchpriority="high">
     <style data-inline-source="css/styles.css">
 @font-face {
   font-family: "Satoshi";
@@ -873,6 +874,26 @@ body.info-active .brand::after {
   pointer-events: none;
 }
 
+.hero-play:not([hidden]) {
+  position: absolute;
+  left: 4vw;
+  bottom: 24px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #ffffff80;
+  border-radius: 50%;
+  color: #fff;
+  background: #0006;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.hero-play svg { width: 22px; height: 22px; fill: currentColor; }
+.hero-play:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
 .scanlines {
   position: absolute;
   inset: 0;
@@ -985,16 +1006,17 @@ main,
   will-change: transform;
 }
 
-.cover-1 { background-image: url("/assets/covers/cover_1.png"); background-position: 50% 50%; }
-.cover-2 { background-image: url("/assets/covers/cover_2.png"); background-position: 50% 50%; }
-.cover-3 { background-image: url("/assets/covers/cover_3.png"); background-position: 52% 50%; }
-.cover-4 { background-image: url("/assets/covers/cover_4.png"); background-position: 50% 48%; }
-.cover-5 { background-image: url("/assets/covers/cover_5.png"); background-position: 48% 50%; }
+.cover-1 { --cover-image: url("/assets/covers/cover_1.home.webp"); background-position: 50% 50%; }
+.cover-2 { --cover-image: url("/assets/covers/cover_2.home.webp"); background-position: 50% 50%; }
+.cover-3 { --cover-image: url("/assets/covers/cover_3.home.webp"); background-position: 52% 50%; }
+.cover-4 { --cover-image: url("/assets/covers/cover_4.home.webp"); background-position: 50% 48%; }
+.cover-5 { --cover-image: url("/assets/covers/cover_5.home.webp"); background-position: 48% 50%; }
 .cover-6 {
-  background-image: url("/assets/covers/cover_6.png");
+  --cover-image: url("/assets/covers/cover_6.home.webp");
   background-size: calc(100% * 1094 / 1074) auto;
   background-position: right center;
 }
+.thumb.is-cover-ready { background-image: var(--cover-image); }
 
 .project-card a::after {
   content: "";
@@ -2397,6 +2419,9 @@ main,
             <source data-src="/assets/hero_new_compressed.mp4" type="video/mp4">
           </video>
           <div class="scanlines"></div>
+          <button class="hero-play" type="button" data-hero-play hidden aria-label="播放背景视频">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg>
+          </button>
         </div>
       </section>
 
@@ -2603,6 +2628,8 @@ main,
           document.body.classList.add('loaded');
           var reveals = document.querySelectorAll('[data-home-page] .reveal');
           for (var index = 0; index < reveals.length; index++) reveals[index].classList.add('visible');
+          var covers = document.querySelectorAll('.work-grid .thumb');
+          for (var cover = 0; cover < covers.length; cover++) covers[cover].classList.add('is-cover-ready');
         }, 8000);
       }());
     </script>
@@ -2710,6 +2737,10 @@ const heroMedia = document.querySelector("[data-hero-media]");
 const introCopy = document.querySelector(".intro p");
 const homePage = document.querySelector("[data-home-page]");
 const homeFooter = document.querySelector("[data-home-footer]");
+const homeVideo = document.querySelector('.hero video');
+const homeVideoSource = homeVideo?.querySelector('source[data-src]');
+const homePlay = document.querySelector('[data-hero-play]');
+let homePosterReady;
 const originPage = document.querySelector("[data-origin-page]");
 const infoPage = document.querySelector("[data-info-page]");
 const adminPage = document.querySelector("[data-admin-page]");
@@ -3096,6 +3127,52 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach((item) => revealObserver.observe(item));
 
+const coverObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-cover-ready');
+    coverObserver.unobserve(entry.target);
+  });
+}, { rootMargin: '200px 0px', threshold: 0 });
+document.querySelectorAll('.work-grid .thumb').forEach(thumb => coverObserver.observe(thumb));
+
+function playHomeVideo() {
+  if (!homeVideo || homePage.hidden) return;
+  if (homePlay) homePlay.hidden = true;
+  try {
+    const playback = homeVideo.play();
+    playback?.catch(() => { if (homePlay) homePlay.hidden = false; });
+  } catch { if (homePlay) homePlay.hidden = false; }
+}
+
+function startHomeVideo() {
+  if (!homeVideo || !homeVideoSource) return;
+  if (homeVideoSource.src) { playHomeVideo(); return; }
+  if (!homePosterReady) {
+    homePosterReady = new Promise(resolve => {
+      const image = new Image();
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        resolve();
+      };
+      const timer = setTimeout(finish, 6000);
+      image.onload = image.onerror = finish;
+      image.src = homeVideo.poster;
+      if (image.complete && image.naturalWidth) finish();
+    });
+  }
+  homePosterReady.then(() => {
+    if (homePage.hidden) return;
+    if (!homeVideoSource.src) { homeVideoSource.src = homeVideoSource.dataset.src; homeVideo.load(); }
+    playHomeVideo();
+  });
+}
+homePlay?.addEventListener('click', playHomeVideo);
+homeVideo?.addEventListener('playing', () => { if (homePlay) homePlay.hidden = true; });
+
 function isTopEdgeInsideCurrentViewport(item) {
   const rect = item.getBoundingClientRect();
   return rect.top >= revealViewportPadding && rect.top <= window.innerHeight - revealViewportPadding;
@@ -3320,10 +3397,6 @@ async function showAdminPage() {
 }
 
 function showHomePage() {
-  const homeVideo = document.querySelector('.hero video');
-  const homeSource = homeVideo?.querySelector('source[data-src]');
-  if (homeSource && !homeSource.src) { homeSource.src = homeSource.dataset.src; homeVideo.load(); }
-  homeVideo?.play().catch(() => {});
   setMenuOpen(false);
   homePage.hidden = false;
   if (homeFooter) homeFooter.hidden = false;
@@ -3342,6 +3415,7 @@ function showHomePage() {
   renderProjectBlocks();
   document.title = "sphr";
   updateHeader();
+  startHomeVideo();
 }
 
 function showProjectLoadState(failed = false) {

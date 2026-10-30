@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>sphr</title>
+    <meta name="description" content="LvSchopenhauer's cinematic personal portfolio for design, technology and moving image work.">
+    <link rel="icon" href="/assets/sphr.svg" type="image/svg+xml">
+    <link rel="preload" as="image" href="/assets/hero-poster.jpg" fetchpriority="high">
+    <link rel="stylesheet" href="/css/styles.css?v=20261030-independent-routes">
+    <link rel="stylesheet" href="/css/typography.css?v=20261030-release">
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="/" aria-label="Back to home">
+        <img src="/assets/sphr.svg" alt="Sphr">
+      </a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation" data-site-nav>
+        <a href="/#moving">Work</a>
+        <a href="/info">Info</a>
+        <a href="/origin">Origin</a>
+      </nav>
+    </header>
+
+    <main id="top" data-home-page>
+      <section class="hero" aria-label="Portfolio hero">
+        <div class="hero-media" data-hero-media aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="/assets/hero-poster.jpg">
+            <source data-src="/assets/hero_new_compressed.mp4" type="video/mp4">
+          </video>
+          <div class="scanlines"></div>
+          <button class="hero-play" type="button" data-hero-play hidden aria-label="播放背景视频">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <section id="content" class="intro reveal">
+        <h1>我是 sphr，一名专注于商业影像的 3D 动态设计师。</h1>
+        <p>
+          以材质、光线与运动为语言，塑造产品的质感与视觉张力。
+        </p>
+      </section>
+
+      <section id="moving" class="work-grid" aria-label="Selected work">
+        <article class="project-card reveal" data-project="eqlz" data-reveal="repeat-from-top">
+          <a href="/eqlz">
+            <span class="thumb cover-1"></span>
+            <span class="caption">
+              <strong>EQLZ</strong>
+              <em>2023 Multidimensional</em>
+            </span>
+          </a>
+        </article>
+        <article class="project-card reveal" data-project="supernova" data-reveal="repeat-from-top">
+          <a href="/supernova">
+            <span class="thumb cover-2"></span>
+            <span class="caption">
+              <strong>Adidas</strong>
+              <em>Supernova 2024</em>
+            </span>
+          </a>
+        </article>
+        <article class="project-card reveal" data-project="kolon" data-reveal="repeat-from-top">
+          <a href="/kolon">
+            <span class="thumb cover-3"></span>
+            <span class="caption">
+              <strong>KOLON</strong>
+              <em>Move Alpha</em>
+            </span>
+          </a>
+        </article>
+        <article class="project-card reveal" data-project="auto" data-reveal="repeat-from-top">
+          <a href="/auto">
+            <span class="thumb cover-4"></span>
+            <span class="caption">
+              <strong>Auto China</strong>
+              <em>ID.CODE</em>
+            </span>
+          </a>
+        </article>
+        <article class="project-card reveal" data-project="helena" data-reveal="repeat-from-top">
+          <a href="/helena">
+            <span class="thumb cover-5"></span>
+            <span class="caption">
+              <strong>Helena Rubinstein</strong>
+              <em>Countdown Gift Box</em>
+            </span>
+          </a>
+        </article>
+        <article class="project-card reveal" data-project="361" data-reveal="repeat-from-top">
+          <a href="/361">
+            <span class="thumb cover-6"></span>
+            <span class="caption">
+              <strong>361</strong>
+              <em>Breathing underwater</em>
+            </span>
+          </a>
+        </article>
+      </section>
+
+      <section id="immersive" class="statement reveal">
+        <h2>
+          我的实践来自运动、汽车与美妆等领域的商业项目，参与内容涵盖视觉开发、动态图形、特效模拟、灯光渲染与后期合成。
+          <span>我也持续通过个人实验，探索 3D 与 AI 辅助影像的制作方法。</span>
+        </h2>
+      </section>
+
+      <footer class="home-footer" data-home-footer>
+        <p class="credit">Website built by sphr with Codex</p>
+        <nav class="social-links" aria-label="Social links">
+          <a class="social-link-instagram" href="https://www.instagram.com/fbmarkkk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="/assets/social-instagram.svg" alt="" width="24" height="24">
+          </a>
+          <a class="social-link-xiaohongshu" href="https://xhslink.cn/o/3bJI2GT29qv" target="_blank" rel="noopener noreferrer" aria-label="小红书">
+            <img src="/assets/social-xiaohongshu.svg" alt="" width="36" height="36">
+          </a>
+        </nav>
+      </footer>
+
+    </main>
+
+    <main class="origin-page" data-origin-page hidden>
+      <section class="origin-hero" aria-label="sphr origin">
+        <p class="origin-index">Why Sphr</p>
+        <div class="origin-hero-copy">
+          <h1>
+            <span class="latin">sphr</span> 来自 <span class="latin">Schopenhauer</span>。对我来说，他不只是一个我读过的哲学家。他更像是一个入口——让我第一次意识到，世界可以被用另一种角度观看。通过他，我开始重新理解欲望、痛苦、死亡和艺术。很多原本抽象的东西，变得更近、更重，也更真实。
+          </h1>
+        </div>
+        <figure class="origin-hero-figure">
+          <img src="/assets/origin/schopenhauer-portrait.jpg" alt="Arthur Schopenhauer portrait photograph by J. Schaefer, 1859">
+        </figure>
+      </section>
+    </main>
+
+    <main class="info-page" data-info-page hidden>
+      <section class="info-portal" aria-label="Independent projects">
+        <a class="verse-portal" href="https://verse.sphr.top/" target="_blank" rel="noopener noreferrer" aria-label="打开 Verse，另一个个人项目（新窗口）">
+          <span class="verse-object" aria-hidden="true">
+            <span class="verse-shadow"></span>
+            <span class="verse-cube">
+              <span class="verse-cube-face verse-cube-front"><span>v.</span></span>
+              <span class="verse-cube-face verse-cube-back"></span>
+              <span class="verse-cube-face verse-cube-right"></span>
+              <span class="verse-cube-face verse-cube-left"></span>
+              <span class="verse-cube-face verse-cube-top"></span>
+              <span class="verse-cube-face verse-cube-bottom"></span>
+            </span>
+          </span>
+          <span class="verse-label">
+            <span class="verse-name">Verse <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg></span>
+            <span class="verse-address">verse.sphr.top</span>
+          </span>
+        </a>
+      </section>
+    </main>
+
+    <main class="admin-page" data-admin-page hidden><p class="editor-loading">正在载入作品编辑器…</p></main>
+
+    <main class="project-page" data-project-page hidden>
+      <section class="project-hero" aria-label="Project motion preview">
+        <div class="project-visual" data-project-visual>
+          <img src="/assets/head2.png" alt="" data-project-image>
+          <div class="scanlines"></div>
+        </div>
+        <a class="project-scroll" href="#project-story" aria-label="Scroll to project story"></a>
+      </section>
+
+      <section id="project-story" class="project-story">
+        <h1>
+          <span data-project-title>Project Title</span>
+          <em data-project-service>Project Type</em>
+        </h1>
+        <div class="project-copy">
+          <p data-project-copy>
+            A focused project story about the approach, production logic and
+            visual system.
+          </p>
+          <p data-project-secondary>
+            The visual direction moves from fast experiments into a precise
+            system: composition, material, motion rhythm and interface behavior
+            are tested before the final experience is assembled.
+          </p>
+        </div>
+        <div class="project-video iframe-wrapper standard-play">
+          <iframe
+            title="vimeo-player"
+            data-project-video
+            src="about:blank"
+            width="640"
+            height="360"
+            frameborder="0"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"></iframe>
+        </div>
+      </section>
+
+      <section class="project-custom-blocks" data-project-blocks hidden></section>
+
+      <nav class="project-return" aria-label="Project navigation">
+        <a href="/">回到主页</a>
+      </nav>
+
+    </main>
+
+    <section class="route-status" data-route-status hidden aria-live="polite" aria-label="作品加载状态">
+      <p data-route-status-message>正在加载作品…</p>
+      <button type="button" data-route-retry hidden>重新加载</button>
+      <a href="/">回到主页</a>
+    </section>
+
+    <script id="startup-guard">
+      (function () {
+        var state = window.__sphrStartup = { version: '20261030-independent-routes', stage: 'html-ready', errors: [], warnings: [], fallback: false };
+        function record(message, source, optional) {
+          var bucket = optional ? state.warnings : state.errors;
+          if (bucket.length >= 6) return;
+          bucket.push({ message: String(message || 'Unknown script error').slice(0, 240), source: source || '' });
+        }
+        window.addEventListener('error', function (event) {
+          var target = event.target;
+          if (target && target.tagName === 'SCRIPT') {
+            var src = target.src || '';
+            var external = src && src.indexOf(location.origin + '/') !== 0;
+            record('Script resource failed', external ? src.split('/')[2] : (target.getAttribute('src') || '').split('?')[0], external);
+          } else if (event.message) {
+            var externalError = event.filename && event.filename.indexOf(location.origin + '/') !== 0;
+            record(event.message, externalError ? 'third-party' : event.filename ? event.filename.slice(location.origin.length).split('?')[0] : '', externalError);
+          }
+        }, true);
+        window.addEventListener('unhandledrejection', function (event) {
+          record(event.reason && event.reason.message ? event.reason.message : event.reason);
+        });
+        setTimeout(function () {
+          if (document.body.classList.contains('loaded')) return;
+          state.fallback = true;
+          document.body.classList.add('loaded');
+          var reveals = document.querySelectorAll('[data-home-page] .reveal');
+          for (var index = 0; index < reveals.length; index++) reveals[index].classList.add('visible');
+          var covers = document.querySelectorAll('.work-grid .thumb');
+          for (var cover = 0; cover < covers.length; cover++) covers[cover].classList.add('is-cover-ready');
+        }, 8000);
+      }());
+    </script>
+    <script type="module" src="/js/main.js?v=20261030-independent-routes"></script>
+  </body>
+</html>

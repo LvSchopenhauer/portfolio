@@ -20,6 +20,8 @@ Cloudflare deploys this portfolio as a static site. Do not rely on `server.js` o
 
 Before pushing:
 
+- Edit homepage structure in `templates/index.html`, styles in `css/`, and scripts in `js/`. Run `node scripts/build-site.cjs`; generated `index.html` embeds the same CSS and startup modules. The push helper runs this build automatically and stops on build errors.
+
 - Check tracked files over Cloudflare's 25MB asset limit:
 
 ```cmd
@@ -28,7 +30,7 @@ git ls-files | powershell -NoProfile -Command "ForEach-Object { Get-Item $_ } | 
 
 - Large local source assets should stay ignored through `.gitignore` and `.assetsignore`.
 - Project content must work from static `data/*.json` files when `/api/projects` returns the static HTML fallback.
-- If `js/main.js` changes production data-loading behavior, bump the script query string in `index.html` so browsers do not keep an old cached script.
+- Rebuild after startup code or stylesheet changes so the generated HTML contains their current contents. The production homepage no longer depends on separate critical CSS or startup-script requests. Lazy editor modules still require their usual cache version when changed.
 
 After pushing:
 

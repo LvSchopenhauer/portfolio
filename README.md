@@ -19,12 +19,16 @@ http://127.0.0.1:4176
 
 Use the local [project editor](http://127.0.0.1:4173/admin) for project copy, hero media and content blocks. Start with `start-local.cmd`; see [EDITOR.md](EDITOR.md) for drafts, revision history, recovery and verification.
 
-- Brand/title: `index.html`
-- Project names and descriptions: `index.html` and `js/main.js`
-- Email/social links: `index.html`
+- Homepage HTML source: `templates/index.html`
+- Project names and descriptions: `templates/index.html` and `js/main.js`
+- Email/social links: `templates/index.html`
 - Hero image: `assets/hero.png`
 - Project cover sheet: `assets/project-sheet.png`
 - Visual system and responsive layout: `css/styles.css`
+
+After editing HTML, CSS or startup JavaScript, run `node scripts/build-site.cjs` to refresh the generated `index.html` and diagnostic comparison page. The local launcher and Git push helper do this automatically. Production embeds the same styles and startup modules into the homepage to avoid additional blocking requests. Project JSON and editor saves do not require rebuilding.
+
+Homepage covers use lossless WebP derivatives, verified against the visible original pixels; the originals remain available for project pages. Cover requests start near the viewport, and the existing video begins after its poster has had a chance to load. If autoplay is rejected, a play button provides a user-initiated fallback.
 
 ## Production
 

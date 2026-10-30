@@ -125,7 +125,7 @@ API 和静态项目 JSON 保持 no-store。本地传输层按 Accept-Encoding �
 
 ## Invariants
 
-1. 前台必须能在没有本地 API 的静态环境下读取项目 JSON；公开部署不能依赖 Node 写入能力。
+1. 前台必须能在没有本地 API 的静态环境下读取项目 JSON；公开部署不能依赖 Node 写入能力。首页源码为 templates/index.html；build-site.cjs 将当前两份 CSS 和三个启动模块内联到生成的 index.html。启动与推送辅助脚本会先构建，JSON 保存无需重建。首页封面为可见像素校验一致的无损 WebP，接近视口时请求；头部优先加载静帧，再启动原视频。
 2. 编辑服务保持回环绑定、Host 校验与跨来源 POST 拒绝；不能把当前模型直接扩成互联网多人 CMS。其检查不等于已实现用户身份认证。
 3. 写入 slug 固定白名单。静态公开目录限 assets/css/js/data 和 index.html；server.js、scripts、启动脚本与点路径不公开，检查包含大小写、Windows 尾随空格/点及冒号变体。前端 js 目录属于网站资源。公开部署还需要独立的产物边界，不能依赖 Node 的拒绝规则。
 4. 保存需要匹配 ETag，先备份后替换；浏览器草稿、磁盘当前版本、历史版本与线上发布是四种不同状态。

@@ -19,7 +19,9 @@
 
 ## Interface
 
-首屏阻塞对照实验：`node scripts/build-startup-comparison.cjs` 从当前 index.html、两份公开 CSS 及三个启动模块生成 `assets/startup-comparison.html`。该入口内联同一份代码和样式，保留原布局及延迟载入的编辑器，不另外请求首屏 CSS/启动模块；媒体和项目数据仍使用原地址。它是 noindex 的独立诊断快照，重建后才包含后续源码修改，不替代正式入口，也不能在手机实测前视为修复结论。
+首屏阻塞对照实验经手机确认能显示内容后，单文件启动方式已用于正式首页。`node scripts/build-site.cjs` 从 templates/index.html、两份公开 CSS 及三个启动模块生成正式 index.html 和 noindex 的 assets/startup-comparison.html。两者内联相同源码，编辑器仍延迟载入；修改模板、CSS 或 JS 后需重建，启动/推送辅助脚本会自动执行。它降低关键请求阻塞风险，不代表手机大媒体传输问题已经解决。
+
+首页媒体补充：封面使用无损 WebP 副本，前两张只去掉固定 16:9 展示中不可见的上下画布，其余尺寸保持不变；已逐张校验可见解码像素一致。coverObserver 在接近视口 200px 时分配背景图片请求，既有裁切和缩放动效不变。原视频未重编码，已有 moov 前置；启动前先等待 poster 的 load/error 或最多 6 秒，离开首页时不启动待定播放。自动播放拒绝时显示原生点击播放入口，playing 后隐藏。
 
 ### 前台入口与路由
 

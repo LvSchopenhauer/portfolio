@@ -46,6 +46,7 @@ function guardFixture(loaded = false) {
   const script = html.match(/<script id="startup-guard">([\s\S]*?)<\/script>/)[1];
   const classes = new Set(loaded ? ['loaded'] : []);
   const revealed = [];
+  const covers = [];
   const handlers = {};
   let timeout;
   const window = { addEventListener: (name, fn) => { handlers[name] = fn; } };
@@ -54,11 +55,11 @@ function guardFixture(loaded = false) {
     location: { origin: 'https://sphr.top' },
     document: {
       body: { classList: { contains: name => classes.has(name), add: name => classes.add(name) } },
-      querySelectorAll: () => [0, 1].map(index => ({ classList: { add: name => revealed.push([index, name]) } }))
+      querySelectorAll: selector => [0, 1].map(index => ({ classList: { add: name => (selector.includes('.thumb') ? covers : revealed).push([index, name]) } }))
     },
     setTimeout: (fn, ms) => { assert.equal(ms, 8000); timeout = fn; }
   });
-  return { window, classes, revealed, handlers, timeout };
+  return { window, classes, revealed, covers, handlers, timeout };
 }
 
 test('failed or stalled module cannot keep static homepage content invisible', () => {
@@ -67,6 +68,7 @@ test('failed or stalled module cannot keep static homepage content invisible', (
   assert.ok(fixture.classes.has('loaded'));
   assert.equal(fixture.window.__sphrStartup.fallback, true);
   assert.deepEqual(fixture.revealed, [[0, 'visible'], [1, 'visible']]);
+  assert.deepEqual(fixture.covers, [[0, 'is-cover-ready'], [1, 'is-cover-ready']]);
 });
 
 test('successful startup retains normal reveal effects without triggering fallback', () => {

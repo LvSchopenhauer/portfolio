@@ -18,6 +18,9 @@ if (-not $remote) {
   throw "Cannot determine origin remote"
 }
 
+node scripts/build-site.cjs
+if ($LASTEXITCODE -ne 0) { throw "Homepage build failed; no commit or push was attempted." }
+
 $status = git status --porcelain
 if (-not $status) {
   Write-Host "No local changes to push on $branch"

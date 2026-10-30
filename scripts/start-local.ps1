@@ -35,6 +35,9 @@ if (-not (Test-Path $Node)) {
   $Node = $nodeCommand.Source
 }
 
+& $Node (Join-Path $Root "scripts/build-site.cjs")
+if ($LASTEXITCODE -ne 0) { throw "Homepage build failed; local server was not changed." }
+
 if (Test-LocalServer -Port $Port) {
   Write-Host "Already running at http://127.0.0.1:$Port/"
   exit 0

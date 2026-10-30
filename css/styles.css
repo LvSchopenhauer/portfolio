@@ -863,6 +863,26 @@ body.info-active .brand::after {
   pointer-events: none;
 }
 
+.hero-play:not([hidden]) {
+  position: absolute;
+  left: 4vw;
+  bottom: 24px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #ffffff80;
+  border-radius: 50%;
+  color: #fff;
+  background: #0006;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.hero-play svg { width: 22px; height: 22px; fill: currentColor; }
+.hero-play:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
 .scanlines {
   position: absolute;
   inset: 0;
@@ -975,16 +995,17 @@ main,
   will-change: transform;
 }
 
-.cover-1 { background-image: url("../assets/covers/cover_1.png"); background-position: 50% 50%; }
-.cover-2 { background-image: url("../assets/covers/cover_2.png"); background-position: 50% 50%; }
-.cover-3 { background-image: url("../assets/covers/cover_3.png"); background-position: 52% 50%; }
-.cover-4 { background-image: url("../assets/covers/cover_4.png"); background-position: 50% 48%; }
-.cover-5 { background-image: url("../assets/covers/cover_5.png"); background-position: 48% 50%; }
+.cover-1 { --cover-image: url("../assets/covers/cover_1.home.webp"); background-position: 50% 50%; }
+.cover-2 { --cover-image: url("../assets/covers/cover_2.home.webp"); background-position: 50% 50%; }
+.cover-3 { --cover-image: url("../assets/covers/cover_3.home.webp"); background-position: 52% 50%; }
+.cover-4 { --cover-image: url("../assets/covers/cover_4.home.webp"); background-position: 50% 48%; }
+.cover-5 { --cover-image: url("../assets/covers/cover_5.home.webp"); background-position: 48% 50%; }
 .cover-6 {
-  background-image: url("../assets/covers/cover_6.png");
+  --cover-image: url("../assets/covers/cover_6.home.webp");
   background-size: calc(100% * 1094 / 1074) auto;
   background-position: right center;
 }
+.thumb.is-cover-ready { background-image: var(--cover-image); }
 
 .project-card a::after {
   content: "";
