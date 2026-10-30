@@ -17,6 +17,8 @@ http://127.0.0.1:4176
 
 ## Edit Your Content
 
+Use the local [project editor](http://127.0.0.1:4173/admin) for project copy, hero media and content blocks. Start with `start-local.cmd`; see [EDITOR.md](EDITOR.md) for drafts, revision history, recovery and verification.
+
 - Brand/title: `index.html`
 - Project names and descriptions: `index.html` and `js/main.js`
 - Email/social links: `index.html`
@@ -24,6 +26,6 @@ http://127.0.0.1:4176
 - Project cover sheet: `assets/project-sheet.png`
 - Visual system and responsive layout: `css/styles.css`
 
-## GitHub Pages
+## Production
 
-This project is a static site and works with branch-based GitHub Pages deployment. The red status icon shown beside a commit can come from an older workflow/check and does not necessarily mean the current Pages deployment failed. Check the repository's Deployments panel for the `github-pages` result.
+The production site is https://sphr.top/. Push `main` to `LvSchopenhauer/portfolio` to trigger the existing Cloudflare Pages deployment. Production serves static project JSON; the editor's writable API runs locally. See [GITHUB_PUSH.md](GITHUB_PUSH.md) for release checks. Local archives and QA evidence in `outputs/` are excluded from Git and deployment.

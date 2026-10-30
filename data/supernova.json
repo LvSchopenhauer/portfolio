@@ -1,9 +1,9 @@
 {
   "client": "Adidas",
   "title": "Supernova 2024",
-  "copy": "本作品是一支结合实拍、CG 与 UI 包装的产品 Campaign Film。项目围绕 SUPERNOVA PILOT RISE 2 的第二代升级展开，以 DREAMSTRIKE+ Super Foam 中底科技为核心，将长距离舒适、云感柔软、能量回弹与稳定支撑这些产品卖点，转译为具有运动感和科技感的视觉系统。",
-  "secondary": "相比单纯展示鞋子，影片更关注如何通过真实跑步场景、CG 性能可视化与 UI 信息包装，让观众直观感受到“柔软但有响应”的跑步体验。",
-  "image": "http://localhost:4173/assets/covers/cover_2.png",
+  "copy": "这是一支结合实拍、CG 与动态图形的 adidas Supernova 产品宣传影像。影片围绕跑鞋的缓震、回弹与稳定支撑展开，通过材质形变、粒子与结构动画，将产品科技转化为直观的视觉表达，并与真实跑步场景衔接。",
+  "secondary": "",
+  "image": "/assets/covers/cover_2.png",
   "blocks": [
     {
       "id": "1779707531884-4e91cb1bd135f",
@@ -13,27 +13,113 @@
       "fontSize": 24,
       "fontWeight": 400,
       "layout": "full",
-      "ratio": "auto"
+      "ratio": "auto",
+      "alt": "",
+      "caption": ""
     },
     {
       "id": "1779708049078-9aeae7c54d9368",
       "type": "text",
-      "content": "Translating Performance\ninto Motion",
+      "content": "CG Production\n& Compositing",
       "size": 100,
       "fontSize": 30,
       "fontWeight": 400,
       "layout": "full",
-      "ratio": "16 / 9"
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "typography": {
+        "fontSize": 40,
+        "cnWeight": 300,
+        "enWeight": 100,
+        "lineHeight": 115,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
     },
     {
       "id": "1779708057882-0b7e4b61afd908",
       "type": "text",
-      "content": "项目通过实拍、CG 与 Motion UI 的结合，呈现 SUPERNOVA PILOT RISE 2 在长距离舒适、缓震回弹和稳定支撑方面的产品特征。\n\nCG 部分使用柔体模拟表现鞋底材料受力时的传导、形变与贴合关系，并通过粒子模拟可视化跑鞋对人体运动的支撑作用。Motion UI 则基于 Brief 中的科技表达需求，以实验室感的信息图形强化产品卖点的清晰度与可信度。\n\n在最终呈现中，CG 与实拍段落通过镜头运动、视角关系和剪辑节奏进行匹配，使真实运动画面与产品性能可视化之间形成连续的观看体验。",
+      "content": "我参与了本片主要 CG 制作，工作涉及部分场景搭建、动画与镜头动画、粒子及柔体模拟、灯光材质、渲染和后期合成。制作中，我关注形变、材质与运动节奏的配合，并结合实拍段落调整 CG 的镜头运动并匹配画面，让产品细节与抽象视觉形成连贯的观看体验。",
       "size": 100,
       "fontSize": 15,
       "fontWeight": 300,
       "layout": "full",
-      "ratio": "16 / 9"
+      "ratio": "16 / 9",
+      "alt": "",
+      "caption": "",
+      "typography": {
+        "fontSize": 18,
+        "cnWeight": 300,
+        "enWeight": 100,
+        "lineHeight": 150,
+        "lineHeightUnit": "%",
+        "letterSpacing": 0.2,
+        "letterSpacingUnit": "px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "04fec523-b840-4ced-b109-d924e3de29d8",
+      "type": "image",
+      "content": "/assets/uploads/1793254798466-074c786aa263e8-861f47224722895.68106c14a2255.gif",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "half",
+      "ratio": "auto",
+      "alt": "",
+      "caption": "",
+      "spacingAfter": 28
+    },
+    {
+      "id": "9c72dce1-7d2f-44fb-a8e3-7a6b6f9b8c62",
+      "type": "image",
+      "content": "/assets/uploads/1793254826770-8ecb44d791651-683604224722895.68106c14a3b1a.gif",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "half",
+      "ratio": "auto",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "id": "2567c3ec-4686-4f65-b937-272e95db6e19",
+      "type": "image",
+      "content": "/assets/uploads/1793254843314-f3c984f49df95-ae5156224722895.68106c14a2ab5.gif",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto",
+      "alt": "",
+      "caption": ""
     }
-  ]
+  ],
+  "video": "https://player.vimeo.com/video/1078557961?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
+  "typography": {
+    "copy": {
+      "fontSize": 18,
+      "cnWeight": 300,
+      "enWeight": 100,
+      "lineHeight": 150,
+      "lineHeightUnit": "%",
+      "letterSpacing": 0.2,
+      "letterSpacingUnit": "px",
+      "align": "center"
+    },
+    "secondary": {
+      "fontSize": 18,
+      "cnWeight": 300,
+      "enWeight": 100,
+      "lineHeight": 150,
+      "lineHeightUnit": "%",
+      "letterSpacing": 0.2,
+      "letterSpacingUnit": "px",
+      "align": "center"
+    }
+  }
 }

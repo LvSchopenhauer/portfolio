@@ -1,5 +1,6 @@
 param(
-  [int]$Port = 4173
+  [int]$Port = 4173,
+  [switch]$Watch
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,7 +16,7 @@ function Test-LocalServer {
 
   try {
     $response = Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:$Port/" -TimeoutSec 2
-    return $response.StatusCode -ge 200 -and $response.StatusCode -lt 500
+    return $response.StatusCode -eq 200 -and $response.Headers["X-Portfolio-Server"] -eq "sphr-portfolio"
   } catch {
     return $false
   }
@@ -39,12 +40,23 @@ if (Test-LocalServer -Port $Port) {
   exit 0
 }
 
+# A responding port is not necessarily this portfolio. Never reuse another project.
+try {
+  $PortResponse = Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:$Port/" -TimeoutSec 2
+} catch {
+  $PortResponse = $_.Exception.Response
+}
+if ($PortResponse) {
+  throw "Port $Port is occupied by another service. Stop that specific service or choose another port; it was not reused."
+}
+
 [Environment]::SetEnvironmentVariable("PATH", $null, "Process")
 [Environment]::SetEnvironmentVariable("Path", "C:\Program Files\nodejs;C:\Windows\System32;C:\Windows", "Process")
 
+$ServerArguments = if ($Watch) { @("--watch", "--watch-preserve-output", $Server, $Port) } else { @($Server, $Port) }
 $process = Start-Process `
   -FilePath $Node `
-  -ArgumentList @($Server, $Port) `
+  -ArgumentList $ServerArguments `
   -WorkingDirectory $Root `
   -RedirectStandardOutput $StdoutLog `
   -RedirectStandardError $StderrLog `
@@ -54,7 +66,7 @@ $process = Start-Process `
 for ($attempt = 0; $attempt -lt 20; $attempt++) {
   Start-Sleep -Milliseconds 250
   if (Test-LocalServer -Port $Port) {
-    Write-Host "Started http://127.0.0.1:$Port/ pid=$($process.Id)"
+    Write-Host "Started http://127.0.0.1:$Port/ pid=$($process.Id) watch=$Watch"
     exit 0
   }
 }

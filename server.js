@@ -2,12 +2,16 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
+const { createProjectStore } = require("./scripts/project-store.cjs");
+const { sendBuffer, sendFile } = require("./scripts/http-delivery.cjs");
 
 const root = __dirname;
 const port = Number(process.env.PORT || process.argv[2] || 4173);
-const editableProjectDir = path.join(root, "data");
+const storageRoot = process.env.PORTFOLIO_STORAGE_DIR || root;
+const editableProjectDir = path.join(storageRoot, "data");
+const projectStore = createProjectStore({ dataDir: editableProjectDir, historyDir: path.join(storageRoot, ".local-history", "projects") });
 const projectSlugs = new Set(["eqlz", "supernova", "kolon", "auto", "helena", "361"]);
-const uploadDir = path.join(root, "assets", "uploads");
+const uploadDir = path.join(storageRoot, "assets", "uploads");
 const maxVideoBytes = 25 * 1024 * 1024;
 const maxImageBytes = 120 * 1024 * 1024;
 const ffmpegPath = path.join(root, ".tools", "ffmpeg-npm", "node_modules", "ffmpeg-static", "ffmpeg.exe");
@@ -19,14 +23,17 @@ const types = {
   ".gif": "image/gif",
   ".mp4": "video/mp4",
   ".webm": "video/webm",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
+  ".json": "application/json; charset=utf-8",
+  ".woff2": "font/woff2",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".svg": "image/svg+xml"
 };
 
 function sendJson(res, status, payload) {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
-  res.end(JSON.stringify(payload));
+  sendBuffer(res.req, res, JSON.stringify(payload), { status, type: "application/json; charset=utf-8" }).catch(() => res.destroy());
 }
 
 function readBody(req, callback) {
@@ -144,31 +151,8 @@ function readProjectFile(slug, callback) {
   });
 }
 
-function sanitizeProject(data) {
-  const blocks = Array.isArray(data.blocks) ? data.blocks : [];
-
-  return {
-    client: String(data.client || ""),
-    title: String(data.title || ""),
-    copy: String(data.copy || ""),
-    secondary: String(data.secondary || ""),
-    image: String(data.image || ""),
-    blocks: blocks
-      .filter((block) => block && (block.type === "text" || block.type === "image" || block.type === "video"))
-      .map((block) => ({
-        id: String(block.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`),
-        type: block.type,
-        content: String(block.content || ""),
-        size: Math.min(100, Math.max(50, Number(block.size) || 100)),
-        fontSize: Math.min(72, Math.max(14, Number(block.fontSize) || 24)),
-        fontWeight: Math.min(700, Math.max(300, Number(block.fontWeight) || 400)),
-        layout: (block.type === "image" || block.type === "video") && block.layout === "half" ? "half" : "full",
-        ratio: String(block.ratio || "16 / 9")
-      }))
-  };
-}
-
-http.createServer((req, res) => {
+http.createServer(async (req, res) => {
+  res.setHeader("X-Portfolio-Server", "sphr-portfolio");
   let urlPath;
 
   try {
@@ -176,6 +160,32 @@ http.createServer((req, res) => {
   } catch {
     res.writeHead(400);
     res.end("Bad request");
+    return;
+  }
+
+  // The editor is a loopback-only tool. Reject cross-origin mutations and private-file reads.
+  const host = String(req.headers.host || "");
+  if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) {
+    sendJson(res, 403, { error: "Local access only" }); return;
+  }
+  if (req.method === "POST" && req.headers.origin && req.headers.origin !== `http://${host}`) {
+    sendJson(res, 403, { error: "Cross-origin writes are not allowed" }); return;
+  }
+  if (req.method === "POST" && req.headers["sec-fetch-site"] === "cross-site") {
+    sendJson(res, 403, { error: "Cross-site writes are not allowed" }); return;
+  }
+  const urlSegments = urlPath.replace(/\\/g, '/').split('/');
+  const normalizedUrlPath = urlSegments.map(segment => segment.replace(/[ .]+$/g, '').toLowerCase()).join('/');
+  if (urlSegments.some(segment => segment.startsWith('.') || segment.includes(':')) || /^(?:\/server\.js|\/scripts(?:\/|$)|\/dev-server)/.test(normalizedUrlPath) || /\.(?:cmd|ps1|cjs)$/.test(normalizedUrlPath)) {
+    res.writeHead(403); res.end("Forbidden"); return;
+  }
+  if (req.method === "GET" && urlPath === "/api/editor") {
+    sendJson(res, 200, { writable: true, historyLimit: 50 }); return;
+  }
+  const historyMatch = urlPath.match(/^\/api\/projects\/([^/]+)\/history(?:\/([^/]+))?$/);
+  if (req.method === "GET" && historyMatch) {
+    try { sendJson(res, 200, historyMatch[2] ? await projectStore.history(historyMatch[1], historyMatch[2]) : await projectStore.list(historyMatch[1])); }
+    catch (error) { sendJson(res, error.status || 500, { error: error.status ? error.message : "读取历史版本失败。" }); }
     return;
   }
 
@@ -249,7 +259,7 @@ http.createServer((req, res) => {
       const originalName = safeUploadName(req.headers["x-file-name"]);
       const extension = path.extname(originalName).toLowerCase();
       const contentType = String(req.headers["content-type"] || "");
-      const allowedTypes = new Set([".gif"]);
+      const allowedTypes = new Set([".gif", ".png", ".jpg", ".jpeg", ".webp", ".avif"]);
 
       if (!allowedTypes.has(extension) || !contentType.startsWith("image/")) {
         sendJson(res, 400, { error: "Unsupported image type" });
@@ -299,9 +309,8 @@ http.createServer((req, res) => {
       return;
     }
 
-    readProjectFile(slug, (err, data) => {
-      sendJson(res, err ? 500 : 200, err ? { error: "Read failed" } : data);
-    });
+    try { const project = await projectStore.read(slug); res.setHeader("ETag", project.revision); sendJson(res, 200, project.data); }
+    catch (error) { sendJson(res, error.status || 500, { error: error.status ? error.message : "读取失败。" }); }
     return;
   }
 
@@ -312,26 +321,18 @@ http.createServer((req, res) => {
       return;
     }
 
-    readBody(req, (err, body) => {
+    readBody(req, async (err, body) => {
       if (err) {
         sendJson(res, 400, { error: "Bad request" });
         return;
       }
 
       try {
-        const project = sanitizeProject(JSON.parse(body));
-        fs.mkdir(editableProjectDir, { recursive: true }, (mkdirErr) => {
-          if (mkdirErr) {
-            sendJson(res, 500, { error: "Write failed" });
-            return;
-          }
-
-          fs.writeFile(getProjectFile(slug), `${JSON.stringify(project, null, 2)}\n`, "utf8", (writeErr) => {
-            sendJson(res, writeErr ? 500 : 200, writeErr ? { error: "Write failed" } : project);
-          });
-        });
-      } catch {
-        sendJson(res, 400, { error: "Invalid JSON" });
+        const project = await projectStore.save(slug, JSON.parse(body), req.headers["if-match"]);
+        res.setHeader("ETag", project.revision);
+        sendJson(res, 200, project.data);
+      } catch (error) {
+        sendJson(res, error.status || (error instanceof SyntaxError ? 400 : 500), { error: error.status ? error.message : "保存失败，原文件和草稿已保留。" });
       }
     });
     return;
@@ -343,10 +344,20 @@ http.createServer((req, res) => {
     return;
   }
 
+  // Serve only website resources. Root source/docs cannot become public through Windows aliases.
+  if (!/^\/(?:assets|css|js|data)\//.test(normalizedUrlPath) && !['/', '/index.html'].includes(normalizedUrlPath)) {
+    if (path.extname(urlPath)) { res.writeHead(403); res.end('Forbidden'); return; }
+    try { await sendFile(req, res, path.join(root, 'index.html'), types['.html']); }
+    catch { res.writeHead(500); res.end('Server error'); }
+    return;
+  }
+
   const safePath = path.normalize(urlPath).replace(/^([/\\])+/, "").replace(/^(\.\.[/\\])+/, "");
-  const filePath = path.resolve(root, safePath === "" ? "index.html" : safePath);
+  const filePath = storageRoot !== root && safePath.startsWith(path.join("assets", "uploads") + path.sep)
+    ? path.resolve(storageRoot, safePath)
+    : path.resolve(root, safePath === "" ? "index.html" : safePath);
   const relativePath = path.relative(root, filePath);
-  const insideRoot = relativePath === "" || (!relativePath.startsWith("..") && !path.isAbsolute(relativePath));
+  const insideRoot = relativePath === "" || (!relativePath.startsWith("..") && !path.isAbsolute(relativePath)) || (storageRoot !== root && filePath.startsWith(path.join(storageRoot, "assets", "uploads") + path.sep));
 
   if (!insideRoot) {
     res.writeHead(403);
@@ -354,29 +365,18 @@ http.createServer((req, res) => {
     return;
   }
 
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      if (path.extname(filePath) === "") {
-        fs.readFile(path.join(root, "index.html"), (fallbackErr, fallbackData) => {
-          if (fallbackErr) {
-            res.writeHead(500);
-            res.end("Server error");
-            return;
-          }
-
-          res.writeHead(200, { "Content-Type": types[".html"] });
-          res.end(fallbackData);
-        });
-        return;
-      }
-
-      res.writeHead(404);
-      res.end("Not found");
+  try {
+    await sendFile(req, res, filePath, types[path.extname(filePath).toLowerCase()] || "application/octet-stream");
+  } catch (error) {
+    if (res.headersSent || res.destroyed) { res.destroy(); return; }
+    if (['ENOENT', 'ENOTDIR', 'EISDIR'].includes(error.code) && path.extname(filePath) === "") {
+      try { await sendFile(req, res, path.join(root, 'index.html'), types['.html']); }
+      catch { res.writeHead(500); res.end('Server error'); }
       return;
     }
-    res.writeHead(200, { "Content-Type": types[path.extname(filePath)] || "application/octet-stream" });
-    res.end(data);
-  });
+    res.writeHead(['ENOENT', 'ENOTDIR', 'EISDIR'].includes(error.code) ? 404 : 500);
+    res.end(error.code === 'ENOENT' ? 'Not found' : 'Server error');
+  }
 }).listen(port, "127.0.0.1", () => {
   console.log(`Portfolio server running at http://127.0.0.1:${port}`);
 });

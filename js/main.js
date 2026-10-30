@@ -1,3 +1,6 @@
+import { renderTypography } from './typography.js';
+import { blockRowSpacing, normalizeBlockSpacing } from './block-spacing.js';
+
 const header = document.querySelector("[data-header]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
@@ -21,33 +24,6 @@ const projectCopy = document.querySelector("[data-project-copy]");
 const projectSecondary = document.querySelector("[data-project-secondary]");
 const projectVideo = document.querySelector("[data-project-video]");
 const projectBlocks = document.querySelector("[data-project-blocks]");
-const adminForm = document.querySelector("[data-admin-form]");
-const adminClient = document.querySelector("[data-admin-client]");
-const adminTitle = document.querySelector("[data-admin-title]");
-const adminCopy = document.querySelector("[data-admin-copy]");
-const adminSecondary = document.querySelector("[data-admin-secondary]");
-const adminImage = document.querySelector("[data-admin-image]");
-const adminPreview = document.querySelector("[data-admin-preview]");
-const adminHeroTrigger = document.querySelector("[data-admin-hero-trigger]");
-const adminLiveClient = document.querySelector("[data-admin-live-client]");
-const adminLiveTitle = document.querySelector("[data-admin-live-title]");
-const adminLiveCopy = document.querySelector("[data-admin-live-copy]");
-const adminLiveSecondary = document.querySelector("[data-admin-live-secondary]");
-const adminCanvas = document.querySelector(".admin-canvas");
-const adminBlockList = document.querySelector("[data-admin-block-list]");
-const adminEditorTitle = document.querySelector("[data-admin-editor-title]");
-const adminProjectTabs = document.querySelector("[data-admin-project-tabs]");
-const adminAddText = document.querySelector("[data-admin-add-text]");
-const adminAddImage = document.querySelector("[data-admin-add-image]");
-const adminAddVideo = document.querySelector("[data-admin-add-video]");
-const adminReset = document.querySelector("[data-admin-reset]");
-const adminStatus = document.querySelector("[data-admin-status]");
-
-let adminBlocks = [];
-let pendingBlockType = null;
-let draggedBlockId = null;
-let placementGhost = null;
-
 const projects = {
   eqlz: {
     title: "Multidimensional",
@@ -68,31 +44,31 @@ const projects = {
     secondary: "The frame keeps the silhouette legible while the reflected terrain adds a sense of movement, depth and outdoor performance without becoming literal."
   },
   kolon: {
-    title: "Replasty",
-    client: "Helena Rubinstein",
+    title: "MOVE ALPHA",
+    client: "KOLON",
     visual: "project-visual-c",
-    image: "/assets/covers/cover_3.png",
-    video: "https://player.vimeo.com/video/1074185659?h=14f6fb727c&title=0&byline=0&portrait=0&badge=0",
-    copy: "A premium beauty still exploring black gloss, soft refraction and luminous product staging.",
-    secondary: "The composition leans on contrast rather than decoration: pale liquid forms, sharp packaging edges and small spark highlights create a clean luxury atmosphere."
+    image: "/assets/projects/kolon/10-board.webp",
+    video: "https://player.vimeo.com/video/1074185659?title=0&byline=0&portrait=0&badge=0",
+    copy: "KOLON MOVE ALPHA 是一支以自然能量为主题的登山鞋 CG 宣传片。影片从鞋款的三种配色出发，构建森林矩阵、沙漠与火山熔岩三个幻想空间，将产品外观与自然环境中的形态、材质和运动相结合，呈现充满想象力的户外世界。",
+    secondary: "我负责沙漠篇大部分镜头的 CG 制作，依据既定分镜完成场景搭建、摄像机动画、特效模拟、灯光材质、渲染及后期合成，并参与箭头标识与微粒交互效果的前期视觉开发。"
   },
   auto: {
-    title: "ID.CODE",
-    client: "Auto China",
+    title: "ID. CODE",
+    client: "Volkswagen",
     visual: "project-visual-d",
     image: "/assets/covers/cover_4.png",
-    video: "https://player.vimeo.com/video/1079755480?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
-    copy: "An abstract frozen system where particles gather into a circular field and dissolve back into depth.",
-    secondary: "The image works as an atmospheric counterpoint to the product-led pieces, adding a colder research note to the homepage rhythm."
+    video: "https://player.vimeo.com/video/1079755480?h=b0377a1ee5&title=0&byline=0&portrait=0&badge=0",
+    copy: "本项目为大众 ID. CODE 概念车在 2024 北京车展的展示制作数字艺术影像。作品以粒子、液体与金属三种视觉语言，呈现材料的流动、形态变化与光泽，并与现场的实体车辆和 LED 展陈空间相结合，形成围绕产品展开的动态视觉体验。",
+    secondary: "我参与了粒子与液体部分的制作，完成其中大部分粒子模拟、动画和摄像机工作，并负责材质、灯光、Redshift 渲染，以及 AE 中的剪辑与合成。摄像机动画依据既定分镜完成。"
   },
   helena: {
     title: "Countdown Gift Box",
     client: "Helena Rubinstein",
     visual: "project-visual-e",
     image: "/assets/covers/cover_5.png",
-    video: "https://player.vimeo.com/video/1079682226?title=0&byline=0&portrait=0&badge=0",
-    copy: "A monochrome performance detail built from water, texture and high-contrast product material.",
-    secondary: "Small droplets and dark negative space give the frame an editorial charge while still keeping the surface detail readable."
+    video: "https://player.vimeo.com/video/1079682226?h=1d4e238bca&title=0&byline=0&portrait=0&badge=0",
+    copy: "这是为赫莲娜限量倒数礼盒制作的节日宣传影片。画面以白色层叠形态、金色流体与黑金礼盒构成视觉基调，通过蜡烛、护肤产品和礼盒展开的镜头，呈现节日礼赠的仪式感。",
+    secondary: "我负责片中的金属流体与蜡烛火焰 Pyro 模拟，并依据既定分镜完成礼盒展开动画、Hero 镜头的布置和渲染。主要制作工具为 Houdini、Redshift 与 After Effects。"
   },
   361: {
     title: "Breathing underwater",
@@ -100,8 +76,8 @@ const projects = {
     visual: "project-visual-f",
     image: "/assets/covers/cover_6.png",
     video: "https://player.vimeo.com/video/1076680357?title=0&byline=0&portrait=0&badge=0",
-    copy: "A nocturnal visual package for a premium launch, balancing black-space composition with sharp metallic highlights.",
-    secondary: "The launch direction leans into black space, reflection and restraint, creating a quiet premium atmosphere around a sharp reveal sequence."
+    copy: "本项目为 361° 第八代防水跑鞋制作数字影像，以“水下呼吸”为视觉概念，将鞋款置于悬浮的水立方中，通过水体包裹与破水亮相的过程，呈现产品兼顾防水与透气的特性。",
+    secondary: "我负责雨滴落在鞋面的相关镜头制作，涵盖雨滴模拟、材质、灯光、渲染与合成。主要使用 Houdini、Redshift 和 After Effects，重点控制雨滴的真实质感，以及落点与溅落节奏。"
   }
 };
 
@@ -109,8 +85,7 @@ const projectSlugs = new Set(Object.keys(projects));
 const appRoutes = new Set(["", "origin", "info", "admin", ...projectSlugs]);
 const editableProjectSlugs = ["eqlz", "supernova", "kolon", "auto", "helena", "361"];
 const editableProjectData = {};
-let activeAdminProjectSlug = editableProjectSlugs[0];
-let lastViewedProjectSlug = activeAdminProjectSlug;
+let lastViewedProjectSlug = editableProjectSlugs[0];
 
 function rememberViewedProject(slug) {
   lastViewedProjectSlug = slug;
@@ -199,166 +174,6 @@ function getProject(slug) {
   return project;
 }
 
-async function saveEditableProject(slug, data) {
-  const response = await fetch(getEditableProjectApi(slug), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-
-  if (!response.ok) throw new Error("Project save failed");
-  editableProjectData[slug] = await response.json();
-  return editableProjectData[slug];
-}
-
-function renderAdminProjectTabs() {
-  if (!adminProjectTabs) return;
-  adminProjectTabs.innerHTML = "";
-
-  editableProjectSlugs.forEach((slug) => {
-    const project = getProject(slug);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.adminProject = slug;
-    button.className = slug === activeAdminProjectSlug ? "active" : "";
-    button.textContent = project.client || projects[slug].client || slug;
-    adminProjectTabs.append(button);
-  });
-}
-
-function populateAdminForm() {
-  if (!adminForm) return;
-  const project = getProject(activeAdminProjectSlug);
-  renderAdminProjectTabs();
-  if (adminEditorTitle) {
-    adminEditorTitle.textContent = `${project.client || projects[activeAdminProjectSlug].client || activeAdminProjectSlug} editor`;
-  }
-  adminClient.value = project.client || "";
-  adminTitle.value = project.title || "";
-  adminCopy.value = project.copy || "";
-  adminSecondary.value = project.secondary || "";
-  if (adminLiveClient) adminLiveClient.textContent = project.client || "";
-  if (adminLiveTitle) adminLiveTitle.textContent = project.title || "";
-  if (adminLiveCopy) adminLiveCopy.textContent = project.copy || "";
-  if (adminLiveSecondary) adminLiveSecondary.textContent = project.secondary || "";
-  if (adminPreview) adminPreview.src = project.image || projects[activeAdminProjectSlug].image;
-  if (adminImage) adminImage.value = "";
-  adminBlocks = Array.isArray(project.blocks) ? project.blocks.map((block) => ({ ...block })) : [];
-  renderAdminBlocks();
-  const viewLink = document.querySelector(".admin-toolbox a[href]");
-  if (viewLink) viewLink.href = `/${activeAdminProjectSlug}`;
-  if (adminStatus) adminStatus.textContent = "";
-}
-
-function syncAdminFieldsFromCanvas() {
-  if (adminLiveClient) adminClient.value = adminLiveClient.textContent.trim();
-  if (adminLiveTitle) adminTitle.value = adminLiveTitle.textContent.trim();
-  if (adminLiveCopy) adminCopy.value = adminLiveCopy.textContent.trim();
-  if (adminLiveSecondary) adminSecondary.value = adminLiveSecondary.textContent.trim();
-}
-
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(reader.result));
-    reader.addEventListener("error", () => reject(reader.error));
-    reader.readAsDataURL(file);
-  });
-}
-
-function loadImageFromFile(file) {
-  return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const image = new Image();
-    image.addEventListener("load", () => {
-      URL.revokeObjectURL(url);
-      resolve(image);
-    });
-    image.addEventListener("error", () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Image load failed"));
-    });
-    image.src = url;
-  });
-}
-
-async function fileToDataUrl(file) {
-  if (!file.type?.startsWith("image/")) return readFileAsDataUrl(file);
-
-  try {
-    const image = await loadImageFromFile(file);
-    const maxEdge = 1800;
-    const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
-    const width = Math.max(1, Math.round(image.naturalWidth * scale));
-    const height = Math.max(1, Math.round(image.naturalHeight * scale));
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const context = canvas.getContext("2d");
-    context.drawImage(image, 0, 0, width, height);
-    return canvas.toDataURL("image/jpeg", 0.82);
-  } catch {
-    return readFileAsDataUrl(file);
-  }
-}
-
-async function uploadImageFile(file) {
-  const response = await fetch("/api/uploads/image", {
-    method: "POST",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-      "X-File-Name": file.name || "image.gif"
-    },
-    body: file
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || "Image upload failed");
-  return data;
-}
-
-function isGifFile(file) {
-  return file.type === "image/gif" || /\.gif$/i.test(file.name || "");
-}
-
-async function prepareImageFile(file) {
-  if (isGifFile(file)) {
-    return (await uploadImageFile(file)).url;
-  }
-
-  return fileToDataUrl(file);
-}
-
-async function prepareMediaBlockFile(block, file) {
-  if (block.type === "video" || isGifFile(file)) {
-    const upload = await uploadVideoFile(file);
-    return {
-      content: upload.url,
-      compressed: upload.compressed,
-      type: "video"
-    };
-  }
-
-  return {
-    content: await prepareImageFile(file),
-    compressed: false,
-    type: "image"
-  };
-}
-
-function createBlock(type) {
-  return {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    type,
-    content: "",
-    size: 100,
-    fontSize: 24,
-    fontWeight: 400,
-    layout: type === "image" || type === "video" ? "full" : "full",
-    ratio: "16 / 9"
-  };
-}
-
 function getMediaLayout(block) {
   if (block.type !== "image" && block.type !== "video") return "full";
   return block.layout === "half" ? "half" : "full";
@@ -396,240 +211,21 @@ function getImageRatio(block) {
   return block.ratio || "16 / 9";
 }
 
-function getRatioOptions(block) {
-  const options = [
-    ["16 / 9", "16:9"],
-    ["4 / 3", "4:3"],
-    ["1 / 1", "1:1"],
-    ["3 / 4", "3:4"],
-    ["9 / 16", "9:16"]
-  ];
-
-  return block.type === "image" ? [["auto", "Original"], ...options] : options;
-}
-
-async function uploadVideoFile(file) {
-  const response = await fetch("/api/uploads/video", {
-    method: "POST",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-      "X-File-Name": file.name || "video.mp4"
-    },
-    body: file
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || "Video upload failed");
-  return data;
-}
-
-function setPendingBlockType(type) {
-  pendingBlockType = type;
-  adminCanvas?.classList.toggle("placing", Boolean(type));
-  adminAddText?.classList.toggle("active", type === "text");
-  adminAddImage?.classList.toggle("active", type === "image");
-  adminAddVideo?.classList.toggle("active", type === "video");
-  placementGhost?.remove();
-  placementGhost = null;
-
-  if (type) {
-    placementGhost = document.createElement("div");
-    placementGhost.className = `admin-placement-ghost ${type}`;
-    placementGhost.textContent = type === "text" ? "Text" : type === "image" ? "Image" : "Video";
-    document.body.append(placementGhost);
-  }
-
-  if (adminStatus) {
-    adminStatus.textContent = type
-      ? `Click the canvas to place a ${type} block.`
-      : "";
-  }
-}
-
-function movePlacementGhost(event) {
-  if (!placementGhost) return;
-  placementGhost.style.transform = `translate(${event.clientX + 14}px, ${event.clientY + 14}px)`;
-}
-
-function getInsertionIndex(clientY) {
-  if (!adminBlockList) return adminBlocks.length;
-  const items = [...adminBlockList.querySelectorAll("[data-block-id]")];
-  const target = items.find((item) => clientY < item.getBoundingClientRect().top + item.offsetHeight / 2);
-  if (!target) return adminBlocks.length;
-  return Math.max(0, adminBlocks.findIndex((block) => block.id === target.dataset.blockId));
-}
-
-function renderAdminBlocks() {
-  if (!adminBlockList) return;
-  adminBlockList.innerHTML = "";
-
-  adminBlocks.forEach((block, index) => {
-    const item = document.createElement("article");
-    item.className = `admin-block ${block.type}`;
-    if ((block.type === "image" || block.type === "video") && getMediaLayout(block) === "full") item.classList.add("wide-image");
-    if (shouldCenterHalfImage(block, index, adminBlocks)) item.classList.add("centered-image");
-    item.dataset.blockId = block.id;
-    item.draggable = true;
-    item.style.setProperty("--block-span", String(getBlockSpan(block)));
-    item.style.setProperty("--block-width", getBlockWidth(block));
-    item.style.setProperty("--text-size", `${getTextFontSize(block)}px`);
-    item.style.setProperty("--text-weight", String(getTextFontWeight(block)));
-    item.style.setProperty("--image-ratio", getImageRatio(block));
-
-    const remove = document.createElement("button");
-    remove.className = "admin-block-remove";
-    remove.type = "button";
-    remove.dataset.blockAction = "remove";
-    remove.setAttribute("aria-label", "Remove block");
-    remove.textContent = "x";
-    item.append(remove);
-
-    if (block.type === "text") {
-      const text = document.createElement("div");
-      text.className = "admin-block-text";
-      text.contentEditable = "true";
-      text.dataset.blockField = "content";
-      text.dataset.placeholder = "Type text here";
-      text.textContent = block.content || "";
-      item.append(text);
-
-      const controls = document.createElement("div");
-      controls.className = "admin-block-controls";
-
-      const sizeLabel = document.createElement("label");
-      sizeLabel.textContent = "Size";
-      const sizeInput = document.createElement("input");
-      sizeInput.type = "number";
-      sizeInput.min = "14";
-      sizeInput.max = "72";
-      sizeInput.step = "1";
-      sizeInput.value = String(getTextFontSize(block));
-      sizeInput.dataset.blockField = "fontSize";
-      sizeLabel.append(sizeInput);
-
-      const weightLabel = document.createElement("label");
-      weightLabel.textContent = "Weight";
-      const weightSelect = document.createElement("select");
-      weightSelect.dataset.blockField = "fontWeight";
-      [300, 400, 500, 700].forEach((weight) => {
-        const option = document.createElement("option");
-        option.value = String(weight);
-        option.textContent = String(weight);
-        option.selected = getTextFontWeight(block) === weight;
-        weightSelect.append(option);
-      });
-      weightLabel.append(weightSelect);
-
-      controls.append(sizeLabel, weightLabel);
-      item.append(controls);
-    }
-
-    if (block.type === "image" || block.type === "video") {
-      const label = document.createElement("label");
-      label.className = "admin-upload";
-      const labelText = document.createElement("span");
-      labelText.textContent = block.type === "image" ? "Image" : "Video";
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = block.type === "image" ? "image/*" : "video/*";
-      input.dataset.blockField = block.type;
-      label.append(labelText, input);
-      item.append(label);
-
-      if (block.type === "image" && block.content) {
-        const image = document.createElement("img");
-        image.src = block.content;
-        image.alt = "";
-        item.append(image);
-      }
-
-      if (block.type === "video" && block.content) {
-        const video = document.createElement("video");
-        video.src = block.content;
-        video.muted = true;
-        video.loop = true;
-        video.autoplay = true;
-        video.playsInline = true;
-        video.controls = true;
-        item.append(video);
-      }
-
-      const layoutLabel = document.createElement("label");
-      layoutLabel.className = "admin-size-control";
-      const layoutText = document.createElement("span");
-      layoutText.textContent = "Layout";
-      const layoutSelect = document.createElement("select");
-      layoutSelect.dataset.blockField = "layout";
-      [
-        ["full", "Full row"],
-        ["half", "Half row"]
-      ].forEach(([value, labelText]) => {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = labelText;
-        option.selected = getMediaLayout(block) === value;
-        layoutSelect.append(option);
-      });
-      layoutLabel.append(layoutText, layoutSelect);
-      item.append(layoutLabel);
-
-      const sizeLabel = document.createElement("label");
-      sizeLabel.className = "admin-size-control";
-      const sizeText = document.createElement("span");
-      sizeText.textContent = "Width";
-      const sizeInput = document.createElement("input");
-      sizeInput.type = "range";
-      sizeInput.min = "50";
-      sizeInput.max = "100";
-      sizeInput.step = "1";
-      sizeInput.value = String(block.size || 50);
-      sizeInput.dataset.blockField = "size";
-      sizeLabel.append(sizeText, sizeInput);
-      item.append(sizeLabel);
-
-      const ratioLabel = document.createElement("label");
-      ratioLabel.className = "admin-size-control";
-      const ratioText = document.createElement("span");
-      ratioText.textContent = "Ratio";
-      const ratioSelect = document.createElement("select");
-      ratioSelect.dataset.blockField = "ratio";
-      getRatioOptions(block).forEach(([value, label]) => {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = label;
-        option.selected = getImageRatio(block) === value;
-        ratioSelect.append(option);
-      });
-      ratioLabel.append(ratioText, ratioSelect);
-      item.append(ratioLabel);
-    }
-
-    adminBlockList.append(item);
-  });
-}
-
-function resetAdminBlockDragging() {
-  adminBlockList?.querySelectorAll("[data-block-id]").forEach((item) => {
-    item.draggable = true;
-  });
-}
-
-function syncAdminBlocksFromDom() {
-  if (!adminBlockList) return;
-  adminBlockList.querySelectorAll("[data-block-id]").forEach((item) => {
-    const block = adminBlocks.find((candidate) => candidate.id === item.dataset.blockId);
-    if (!block) return;
-    const content = item.querySelector("[data-block-field='content']");
-    if (content) block.content = content.textContent.trim();
-  });
-}
-
+let renderedBlocksSnapshot = null;
 function renderProjectBlocks(blocks = []) {
   if (!projectBlocks) return;
+  const snapshot = JSON.stringify(blocks);
+  if (snapshot === renderedBlocksSnapshot) return;
+  renderedBlocksSnapshot = snapshot;
   projectBlocks.innerHTML = "";
 
   const visibleBlocks = blocks.filter((block) => block.content);
   projectBlocks.hidden = visibleBlocks.length === 0;
+  projectBlocks.classList.toggle('has-custom-spacing', visibleBlocks.some(block => normalizeBlockSpacing(block.spacingAfter) !== undefined));
+  const rowSpacing = blockRowSpacing(visibleBlocks.map((block, index) => ({
+    span: shouldCenterHalfImage(block, index, visibleBlocks) ? 2 : getBlockSpan(block), spacingAfter: block.spacingAfter
+  })));
+  const mobileSpacing = blockRowSpacing(visibleBlocks.map(block => ({ span: 2, spacingAfter: block.spacingAfter })));
 
   visibleBlocks.forEach((block, index) => {
     const item = document.createElement("article");
@@ -644,17 +240,25 @@ function renderProjectBlocks(blocks = []) {
     item.style.setProperty("--text-size", `${getTextFontSize(block)}px`);
     item.style.setProperty("--text-weight", String(getTextFontWeight(block)));
     item.style.setProperty("--image-ratio", getImageRatio(block));
+    if (rowSpacing[index].gap !== undefined) item.style.setProperty('--block-gap-after', `${rowSpacing[index].gap}px`);
+    if (mobileSpacing[index].gap !== undefined) item.style.setProperty('--block-gap-after-mobile', `${mobileSpacing[index].gap}px`);
+    item.classList.toggle('has-custom-spacing-after', rowSpacing[index].custom);
+    if (block.type === 'text' && block.textStyle === 'custom') {
+      item.style.fontSize = `clamp(14px, ${getTextFontSize(block) / 12}vw, ${getTextFontSize(block)}px)`;
+      item.style.fontWeight = String(getTextFontWeight(block));
+    }
 
     if (block.type === "text") {
       const paragraph = document.createElement("p");
-      paragraph.textContent = block.content;
       item.append(paragraph);
+      projectBlocks.append(item);
+      renderTypography(paragraph, block.content, block.typography);
     }
 
     if (block.type === "image") {
       const image = document.createElement("img");
       image.src = block.content;
-      image.alt = "";
+      image.alt = block.alt || "";
       item.append(image);
     }
 
@@ -662,10 +266,20 @@ function renderProjectBlocks(blocks = []) {
       const video = document.createElement("video");
       video.src = block.content;
       video.muted = true;
-      video.loop = true;
-      video.autoplay = true;
+      video.loop = block.loop !== false;
+      video.autoplay = block.autoplay !== false;
       video.playsInline = true;
+      video.controls = block.controls === true;
+      video.preload = "metadata";
       item.append(video);
+    }
+
+    if (block.caption) {
+      const caption = document.createElement('p');
+      caption.className = 'project-media-caption';
+      caption.textContent = block.caption;
+      item.append(caption);
+      renderTypography(caption, block.caption);
     }
 
     projectBlocks.append(item);
@@ -728,11 +342,10 @@ document.addEventListener("click", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && pendingBlockType) setPendingBlockType(null);
   if (event.key === "Escape") setMenuOpen(false);
 });
 
-window.addEventListener("mousemove", movePlacementGhost);
+
 
 let resizeAnimationFrame = null;
 
@@ -845,258 +458,6 @@ function scrollToProjectStory(event) {
 
 projectScroll?.addEventListener("click", scrollToProjectStory);
 
-adminHeroTrigger?.addEventListener("click", () => {
-  adminImage?.click();
-});
-
-adminImage?.addEventListener("change", async () => {
-  const file = adminImage.files?.[0];
-  if (!file) return;
-
-  try {
-    const image = await prepareImageFile(file);
-    if (adminPreview) adminPreview.src = image;
-    if (adminStatus) adminStatus.textContent = "Image ready. Save to apply it.";
-  } catch {
-    if (adminStatus) adminStatus.textContent = "Could not read that image.";
-  }
-});
-
-[adminLiveClient, adminLiveTitle, adminLiveCopy, adminLiveSecondary].forEach((field) => {
-  field?.addEventListener("input", syncAdminFieldsFromCanvas);
-});
-
-adminAddText?.addEventListener("click", () => {
-  setPendingBlockType(pendingBlockType === "text" ? null : "text");
-});
-
-adminAddImage?.addEventListener("click", () => {
-  setPendingBlockType(pendingBlockType === "image" ? null : "image");
-});
-
-adminAddVideo?.addEventListener("click", () => {
-  setPendingBlockType(pendingBlockType === "video" ? null : "video");
-});
-
-adminProjectTabs?.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-admin-project]");
-  if (!button) return;
-  syncAdminBlocksFromDom();
-  activeAdminProjectSlug = button.dataset.adminProject;
-  setPendingBlockType(null);
-  populateAdminForm();
-});
-
-adminCanvas?.addEventListener("click", (event) => {
-  if (!pendingBlockType) return;
-  if (event.target.closest("button, input")) return;
-
-  syncAdminBlocksFromDom();
-  const block = createBlock(pendingBlockType);
-  adminBlocks.splice(getInsertionIndex(event.clientY), 0, block);
-  renderAdminBlocks();
-  setPendingBlockType(null);
-
-  requestAnimationFrame(() => {
-    const item = adminBlockList.querySelector(`[data-block-id="${block.id}"]`);
-    const editable = item?.querySelector("[contenteditable='true']");
-    editable?.focus();
-    item?.querySelector("input[type='file']")?.click();
-  });
-});
-
-adminCanvas?.addEventListener("pointerdown", (event) => {
-  if (pendingBlockType) return;
-  if (event.target.closest("[contenteditable='true'], button, input, label")) return;
-  if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-});
-
-function updateAdminBlockField(event) {
-  const item = event.target.closest("[data-block-id]");
-  if (!item) return;
-  const block = adminBlocks.find((candidate) => candidate.id === item.dataset.blockId);
-  if (!block) return;
-
-    if (event.target.dataset.blockField === "content") block.content = event.target.textContent;
-    if (event.target.dataset.blockField === "size") {
-      block.size = Number(event.target.value);
-      item.style.setProperty("--block-width", getBlockWidth(block));
-    }
-    if (event.target.dataset.blockField === "layout") {
-      block.layout = getMediaLayout({ type: block.type, layout: event.target.value });
-      renderAdminBlocks();
-    }
-    if (event.target.dataset.blockField === "fontSize") {
-      block.fontSize = getTextFontSize({ fontSize: event.target.value });
-      item.style.setProperty("--text-size", `${block.fontSize}px`);
-    }
-    if (event.target.dataset.blockField === "fontWeight") {
-      block.fontWeight = getTextFontWeight({ fontWeight: event.target.value });
-      item.style.setProperty("--text-weight", String(block.fontWeight));
-    }
-    if (event.target.dataset.blockField === "ratio") {
-      block.ratio = event.target.value;
-      item.style.setProperty("--image-ratio", getImageRatio(block));
-    }
-}
-
-adminBlockList?.addEventListener("input", updateAdminBlockField);
-
-adminBlockList?.addEventListener("pointerdown", (event) => {
-  if (!event.target.closest("input, select, button, label")) return;
-  event.stopPropagation();
-  const item = event.target.closest("[data-block-id]");
-  if (item) item.draggable = false;
-});
-
-window.addEventListener("pointerup", resetAdminBlockDragging);
-window.addEventListener("blur", resetAdminBlockDragging);
-
-adminBlockList?.addEventListener("change", async (event) => {
-  updateAdminBlockField(event);
-  if (event.target.dataset.blockField !== "image" && event.target.dataset.blockField !== "video") return;
-  const item = event.target.closest("[data-block-id]");
-  const block = adminBlocks.find((candidate) => candidate.id === item?.dataset.blockId);
-  const file = event.target.files?.[0];
-  if (!block || !file) return;
-
-  try {
-    if (event.target.dataset.blockField === "video" || isGifFile(file)) {
-      if (adminStatus) {
-        adminStatus.textContent = file.size > 25 * 1024 * 1024
-          ? "Converting media to an MP4 under 25MB..."
-          : "Uploading media...";
-      }
-      const media = await prepareMediaBlockFile(block, file);
-      block.type = media.type;
-      block.content = media.content;
-      if (adminStatus) {
-        adminStatus.textContent = media.compressed || isGifFile(file)
-          ? "Media converted below 25MB. Save to apply it."
-          : "Media uploaded. Save to apply it.";
-      }
-    } else {
-      if (adminStatus) {
-        adminStatus.textContent = isGifFile(file)
-          ? "Uploading GIF..."
-          : "Preparing image...";
-      }
-      block.content = await prepareImageFile(file);
-      if (adminStatus) adminStatus.textContent = "Image block ready. Save to apply it.";
-    }
-    renderAdminBlocks();
-  } catch {
-    if (adminStatus) adminStatus.textContent = "Could not process that media block.";
-  }
-});
-
-adminBlockList?.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-block-action]");
-  const item = event.target.closest("[data-block-id]");
-  if (!button || !item) return;
-
-  syncAdminBlocksFromDom();
-  const index = adminBlocks.findIndex((block) => block.id === item.dataset.blockId);
-  if (index < 0) return;
-
-  if (button.dataset.blockAction === "remove") {
-    adminBlocks.splice(index, 1);
-  }
-
-  renderAdminBlocks();
-});
-
-adminBlockList?.addEventListener("dragstart", (event) => {
-  if (event.target.closest("input, select, button, label")) {
-    event.preventDefault();
-    return;
-  }
-  const item = event.target.closest("[data-block-id]");
-  if (!item) return;
-  syncAdminBlocksFromDom();
-  draggedBlockId = item.dataset.blockId;
-  item.classList.add("dragging");
-});
-
-adminBlockList?.addEventListener("dragend", (event) => {
-  event.target.closest("[data-block-id]")?.classList.remove("dragging");
-  draggedBlockId = null;
-});
-
-adminBlockList?.addEventListener("dragover", (event) => {
-  if (!draggedBlockId) return;
-  event.preventDefault();
-  const from = adminBlocks.findIndex((block) => block.id === draggedBlockId);
-  const to = getInsertionIndex(event.clientY);
-  if (from < 0 || to < 0 || from === to) return;
-
-  const [block] = adminBlocks.splice(from, 1);
-  adminBlocks.splice(to > from ? to - 1 : to, 0, block);
-  renderAdminBlocks();
-});
-
-adminForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  syncAdminFieldsFromCanvas();
-  syncAdminBlocksFromDom();
-  const slug = activeAdminProjectSlug;
-  const existing = readEditableProject(slug);
-  let image = adminPreview?.src || existing.image || projects[slug].image;
-
-  if (adminImage?.files?.[0]) {
-    image = await prepareImageFile(adminImage.files[0]);
-  }
-
-  const data = {
-    client: adminClient.value.trim(),
-    title: adminTitle.value.trim(),
-    copy: adminCopy.value.trim(),
-    secondary: adminSecondary.value.trim(),
-    image,
-    blocks: adminBlocks
-      .filter((block) => block.type === "text" || block.type === "image" || block.type === "video")
-      .map((block) => ({
-        id: block.id,
-        type: block.type,
-        content: block.content || "",
-        size: block.size || (block.type === "image" ? 50 : 100),
-        fontSize: getTextFontSize(block),
-        fontWeight: getTextFontWeight(block),
-        layout: getMediaLayout(block),
-        ratio: getImageRatio(block)
-      }))
-  };
-
-  try {
-    await saveEditableProject(slug, data);
-    try {
-      window.localStorage.setItem(getEditableProjectStorageKey(slug), JSON.stringify(data));
-    } catch {
-      // The JSON file is the source of truth; localStorage is only a fallback for static hosting.
-    }
-    populateAdminForm();
-    if (adminStatus) adminStatus.textContent = `Saved to data/${slug}.json. Open /${slug} to preview it.`;
-  } catch {
-    if (adminStatus) {
-      adminStatus.textContent = "Save failed. Restart the local server if this page was already open.";
-    }
-  }
-});
-
-adminReset?.addEventListener("click", async () => {
-  const slug = activeAdminProjectSlug;
-  const defaults = { ...projects[slug], blocks: [] };
-
-  try {
-    await saveEditableProject(slug, defaults);
-    window.localStorage.removeItem(getEditableProjectStorageKey(slug));
-    populateAdminForm();
-    if (adminStatus) adminStatus.textContent = `Reset data/${slug}.json to default content.`;
-  } catch {
-    if (adminStatus) adminStatus.textContent = "Reset failed. Restart the local server and try again.";
-  }
-});
-
 function updateHeader() {
   showRepeatRevealsInsideViewport();
   resetRepeatRevealsAtTop();
@@ -1157,12 +518,16 @@ function showProjectPage(slug) {
   document.body.classList.remove("info-active");
   document.body.classList.remove("admin-active");
   if (projectClient) projectClient.textContent = project.title;
-  projectTitle.textContent = project.client;
-  projectService.textContent = project.title;
-  projectCopy.textContent = project.copy;
-  projectSecondary.textContent = project.secondary;
+  renderTypography(projectTitle, project.client, project.typography?.client);
+  renderTypography(projectService, project.title, project.typography?.title);
+  renderTypography(projectCopy, project.copy, project.typography?.copy);
+  renderTypography(projectSecondary, project.secondary, project.typography?.secondary);
   if (projectImage && project.image) projectImage.src = project.image;
-  if (projectVideo && project.video) projectVideo.src = project.video;
+  if (projectVideo) {
+    const videoSource = project.video || 'about:blank';
+    if (projectVideo.getAttribute('src') !== videoSource) projectVideo.src = videoSource;
+    projectVideo.closest('.project-video').hidden = !project.video;
+  }
   renderProjectBlocks(project.blocks);
   projectVisual.className = `project-visual ${project.visual}`;
   projectVisual.removeAttribute("style");
@@ -1200,6 +565,7 @@ function showOriginPage() {
 
 function showInfoPage() {
   setMenuOpen(false);
+  document.querySelector('.hero video')?.pause();
   homePage.hidden = true;
   if (homeFooter) homeFooter.hidden = true;
   if (originPage) originPage.hidden = true;
@@ -1216,41 +582,30 @@ function showInfoPage() {
   if (projectVideo) projectVideo.src = "about:blank";
   renderProjectBlocks();
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
-  document.title = "sphr";
+  document.title = "Info · sphr";
   window.scrollTo(0, 0);
   updateHeader();
 }
 
 async function showAdminPage() {
-  const recentProjectSlug = getLastViewedProjectSlug();
-  if (editableProjectSlugs.includes(recentProjectSlug)) {
-    activeAdminProjectSlug = recentProjectSlug;
-  }
-  await loadEditableProject();
   setMenuOpen(false);
-  homePage.hidden = true;
-  if (homeFooter) homeFooter.hidden = true;
-  if (originPage) originPage.hidden = true;
-  if (infoPage) infoPage.hidden = true;
-  projectPage.hidden = true;
-  if (adminPage) adminPage.hidden = false;
-  populateAdminForm();
-  document.body.classList.remove("project-active");
-  document.body.classList.remove("origin-active");
-  document.body.classList.remove("info-active");
-  document.body.classList.add("admin-active");
-  projectVisual?.removeAttribute("style");
-  projectHero?.style.removeProperty("--project-overlay-opacity");
-  if (projectScroll) projectScroll.removeAttribute("style");
-  if (projectVideo) projectVideo.src = "about:blank";
-  renderProjectBlocks();
-  if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
-  document.title = "sphr admin";
-  window.scrollTo(0, 0);
+  [homePage, homeFooter, originPage, infoPage, projectPage].forEach(node => { if (node) node.hidden = true; });
+  adminPage.hidden = false;
+  document.body.classList.remove('project-active', 'origin-active', 'info-active');
+  document.body.classList.add('admin-active');
+  if (projectVideo) projectVideo.src = 'about:blank';
+  document.querySelector('.hero video')?.pause();
+  document.title = '作品编辑器 · sphr';
+  const editor = await import('/js/editor.js?v=20261027');
+  await editor.mountEditor(adminPage, { projects, initialSlug: new URLSearchParams(location.search).get('project') || getLastViewedProjectSlug() });
   updateHeader();
 }
 
 function showHomePage() {
+  const homeVideo = document.querySelector('.hero video');
+  const homeSource = homeVideo?.querySelector('source[data-src]');
+  if (homeSource && !homeSource.src) { homeSource.src = homeSource.dataset.src; homeVideo.load(); }
+  homeVideo?.play().catch(() => {});
   setMenuOpen(false);
   homePage.hidden = false;
   if (homeFooter) homeFooter.hidden = false;
@@ -1301,7 +656,36 @@ async function routeFromLocation() {
 async function initRoute() {
   await loadEditableProject();
   await routeFromLocation();
+  if (window.parent !== window && new URLSearchParams(location.search).has('editor-preview')) window.parent.postMessage({ type: 'sphr:preview-ready' }, location.origin);
 }
 
 window.addEventListener("popstate", initRoute);
 initRoute();
+
+// Preview renders the same public components, with drafts supplied only by its same-origin parent.
+const isEditorPreview = new URLSearchParams(location.search).has('editor-preview') && window.parent !== window;
+if (isEditorPreview) {
+  document.documentElement.classList.add('editor-preview');
+  window.addEventListener('message', event => {
+    if (event.origin !== location.origin || event.source !== window.parent || event.data?.type !== 'sphr:editor-preview') return;
+    const { slug, project } = event.data;
+    if (!projectSlugs.has(slug) || slug !== getSlugFromPath() || !project || typeof project !== 'object') return;
+    const scrollY = window.scrollY;
+    editableProjectData[slug] = project;
+    showProjectPage(slug);
+    window.scrollTo(0, scrollY);
+  });
+}
+window.addEventListener('sphr:project-saved', event => { editableProjectData[event.detail.slug] = event.detail.data; });
+
+if (['127.0.0.1', 'localhost'].includes(location.hostname) && !isEditorPreview) {
+  const editLink = document.createElement('a');
+  editLink.className = 'local-edit-link'; editLink.textContent = '编辑此项目';
+  document.body.append(editLink);
+  const syncEditLink = () => {
+    const slug = getSlugFromPath(); editLink.hidden = !projectSlugs.has(slug); editLink.href = `/admin?project=${slug}`;
+  };
+  syncEditLink();
+  window.addEventListener('popstate', syncEditLink);
+  document.addEventListener('click', () => queueMicrotask(syncEditLink));
+}

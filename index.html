@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/assets/sphr.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css?v=20261030-release">
+    <link rel="stylesheet" href="/css/typography.css?v=20261030-release">
   </head>
   <body>
     <header class="site-header" data-header>
@@ -31,17 +32,17 @@
     <main id="top" data-home-page>
       <section class="hero" aria-label="Portfolio hero">
         <div class="hero-media" data-hero-media aria-hidden="true">
-          <video autoplay muted loop playsinline preload="auto">
-            <source src="/assets/hero_new_compressed.mp4" type="video/mp4">
+          <video muted loop playsinline preload="none">
+            <source data-src="/assets/hero_new_compressed.mp4" type="video/mp4">
           </video>
           <div class="scanlines"></div>
         </div>
       </section>
 
       <section id="content" class="intro reveal">
-        <h1>我是 sphr，一名视觉设计师与 3D 动态创作者，探索设计、动态、3D 与人工智能的交汇处。</h1>
+        <h1>我是 sphr，一名专注于商业影像的 3D 动态设计师。</h1>
         <p>
-          我为品牌、产品与未来体验创造电影感图像、材质研究和 AI 辅助的视觉世界。
+          以材质、光线与运动为语言，塑造产品的质感与视觉张力。
         </p>
       </section>
 
@@ -104,8 +105,8 @@
 
       <section id="immersive" class="statement reveal">
         <h2>
-          我的工作经验来自真实商业项目，我在创意流程的不同阶段参与视觉开发、动态设计、渲染图像及后期。
-          <span>我正在通过个人实验，以及对 3D、动态和 AI 辅助影像的持续研究，建立自己的视觉语言。</span>
+          我的实践来自运动、汽车与美妆等领域的商业项目，参与内容涵盖视觉开发、动态图形、特效模拟、灯光渲染与后期合成。
+          <span>我也持续通过个人实验，探索 3D 与 AI 辅助影像的制作方法。</span>
         </h2>
       </section>
 
@@ -113,10 +114,10 @@
         <p class="credit">Website built by sphr with Codex</p>
         <nav class="social-links" aria-label="Social links">
           <a class="social-link-instagram" href="https://www.instagram.com/fbmarkkk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <img src="/assets/ins.png" alt="">
+            <img src="/assets/social-instagram.svg" alt="" width="24" height="24">
           </a>
-          <a href="https://www.xiaohongshu.com/user/profile/5e8050a6000000000100a435" target="_blank" rel="noopener noreferrer" aria-label="Xiaohongshu">
-            <img src="/assets/xhs.svg" alt="">
+          <a class="social-link-xiaohongshu" href="https://xhslink.cn/o/3bJI2GT29qv" target="_blank" rel="noopener noreferrer" aria-label="小红书">
+            <img src="/assets/social-xiaohongshu.svg" alt="" width="36" height="36">
           </a>
         </nav>
       </footer>
@@ -137,56 +138,29 @@
       </section>
     </main>
 
-    <main class="info-page" data-info-page hidden></main>
-
-    <main class="admin-page" data-admin-page hidden>
-      <section class="admin-shell" aria-label="Project editor">
-        <div class="admin-heading">
-          <div class="admin-toolbox">
-            <p data-admin-editor-title>Project editor</p>
-            <div class="admin-project-tabs" data-admin-project-tabs aria-label="Select project"></div>
-            <button type="button" data-admin-add-text>Add text</button>
-            <button type="button" data-admin-add-image>Add image</button>
-            <button type="button" data-admin-add-video>Add video</button>
-            <button type="submit" form="admin-project-form">Save</button>
-            <button type="button" data-admin-reset>Reset</button>
-            <a href="/eqlz">View project</a>
-            <p class="admin-status" data-admin-status aria-live="polite"></p>
-          </div>
-        </div>
-        <form class="admin-form" data-admin-form id="admin-project-form">
-          <div class="admin-canvas">
-            <div class="admin-canvas-hero">
-              <img src="/assets/covers/cover_1.png" alt="" data-admin-preview>
-              <button type="button" data-admin-hero-trigger>Change hero image</button>
-            </div>
-            <section class="admin-canvas-story">
-              <h2>
-                <span contenteditable="true" data-admin-live-client></span>
-                <em contenteditable="true" data-admin-live-title></em>
-              </h2>
-              <div class="admin-canvas-copy">
-                <p contenteditable="true" data-admin-live-copy></p>
-                <p contenteditable="true" data-admin-live-secondary></p>
-              </div>
-            </section>
-            <section class="admin-block-editor" aria-label="Custom content blocks">
-              <div class="admin-block-header">
-                <span>Click this area to place a selected block</span>
-              </div>
-              <div class="admin-block-list" data-admin-block-list></div>
-            </section>
-          </div>
-          <div class="admin-fields" aria-hidden="true">
-            <input type="text" name="client" data-admin-client autocomplete="off" tabindex="-1">
-            <input type="text" name="title" data-admin-title autocomplete="off" tabindex="-1">
-            <textarea name="copy" data-admin-copy rows="4" tabindex="-1"></textarea>
-            <textarea name="secondary" data-admin-secondary rows="5" tabindex="-1"></textarea>
-            <input type="file" name="image" data-admin-image accept="image/*" tabindex="-1">
-          </div>
-        </form>
+    <main class="info-page" data-info-page hidden>
+      <section class="info-portal" aria-label="Independent projects">
+        <a class="verse-portal" href="https://verse.sphr.top/" target="_blank" rel="noopener noreferrer" aria-label="打开 Verse，另一个个人项目（新窗口）">
+          <span class="verse-object" aria-hidden="true">
+            <span class="verse-shadow"></span>
+            <span class="verse-cube">
+              <span class="verse-cube-face verse-cube-front"><span>v.</span></span>
+              <span class="verse-cube-face verse-cube-back"></span>
+              <span class="verse-cube-face verse-cube-right"></span>
+              <span class="verse-cube-face verse-cube-left"></span>
+              <span class="verse-cube-face verse-cube-top"></span>
+              <span class="verse-cube-face verse-cube-bottom"></span>
+            </span>
+          </span>
+          <span class="verse-label">
+            <span class="verse-name">Verse <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg></span>
+            <span class="verse-address">verse.sphr.top</span>
+          </span>
+        </a>
       </section>
     </main>
+
+    <main class="admin-page" data-admin-page hidden><p class="editor-loading">正在载入作品编辑器…</p></main>
 
     <main class="project-page" data-project-page hidden>
       <section class="project-hero" aria-label="Project motion preview">
@@ -234,6 +208,6 @@
 
     </main>
 
-    <script src="/js/main.js?v=20260526-static-data"></script>
+    <script type="module" src="/js/main.js?v=20261030-release"></script>
   </body>
 </html>

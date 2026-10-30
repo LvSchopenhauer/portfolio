@@ -3,6 +3,9 @@
 .playwright-cli/
 .tools/
 .vs/
+.local-history/
+.editor-test/
+outputs/
 dev-server.log
 dev-server.err.log
 assets/00086400.gif

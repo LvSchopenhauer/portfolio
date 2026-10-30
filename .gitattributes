@@ -1,1 +1,2 @@
-*.gif filter=lfs diff=lfs merge=lfs -text
+# Published GIFs stay as actual files so static hosts do not serve LFS pointers.
+*.gif -text
