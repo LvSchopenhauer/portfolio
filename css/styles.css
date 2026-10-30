@@ -191,6 +191,32 @@ body.info-active .brand::after {
   background: #191919;
 }
 
+.route-status:not([hidden]) {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 20px;
+  padding: 120px 24px 64px;
+  color: #e4e4df;
+  background: #000;
+  font: 15px/1.6 var(--pingfang);
+}
+
+.route-status p { margin: 0; }
+.route-status button {
+  min-height: 44px;
+  padding: 10px 24px;
+  border: 1px solid #777;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.route-status a { color: #aaa; font-size: 13px; }
+
 .info-portal {
   min-height: 100vh;
   min-height: 100svh;

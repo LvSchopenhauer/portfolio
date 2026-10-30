@@ -6,7 +6,7 @@
     <title>sphr</title>
     <meta name="description" content="LvSchopenhauer's cinematic personal portfolio for design, technology and moving image work.">
     <link rel="icon" href="/assets/sphr.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/css/styles.css?v=20261030-release">
+    <link rel="stylesheet" href="/css/styles.css?v=20261030-independent-routes">
     <link rel="stylesheet" href="/css/typography.css?v=20261030-release">
   </head>
   <body>
@@ -205,9 +205,15 @@
 
     </main>
 
+    <section class="route-status" data-route-status hidden aria-live="polite" aria-label="作品加载状态">
+      <p data-route-status-message>正在加载作品…</p>
+      <button type="button" data-route-retry hidden>重新加载</button>
+      <a href="/">回到主页</a>
+    </section>
+
     <script id="startup-guard">
       (function () {
-        var state = window.__sphrStartup = { version: '20261030-safari-startup', stage: 'html-ready', errors: [], warnings: [], fallback: false };
+        var state = window.__sphrStartup = { version: '20261030-independent-routes', stage: 'html-ready', errors: [], warnings: [], fallback: false };
         function record(message, source, optional) {
           var bucket = optional ? state.warnings : state.errors;
           if (bucket.length >= 6) return;
@@ -236,6 +242,6 @@
         }, 8000);
       }());
     </script>
-    <script type="module" src="/js/main.js?v=20261030-safari-startup"></script>
+    <script type="module" src="/js/main.js?v=20261030-independent-routes"></script>
   </body>
 </html>

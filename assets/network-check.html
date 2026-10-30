@@ -40,9 +40,9 @@
     const tests = [
       { name: 'Cloudflare 连接', url: '/cdn-cgi/trace', kind: 'trace' },
       { name: '首页文件', url: '/?network-check=20261030-v2', kind: 'html' },
-      { name: '页面样式', url: '/css/styles.css?v=20261030-release', kind: 'css' },
+      { name: '页面样式', url: '/css/styles.css?v=20261030-independent-routes', kind: 'css' },
       { name: '排版样式', url: '/css/typography.css?v=20261030-release', kind: 'css' },
-      { name: '主脚本', url: '/js/main.js?v=20261030-safari-startup', kind: 'js' },
+      { name: '主脚本', url: '/js/main.js?v=20261030-independent-routes', kind: 'js' },
       { name: '排版脚本', url: '/js/typography.js', kind: 'js' },
       { name: '布局脚本', url: '/js/block-spacing.js', kind: 'js' },
       { name: '项目资料', url: '/data/eqlz.json', kind: 'json' },
@@ -99,7 +99,7 @@
             detail = `，节点 ${colo}`;
           }
           if (test.kind === 'json') JSON.parse(text);
-          if (test.kind === 'html') detail = text.includes('20261030-safari-startup') ? '，已是 v2 修复版本' : '，未检测到 v2 修复版本';
+          if (test.kind === 'html') detail = text.includes('20261030-independent-routes') ? '，首页独立启动版本' : '，未检测到最新启动版本';
         }
         const message = `通过，${((performance.now() - start) / 1000).toFixed(2)} 秒${detail}`;
         results[index] = { name: test.name, ok: true, message };
@@ -138,10 +138,12 @@
           clearInterval(timer);
           const video = doc.querySelector('.hero video');
           const loaded = !!doc.body && doc.body.classList.contains('loaded');
+          const projectRequests = win.performance.getEntriesByType('resource').filter(entry => /\/(?:api\/projects|data\/[^/]+\.json)/.test(new URL(entry.name).pathname));
           appResult = {
             ok: !!state && state.stage === 'route-ready' && loaded && Number(opacity) > 0 && errors.length === 0,
             lines: [
               `首页启动阶段：${state ? state.stage : '未检测到启动保护脚本'}`,
+              `首页启动项目资料请求：${projectRequests.length} 次`,
               `首页整页透明度：${opacity}（1 为可见，0 为透明）`,
               `超时显示兜底：${state && state.fallback ? '已触发' : '未触发'}`,
               `首页视频：${video ? `画面就绪 ${video.readyState}，${video.paused ? '暂停或未开始' : '播放中'}${video.error ? '，错误 ' + video.error.code : ''}` : '未取得'}`,

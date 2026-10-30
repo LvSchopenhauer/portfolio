@@ -87,6 +87,12 @@ const projectSlugs = new Set(Object.keys(projects));
 const appRoutes = new Set(["", "origin", "info", "admin", ...projectSlugs]);
 const editableProjectSlugs = ["eqlz", "supernova", "kolon", "auto", "helena", "361"];
 const editableProjectData = {};
+const projectRequests = new Map();
+const localEditorHost = ['127.0.0.1', 'localhost'].includes(location.hostname);
+const routeStatus = document.querySelector('[data-route-status]');
+const routeStatusMessage = document.querySelector('[data-route-status-message]');
+const routeRetry = document.querySelector('[data-route-retry]');
+let navigationVersion = 0;
 let lastViewedProjectSlug = editableProjectSlugs[0];
 
 function rememberViewedProject(slug) {
@@ -115,45 +121,47 @@ function getEditableProjectApi(slug = "") {
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error("Project data request failed");
-
-  const contentType = response.headers.get("content-type") || "";
-  if (contentType.includes("text/html")) {
-    throw new Error("Project data response was not JSON");
-  }
-
-  return response.json();
-}
-
-async function loadStaticProjectFiles() {
-  const entries = await Promise.all(
-    editableProjectSlugs.map(async (slug) => {
-      try {
-        return [slug, await fetchJson(`/data/${slug}.json`)];
-      } catch {
-        return [slug, {}];
-      }
-    })
-  );
-
-  entries.forEach(([slug, project]) => {
-    if (project && Object.keys(project).length) editableProjectData[slug] = project;
-  });
-}
-
-async function loadEditableProject() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
   try {
-    const data = await fetchJson(getEditableProjectApi());
-    Object.keys(editableProjectData).forEach((slug) => delete editableProjectData[slug]);
-    if (data && typeof data === "object") {
-      Object.entries(data).forEach(([slug, project]) => {
-        if (project && Object.keys(project).length) editableProjectData[slug] = project;
-      });
+    const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
+    if (!response.ok) throw new Error('Project data request failed');
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('text/html')) throw new Error('Project data response was not JSON');
+    return await response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function loadEditableProject(slug) {
+  if (!projectSlugs.has(slug)) throw new Error('Unknown project');
+  if (editableProjectData[slug]) return editableProjectData[slug];
+  if (projectRequests.has(slug)) return projectRequests.get(slug);
+
+  const request = (async () => {
+    let project;
+    if (localEditorHost) {
+      try {
+        project = await fetchJson(getEditableProjectApi(slug));
+      } catch { /* A local static preview may not provide the editor API. */ }
     }
-  } catch {
-    Object.keys(editableProjectData).forEach((slug) => delete editableProjectData[slug]);
-    await loadStaticProjectFiles();
+    if (!project) project = await fetchJson(`/data/${slug}.json`);
+    if (!project || typeof project !== 'object' || Array.isArray(project) || !Object.keys(project).length) {
+      throw new Error('Project data was empty or invalid');
+    }
+    // A newer editor preview/save arriving during this request takes precedence.
+    if (!editableProjectData[slug]) editableProjectData[slug] = project;
+    return editableProjectData[slug];
+  })();
+  projectRequests.set(slug, request);
+  try {
+    return await request;
+  } catch (error) {
+    if (editableProjectData[slug]) return editableProjectData[slug];
+    throw error;
+  } finally {
+    if (projectRequests.get(slug) === request) projectRequests.delete(slug);
   }
 }
 
@@ -340,7 +348,7 @@ document.addEventListener("click", (event) => {
     window.history.pushState({}, "", next);
   }
 
-  routeFromLocation();
+  initRoute();
 });
 
 window.addEventListener("keydown", (event) => {
@@ -637,41 +645,71 @@ function showHomePage() {
   updateHeader();
 }
 
+function showProjectLoadState(failed = false) {
+  setMenuOpen(false);
+  [homePage, homeFooter, originPage, infoPage, adminPage, projectPage].forEach(node => { if (node) node.hidden = true; });
+  document.body.classList.remove('origin-active', 'info-active', 'admin-active');
+  document.body.classList.add('project-active');
+  document.querySelector('.hero video')?.pause();
+  if (projectVideo) projectVideo.src = 'about:blank';
+  header.classList.remove('on-paper');
+  routeStatus.hidden = false;
+  routeStatusMessage.textContent = failed ? '作品暂时未能加载，请重试。' : '正在加载作品…';
+  routeRetry.hidden = !failed;
+  window.scrollTo(0, 0);
+}
+
 async function routeFromLocation() {
+  const version = ++navigationVersion;
   const slug = getSlugFromPath();
+  routeStatus.hidden = true;
 
   if (slug === "origin") {
     showOriginPage();
-    return;
+    return true;
   }
 
   if (slug === "info") {
     showInfoPage();
-    return;
+    return true;
   }
 
   if (slug === "admin") {
     await showAdminPage();
-    return;
+    return version === navigationVersion;
   }
 
   if (projectSlugs.has(slug)) {
+    if (window.__sphrStartup) window.__sphrStartup.stage = 'project-loading';
+    if (!editableProjectData[slug]) showProjectLoadState();
+    try {
+      await loadEditableProject(slug);
+    } catch {
+      if (version !== navigationVersion || getSlugFromPath() !== slug) return false;
+      showProjectLoadState(true);
+      if (window.__sphrStartup) window.__sphrStartup.stage = 'route-error';
+      return false;
+    }
+    if (version !== navigationVersion || getSlugFromPath() !== slug) return false;
+    routeStatus.hidden = true;
     showProjectPage(slug);
-    return;
+    return true;
   }
 
   showHomePage();
   scrollToHash(window.location.hash);
+  return true;
 }
 
 async function initRoute() {
-  await loadEditableProject();
-  await routeFromLocation();
+  const ready = await routeFromLocation();
+  if (!ready) return;
   if (window.__sphrStartup) window.__sphrStartup.stage = 'route-ready';
   if (window.parent !== window && new URLSearchParams(location.search).has('editor-preview')) window.parent.postMessage({ type: 'sphr:preview-ready' }, location.origin);
 }
 
 window.addEventListener("popstate", initRoute);
+routeRetry?.addEventListener('click', initRoute);
 initRoute();
 
 // Preview renders the same public components, with drafts supplied only by its same-origin parent.

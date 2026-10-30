@@ -34,13 +34,13 @@
 
 依据：`main.js:83–87,280–282,309–333,495–653`。
 
-同源且命中路由集合的普通链接点击被拦截，通过 `history.pushState()` 与 `routeFromLocation()` 更新；组合键、新窗口和外部链接沿浏览器默认行为。`popstate` 调用 `initRoute()`，会重新读取所有项目数据。页面通过 `hidden` 和 `body` 的 `*-active` 类切换，没有组件框架管理挂载与卸载。
+同源且命中路由集合的普通链接点击被拦截，通过 `history.pushState()` 与 `initRoute()` 更新；组合键、新窗口和外部链接沿浏览器默认行为。`popstate` 同样调用 `initRoute()`。首页、Info 和 Origin 直接显示；作品路由只等待自身数据。导航版本号防止旧请求结束后覆盖新页面。页面通过 `hidden` 和 `body` 的 `*-active` 类切换，没有组件框架管理挂载与卸载。
 
 ### 项目读取与渲染
 
-读取顺序为：`GET /api/projects` → 失败时并行请求全部六个 `/data/<slug>.json` → 某作品仍无内存数据时读取旧 `localStorage`。最终使用 `{...projects[slug], ...override}` 合并默认数据。
+`loadEditableProject(slug)` 只读取当前作品：本机访问 `GET /api/projects/<slug>`，本机静态预览缺少 API 时退回 `/data/<slug>.json`；正式域名直接读取该静态 JSON。成功结果缓存在当前页面内，同项目并发请求合并。失败不会写入空缓存，下次可重试；后到的服务器响应不得覆盖更新的编辑草稿。旧 localStorage 与 `{...projects[slug], ...override}` 字段合并仍保留，但作品路由不会在资料失败时展示不完整默认内容。
 
-- `fetchJson()`：`cache: no-store`，拒绝非成功响应与 HTML 冒充的 JSON。
+- `fetchJson()`：`cache: no-store`，拒绝非成功响应与 HTML 冒充的 JSON；AbortController 将请求与 JSON 读取限定在 20 秒内。作品资料等待及失败时展示独立状态，提供重试和返回首页。
 - `getProject()`：合并内容，并将封面中的本机 HTTP 地址转为 `/assets/` 相对站点路径；不遍历迁移区块内的地址。
 - `renderProjectBlocks()`：支持 `text/image/video`，忽略无内容区块；支持整行、半行、比例、宽度、说明文字及视频播放标志。相同完整 JSON 快照不重建区块。
 - 可选 `spacingAfter` 为 0–400 的整数 CSS px；缺省保持原排版。任一区块指定时，按实际网格行分配下方间距；双列同一行取显式值的最大值，手机单列分别应用。最后一行不增加间距。显式设置标题下方间距时停用标题/正文之间原有的负外边距补偿。编辑器留空删除该字段，草稿、导入导出和保存均保留 0。
