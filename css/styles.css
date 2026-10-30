@@ -40,6 +40,7 @@
 .local-edit-link[hidden] { display: none; }
 .project-media-caption { margin: 12px 0 0; font: 13px/1.7 var(--pingfang); color: #b0b0b0; text-align: center; }
 .project-video[hidden] { display: none; }
+.project-player[hidden], .project-video-switch[hidden], .project-video iframe[hidden], .project-video video[hidden], .project-playback-error[hidden] { display: none; }
 .editor-preview { scroll-behavior: auto; }
 
 * {
@@ -1582,8 +1583,11 @@ main,
   object-position: center;
 }
 
+.project-visual img[hidden] { display: none; }
+
 /* Remove the 20px gray strip baked into the left of this 1094px source. */
-.project-visual img[src="/assets/covers/cover_6.png"] {
+.project-visual img[src$="/assets/covers/cover_6.png"],
+.project-visual img[src$="/assets/covers/cover_6.home.webp"] {
   width: calc(100% * 1094 / 1074);
   max-width: none;
   margin-left: calc(-100% * 20 / 1074);
@@ -1674,18 +1678,49 @@ main,
   color: var(--white);
 }
 
+.project-player {
+  width: 100%;
+  margin-top: clamp(90px, 11.7vw, 175px);
+}
+
+.project-video-switch {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.project-video-switch button {
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: #999;
+  font: 13px/1.5 var(--satoshi);
+  cursor: pointer;
+}
+
+.project-video-switch button[aria-pressed="true"] {
+  color: #fff;
+  border-bottom-color: currentColor;
+}
+
+.project-video-switch button:focus-visible { outline: 1px solid #fff; outline-offset: 5px; }
+.project-playback-error { color: #bbb; font: 13px/1.7 var(--pingfang); }
+
 .project-video {
   position: relative;
   width: 100%;
   max-width: 100%;
   height: 0;
   padding-bottom: 56.25%;
-  margin-top: clamp(90px, 11.7vw, 175px);
+  margin-top: 0;
   background: #000;
   overflow: hidden;
 }
 
-.project-video iframe {
+.project-video iframe,
+.project-video video {
   display: block;
   position: absolute;
   top: 0;
@@ -1693,6 +1728,7 @@ main,
   width: 100%;
   height: 100%;
   border: 0;
+  object-fit: contain;
 }
 
 .project-custom-blocks {

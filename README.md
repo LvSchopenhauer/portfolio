@@ -30,6 +30,10 @@ After editing HTML, CSS or startup JavaScript, run `node scripts/build-site.cjs`
 
 Homepage covers use lossless WebP derivatives, verified against the visible original pixels; the originals remain available for project pages. Cover requests start near the viewport, and the existing video begins after its poster has had a chance to load. If autoplay is rejected, a play button provides a user-initiated fallback.
 
+Detail pages use full-frame lossless cover derivatives, hide the previous image during a project switch, and lazy-load below-fold images and the Vimeo iframe. Previously embedded EQLZ/Supernova images are stored as independent files with unchanged encoded bytes so their JSON no longer blocks on image downloads.
+
+Each main film retains its original Vimeo embed and adds a manual “备用播放” switch. Backup MP4s are hosted independently at `https://lvschopenhauer.github.io/portfolio/network-test/assets/films/<slug>.mp4`; no MP4 request starts before selection. These are existing public H.264 playback renditions (up to 1080p and 1920px wide), copied without re-encoding, not original masters. They are published on `gh-pages` rather than duplicated into Cloudflare's asset bundle. Leaving a page releases both players. Keep this media path available when changing hosting, and verify playback on the affected cellular network before claiming the access issue resolved.
+
 ## Production
 
 The production site is https://sphr.top/. Push `main` to `LvSchopenhauer/portfolio` to trigger the existing Cloudflare Pages deployment. Production serves static project JSON; the editor's writable API runs locally. See [GITHUB_PUSH.md](GITHUB_PUSH.md) for release checks. Local archives and QA evidence in `outputs/` are excluded from Git and deployment.

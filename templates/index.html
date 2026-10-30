@@ -166,7 +166,7 @@
     <main class="project-page" data-project-page hidden>
       <section class="project-hero" aria-label="Project motion preview">
         <div class="project-visual" data-project-visual>
-          <img src="/assets/head2.png" alt="" data-project-image>
+          <img alt="" data-project-image hidden fetchpriority="high" decoding="async">
           <div class="scanlines"></div>
         </div>
         <a class="project-scroll" href="#project-story" aria-label="Scroll to project story"></a>
@@ -188,16 +188,25 @@
             are tested before the final experience is assembled.
           </p>
         </div>
+        <div class="project-player" data-project-player>
+          <div class="project-video-switch" data-project-video-switch hidden role="group" aria-label="播放线路">
+            <button type="button" data-video-mode="vimeo" aria-pressed="true">Vimeo</button>
+            <button type="button" data-video-mode="backup" aria-pressed="false">备用播放</button>
+          </div>
         <div class="project-video iframe-wrapper standard-play">
           <iframe
             title="vimeo-player"
             data-project-video
+            loading="lazy"
             src="about:blank"
             width="640"
             height="360"
             frameborder="0"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"></iframe>
+          <video data-project-native hidden controls playsinline preload="none" aria-label="项目主片备用播放"></video>
+        </div>
+          <p class="project-playback-error" data-project-playback-error hidden role="status">备用视频暂时未能加载，请稍后重试。</p>
         </div>
       </section>
 

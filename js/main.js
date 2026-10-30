@@ -29,6 +29,11 @@ const projectClient = document.querySelector("[data-project-client]");
 const projectCopy = document.querySelector("[data-project-copy]");
 const projectSecondary = document.querySelector("[data-project-secondary]");
 const projectVideo = document.querySelector("[data-project-video]");
+const projectPlayer = document.querySelector('[data-project-player]');
+const projectNative = document.querySelector('[data-project-native]');
+const projectVideoSwitch = document.querySelector('[data-project-video-switch]');
+const projectPlaybackError = document.querySelector('[data-project-playback-error]');
+let activeProjectPlayback;
 const projectBlocks = document.querySelector("[data-project-blocks]");
 const projects = {
   eqlz: {
@@ -90,6 +95,8 @@ const projects = {
 const projectSlugs = new Set(Object.keys(projects));
 const appRoutes = new Set(["", "origin", "info", "admin", ...projectSlugs]);
 const editableProjectSlugs = ["eqlz", "supernova", "kolon", "auto", "helena", "361"];
+// Independent media host: the backup must not depend on Vimeo or Cloudflare.
+for (const slug of editableProjectSlugs) projects[slug].videoFallback = `https://lvschopenhauer.github.io/portfolio/network-test/assets/films/${slug}.mp4`;
 const editableProjectData = {};
 const projectRequests = new Map();
 const localEditorHost = ['127.0.0.1', 'localhost'].includes(location.hostname);
@@ -182,8 +189,20 @@ function readEditableProject(slug) {
 
 function getProject(slug) {
   const project = { ...projects[slug], ...readEditableProject(slug) };
+  if (project.video === '') project.videoFallback = '';
   if (typeof project.image === "string") {
     project.image = project.image.replace(/^https?:\/\/(?:127\.0\.0\.1|localhost):\d+(\/assets\/)/, "$1");
+    // Full-frame derivatives preserve the detail hero's crop at every viewport.
+    const fullFrameCovers = {
+      '/assets/covers/cover_1.png': '/assets/covers/cover_1.detail.webp',
+      '/assets/covers/cover_2.png': '/assets/covers/cover_2.detail.webp',
+      '/assets/covers/cover_3.png': '/assets/covers/cover_3.home.webp',
+      '/assets/uploads/1793258782764-64fd59176e8268-cover_3.png': '/assets/covers/cover_3.home.webp',
+      '/assets/covers/cover_4.png': '/assets/covers/cover_4.home.webp',
+      '/assets/covers/cover_5.png': '/assets/covers/cover_5.home.webp',
+      '/assets/covers/cover_6.png': '/assets/covers/cover_6.home.webp'
+    };
+    project.image = fullFrameCovers[project.image] || project.image;
   }
   return project;
 }
@@ -271,6 +290,8 @@ function renderProjectBlocks(blocks = []) {
 
     if (block.type === "image") {
       const image = document.createElement("img");
+      image.loading = "lazy";
+      image.decoding = "async";
       image.src = block.content;
       image.alt = block.alt || "";
       item.append(image);
@@ -570,6 +591,46 @@ window.addEventListener("scroll", updateHeader, { passive: true });
 window.addEventListener("resize", updateHeader);
 updateHeader();
 
+function resetProjectPlayback() {
+  activeProjectPlayback = null;
+  if (projectVideo) projectVideo.src = 'about:blank';
+  if (projectNative) {
+    projectNative.pause();
+    projectNative.removeAttribute('src');
+    projectNative.load();
+    projectNative.hidden = true;
+  }
+  if (projectPlaybackError) projectPlaybackError.hidden = true;
+}
+
+function selectProjectPlayback(mode, play = false) {
+  const project = activeProjectPlayback;
+  if (!project) return;
+  const backup = mode === 'backup' && Boolean(project.videoFallback);
+  projectVideo.hidden = backup;
+  projectNative.hidden = !backup;
+  projectPlaybackError.hidden = true;
+  projectVideoSwitch.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.videoMode === (backup ? 'backup' : 'vimeo'))));
+  if (backup) {
+    projectVideo.src = 'about:blank';
+    if (projectNative.getAttribute('src') !== project.videoFallback) projectNative.src = project.videoFallback;
+    if (play) projectNative.play().catch(() => {});
+  } else {
+    projectNative.pause();
+    projectNative.removeAttribute('src');
+    projectNative.load();
+    projectVideo.src = project.video || 'about:blank';
+  }
+}
+
+projectVideoSwitch?.addEventListener('click', event => {
+  const button = event.target.closest('button[data-video-mode]');
+  if (button) selectProjectPlayback(button.dataset.videoMode, true);
+});
+projectNative?.addEventListener('error', () => {
+  if (activeProjectPlayback && !projectNative.hidden && projectNative.getAttribute('src')) projectPlaybackError.hidden = false;
+});
+
 function showProjectPage(slug) {
   const project = getProject(slug);
   if (!project) return false;
@@ -591,11 +652,26 @@ function showProjectPage(slug) {
   renderTypography(projectService, project.title, project.typography?.title);
   renderTypography(projectCopy, project.copy, project.typography?.copy);
   renderTypography(projectSecondary, project.secondary, project.typography?.secondary);
-  if (projectImage && project.image) projectImage.src = project.image;
+  if (projectImage) {
+    // Clear the previous project's bitmap while the next cover is loading.
+    projectImage.hidden = true;
+    projectImage.onload = () => { projectImage.hidden = false; };
+    projectImage.onerror = () => { projectImage.hidden = true; };
+    if (project.image) {
+      projectImage.src = project.image;
+      if (projectImage.complete && projectImage.naturalWidth) projectImage.hidden = false;
+    } else {
+      projectImage.removeAttribute('src');
+    }
+  }
   if (projectVideo) {
-    const videoSource = project.video || 'about:blank';
-    if (projectVideo.getAttribute('src') !== videoSource) projectVideo.src = videoSource;
-    projectVideo.closest('.project-video').hidden = !project.video;
+    const playbackChanged = !activeProjectPlayback || activeProjectPlayback.video !== project.video || activeProjectPlayback.videoFallback !== project.videoFallback;
+    if (playbackChanged) resetProjectPlayback();
+    activeProjectPlayback = project;
+    projectPlayer.hidden = !project.video && !project.videoFallback;
+    projectVideoSwitch.hidden = !project.videoFallback || !project.video;
+    projectNative.poster = project.image || '';
+    if (playbackChanged) selectProjectPlayback(project.video ? 'vimeo' : 'backup');
   }
   renderProjectBlocks(project.blocks);
   projectVisual.className = `project-visual ${project.visual}`;
@@ -624,7 +700,7 @@ function showOriginPage() {
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
-  if (projectVideo) projectVideo.src = "about:blank";
+  resetProjectPlayback();
   renderProjectBlocks();
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
   document.title = "sphr";
@@ -648,7 +724,7 @@ function showInfoPage() {
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
-  if (projectVideo) projectVideo.src = "about:blank";
+  resetProjectPlayback();
   renderProjectBlocks();
   if (heroMedia) heroMedia.style.removeProperty("--hero-media-opacity");
   document.title = "Info · sphr";
@@ -662,7 +738,7 @@ async function showAdminPage() {
   adminPage.hidden = false;
   document.body.classList.remove('project-active', 'origin-active', 'info-active');
   document.body.classList.add('admin-active');
-  if (projectVideo) projectVideo.src = 'about:blank';
+  resetProjectPlayback();
   document.querySelector('.hero video')?.pause();
   document.title = '作品编辑器 · sphr';
   const editor = await import('/js/editor.js?v=20261027');
@@ -685,7 +761,7 @@ function showHomePage() {
   projectVisual?.removeAttribute("style");
   projectHero?.style.removeProperty("--project-overlay-opacity");
   if (projectScroll) projectScroll.removeAttribute("style");
-  if (projectVideo) projectVideo.src = "about:blank";
+  resetProjectPlayback();
   renderProjectBlocks();
   document.title = "sphr";
   updateHeader();
@@ -698,7 +774,7 @@ function showProjectLoadState(failed = false) {
   document.body.classList.remove('origin-active', 'info-active', 'admin-active');
   document.body.classList.add('project-active');
   document.querySelector('.hero video')?.pause();
-  if (projectVideo) projectVideo.src = 'about:blank';
+  resetProjectPlayback();
   header.classList.remove('on-paper');
   routeStatus.hidden = false;
   routeStatusMessage.textContent = failed ? '作品暂时未能加载，请重试。' : '正在加载作品…';
