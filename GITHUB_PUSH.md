@@ -2,7 +2,7 @@
 
 ## Current recovery state — 2026-10-31
 
-The custom-domain GitHub Pages cutover failed for the user's Wi-Fi connection and was rolled back. Formal DNS is restored to proxied `portfolio-t0w.pages.dev` for both apex and www. The independent GitHub snapshot is served from `gh-pages` at `https://lvschopenhauer.github.io/portfolio/`, with no GitHub custom-domain binding. The original `/portfolio/network-test/` snapshot remains untouched as a fallback; this path-only change does not involve DNS. The canonical-root workflow is disabled and manual-only; do not enable it or attach the formal domain until a new migration is explicitly authorized and tested on the affected network. Main pushes still update the original Cloudflare Pages project. The prepared migration instructions below describe the paused workflow, not the active hosting path.
+The custom-domain GitHub Pages cutover failed for the user's Wi-Fi connection and was rolled back. Formal DNS is restored to proxied `portfolio-t0w.pages.dev` for both apex and www. The independent GitHub snapshot is served from `gh-pages` at `https://lvschopenhauer.github.io/portfolio/network-test/`, with no GitHub custom-domain binding. The canonical-root workflow is disabled and manual-only; do not enable it or attach the formal domain until a new migration is explicitly authorized and tested on the affected network. Main pushes still update the original Cloudflare Pages project. The prepared migration instructions below describe the paused workflow, not the active hosting path.
 
 Use this command to commit all current local changes and push the current branch to GitHub:
 
