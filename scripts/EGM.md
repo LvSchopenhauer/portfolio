@@ -29,12 +29,18 @@
 | `history(slug, id)` | 读取 list 认可的版本内容，不直接恢复磁盘文件 |
 | `normalizeProject(input)` | 校验项目字段、规范化区块，丢弃不在输出结构中的额外字段 |
 | `normalizeTypography(value)` | 校验并限制排版参数 |
-| `mediaUrl(value, {embed=false})` | 规范化素材 URL；embed 对外部 HTTPS 限定 player.vimeo.com |
+| `mediaUrl(value, {embed=false})` | 规范化素材 URL；embed 对外部 HTTPS 限定 Vimeo 或有效 BV 号的哔哩哔哩播放器，B 站关闭弹幕和自动播放 |
 | `StoreError(status, message)` | 错误携带 HTTP 状态，供本地服务映射 |
 
 依据：`project-store.cjs:5–146`。
 
 项目固定为 `eqlz/supernova/kolon/auto/helena/361`。可写字段为 `client/title/copy/secondary/image/video/typography/blocks`。每个区块有唯一 ID，类型为 text、image 或 video；媒体带布局、尺寸、比例、alt/caption，视频附 controls/autoplay/loop，文字可附独立 typography。所有区块可选 `spacingAfter`：缺省/null/空字符串不输出字段，有限数字或数字字符串取整并限制为 0–400；其他值拒绝为 422。0 与缺省不同。
+
+### GitHub Pages 正式发布（2026-10-31）
+
+`build-site.cjs` 生成内联首页；`build-github-pages.cjs` 接受 `--output` 与 `--media-source`，两条路径必须位于当前 checkout 内。构建器只复制公开 HTML、css/js/data 和其引用媒体，核对复制前后的 SHA-256，输出九个显式路由入口、404、CNAME 与旧测试路径跳转；不打包本地服务、历史或工具。六支备用主片取自既有 gh-pages 分支的媒体目录，保持原字节。完整产物检查 1 GiB 上限。
+
+`.github/workflows/deploy-pages.yml` 在 main 推送后执行构建和相关测试，以 GitHub Pages 官方 artifact/deploy Actions 发布。第二次 checkout 只读取 gh-pages 的备用媒体；域名由仓库 Pages 设置管理，Cloudflare 的根域名与 www 为 DNS-only。原 Cloudflare Pages 项目保留作回滚源。
 
 ### Windows 本地启动
 

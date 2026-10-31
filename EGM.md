@@ -6,6 +6,8 @@
 
 本文件由已安装的 `egm-bootstrap` 工作流分析生成，目标文件名采用 `EGM.md`，保留原有 README。记录日期：2026-10-27。分析范围为当前工作树的根目录、`js/`、`scripts/`，并检查 `css/`、`data/`、被引用资源与部署辅助配置。`outputs/`、工具、缓存、历史备份与测试产物不逐层生成契约，也不代表其内容被逐一审查。
 
+2026-10-31 部署补充：正式域名 sphr.top 迁至 GitHub Pages，Cloudflare 仅为根域名和 www 提供 DNS，其他子站保持原配置。main 推送由 `.github/workflows/deploy-pages.yml` 构建、测试和发布；`scripts/build-github-pages.cjs` 给出独立的公开产物边界和九个直接访问入口，媒体复制逐项校验 SHA-256。原 gh-pages 分支保留备用主片源，旧 Cloudflare Pages 项目作为回滚源。GitHub Pages 不读取 `_headers`；其 CDN 响应缓存由平台管理，前台项目 JSON 请求仍使用 no-store，发布后需要验证实际内容。下文初始审查与传输优化记录保留原日期含义。
+
 | 层 | 当前技术与边界 |
 | --- | --- |
 | 文档与页面 | 单个 `index.html`，预置多个 main 容器；原生 DOM 操作切换页面 |
