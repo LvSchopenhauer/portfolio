@@ -1,0 +1,109 @@
+{
+  "client": "EQLZ",
+  "title": "Multidimensional",
+  "copy": "EQLZ 2023 是一支以昆虫为灵感的数字影像项目，延续了品牌对于自然主题的探索。项目将昆虫的结构、质感与生命感，转译为一个由 AI 想象出的多维空间。",
+  "secondary": "不同空间彼此相连，又各自独立，像是一个不断分裂、扩展的数字宇宙。影片通过连续镜头进入其中，完成了一次关于自然、技术与想象力的视觉实验。",
+  "image": "/assets/covers/cover_1.png",
+  "blocks": [
+    {
+      "id": "1779686288461-24736dd39808e",
+      "type": "image",
+      "content": "/assets/projects/eqlz/embedded-17d9b61b28b195b2.jpg",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto"
+    },
+    {
+      "id": "1779695305020-31a49d04983778",
+      "type": "text",
+      "content": "CG to AI Space",
+      "size": 100,
+      "fontSize": 30,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779695314894-d2a1a8aa3e817",
+      "type": "text",
+      "content": "空间表达上，项目首次引入 Stable Diffusion 作为视觉探索工具。通过 AI 生成图像与 CG 场景的结合，我们尝试让影像从传统 CG 空间自然过渡到由 AI 想象出的多维空间，以此表现空间不断延展、分裂和生成的感觉。",
+      "size": 100,
+      "fontSize": 15,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779686223933-226c874ce2be88",
+      "type": "image",
+      "content": "/assets/projects/eqlz/embedded-4b8dd3529a8b1e8e.jpg",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "auto"
+    },
+    {
+      "id": "1779341266424-90826016f6f0f",
+      "type": "text",
+      "content": "Material & Growth",
+      "size": 100,
+      "fontSize": 30,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779353606017-cb3c1d099cc388",
+      "type": "text",
+      "content": "材质方向来自昆虫的外骨骼、翅膀等结构。我们将这些生物特征表现为球鞋局部结构出现过程的材质变化，呈现出昆虫翅膀的特征等。动态设计则围绕“生长”展开，让形态变化呈现出自然生长与人工重构之间的状态。",
+      "size": 100,
+      "fontSize": 15,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779694470497-6cb6c4b02701a",
+      "type": "video",
+      "content": "/assets/uploads/1779695848435-7ce37266fc74-compressed.mp4",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779695768288-b11b3f4703d2c",
+      "type": "text",
+      "content": "Camera Animation",
+      "size": 100,
+      "fontSize": 30,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779695804597-3b2f9cdbead058",
+      "type": "text",
+      "content": "为了讲述空间变化的连续性，影片采用了伪一镜到底的镜头方式。不同场景之间的摄像机曲线被重新匹配，使镜头在切换时仍然保持速度、方向和节奏上的连贯，形成一段无缝穿行的空间体验。",
+      "size": 100,
+      "fontSize": 15,
+      "fontWeight": 300,
+      "layout": "full",
+      "ratio": "16 / 9"
+    },
+    {
+      "id": "1779697130533-585d10588b7f2",
+      "type": "video",
+      "content": "/assets/uploads/1779697154890-b650e16dd68c2-compressed.mp4",
+      "size": 100,
+      "fontSize": 24,
+      "fontWeight": 400,
+      "layout": "full",
+      "ratio": "16 / 9"
+    }
+  ]
+}

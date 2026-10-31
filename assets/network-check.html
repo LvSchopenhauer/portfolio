@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>连接检查 · sphr</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 48px 22px; background: #191919; color: #eee; font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { max-width: 620px; margin: auto; }
+    h1 { margin: 0 0 12px; font-size: 28px; font-weight: 500; }
+    p { color: #aaa; }
+    ul { list-style: none; margin: 32px 0; padding: 0; }
+    li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 15px 0; border-bottom: 1px solid #333; }
+    li span:last-child { color: #aaa; text-align: right; }
+    li[data-result="pass"] span:last-child { color: #b9d9bd; }
+    li[data-result="fail"] span:last-child { color: #f6aa9f; }
+    button { min-height: 44px; padding: 10px 18px; border: 1px solid #777; border-radius: 4px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid #eee; outline-offset: 4px; }
+    pre { padding: 18px; border: 1px solid #444; color: #ccc; font: 12px/1.8 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    iframe { display: block; width: 100%; height: 360px; border: 1px solid #444; background: white; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>连接检查</h1>
+    <p>请保持联通 5G 和当前浏览器。检查会自动开始，先检查文件，再验证真实首页的启动情况，约 1 分钟内结束；把下方结果文字发给我即可。</p>
+    <p id="summary" role="status" aria-live="polite">正在准备检查…</p>
+    <div id="app-preview" hidden></div>
+    <ul id="checks" aria-label="检查结果"></ul>
+    <button id="copy" type="button" disabled>复制结果</button>
+    <pre id="report">等待检查结果…</pre>
+    <p>本页只请求本站资源，不记录 IP、定位或设备标识，不会自动上传检查结果。</p>
+    <p><a href="/">返回首页</a></p>
+    <noscript><p>浏览器未运行 JavaScript。主站交互也需要 JavaScript，请检查浏览器的相关设置。</p></noscript>
+  </main>
+  <script>
+    const tests = [
+      { name: 'Cloudflare 连接', url: '/cdn-cgi/trace', kind: 'trace' },
+      { name: '首页文件', url: '/?network-check=20261030-v2', kind: 'html' },
+      { name: '页面样式', url: '/css/styles.css?v=20261030-independent-routes', kind: 'css' },
+      { name: '排版样式', url: '/css/typography.css?v=20261030-release', kind: 'css' },
+      { name: '主脚本', url: '/js/main.js?v=20261030-independent-routes', kind: 'js' },
+      { name: '排版脚本', url: '/js/typography.js', kind: 'js' },
+      { name: '布局脚本', url: '/js/block-spacing.js', kind: 'js' },
+      { name: '项目资料', url: '/data/eqlz.json', kind: 'json' },
+      { name: '图片连接（64 KB）', url: '/assets/covers/cover_1.png', kind: 'image' }
+    ];
+    const rows = tests.map(test => {
+      const row = document.createElement('li');
+      const label = document.createElement('span');
+      label.textContent = test.name;
+      const status = document.createElement('span');
+      status.textContent = '检查中…';
+      row.append(label, status);
+      document.querySelector('#checks').append(row);
+      return { row, status };
+    });
+    const results = new Array(tests.length);
+    const startedAt = new Date().toISOString();
+    let colo = '未取得';
+    let active = 0;
+    let appResult = null;
+    function updateReport() {
+      const finished = results.filter(Boolean).length;
+      const failures = results.filter(result => result && !result.ok).length;
+      document.querySelector('#summary').textContent = finished === tests.length
+        ? (appResult ? `检查结束：资源 ${finished - failures} 项通过，${failures} 项失败；首页启动${appResult.ok ? '通过' : '需排查'}。` : '资源检查结束，正在验证真实首页启动…')
+        : `已完成 ${finished} / ${tests.length} 项检查…`;
+      document.querySelector('#report').textContent = [
+        'sphr 连接检查 v2', `时间：${startedAt}`, `服务节点：${colo}`,
+        ...results.filter(Boolean).map(result => `${result.name}：${result.message}`),
+        ...(appResult ? appResult.lines : [])
+      ].join('\n');
+      document.querySelector('#copy').disabled = finished !== tests.length || !appResult;
+    }
+    async function run(test, index) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      const start = performance.now();
+      try {
+        const response = await fetch(test.url, {
+          cache: 'no-store', signal: controller.signal,
+          headers: test.kind === 'image' ? { Range: 'bytes=0-65535' } : {}
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const contentType = response.headers.get('content-type') || '';
+        let detail = '';
+        if (test.kind === 'image') {
+          const buffer = new Uint8Array(await response.arrayBuffer());
+          if (buffer[0] !== 137 || buffer[1] !== 80 || buffer[2] !== 78 || buffer[3] !== 71) throw new Error('返回内容不是预期图片');
+        } else {
+          const text = await response.text();
+          if (test.kind !== 'html' && contentType.includes('text/html')) throw new Error('返回了网页，未取得所需资源');
+          if (test.kind === 'trace') {
+            colo = text.match(/^colo=([^\r\n]+)/m)?.[1] || '未取得';
+            detail = `，节点 ${colo}`;
+          }
+          if (test.kind === 'json') JSON.parse(text);
+          if (test.kind === 'html') detail = text.includes('20261030-independent-routes') ? '，首页独立启动版本' : '，未检测到最新启动版本';
+        }
+        const message = `通过，${((performance.now() - start) / 1000).toFixed(2)} 秒${detail}`;
+        results[index] = { name: test.name, ok: true, message };
+        rows[index].row.dataset.result = 'pass';
+        rows[index].status.textContent = message;
+      } catch (error) {
+        const message = error.name === 'AbortError' ? '15 秒内未完成（超时）' : `失败：${error.message}`;
+        results[index] = { name: test.name, ok: false, message };
+        rows[index].row.dataset.result = 'fail';
+        rows[index].status.textContent = message;
+      } finally {
+        clearTimeout(timer);
+        updateReport();
+      }
+    }
+    // Keep concurrency bounded so this check does not itself flood a slow connection.
+    function checkHomepage() {
+      const holder = document.querySelector('#app-preview');
+      const frame = document.createElement('iframe');
+      frame.title = '实际首页启动预览';
+      frame.src = '/?startup-check=20261030-v2';
+      holder.append(frame);
+      holder.hidden = false;
+      const start = performance.now();
+      const timer = setInterval(() => {
+        try {
+          const win = frame.contentWindow;
+          const doc = frame.contentDocument;
+          const state = win.__sphrStartup;
+          const elapsed = performance.now() - start;
+          if (!state && elapsed < 25000) return;
+          const errors = state ? state.errors : [];
+          if (state && state.stage !== 'route-ready' && errors.length === 0 && elapsed < 25000) return;
+          const opacity = doc.body ? win.getComputedStyle(doc.body).opacity : '未取得';
+          if (state && state.stage === 'route-ready' && Number(opacity) < 0.99 && elapsed < 25000) return;
+          clearInterval(timer);
+          const video = doc.querySelector('.hero video');
+          const loaded = !!doc.body && doc.body.classList.contains('loaded');
+          const projectRequests = win.performance.getEntriesByType('resource').filter(entry => /\/(?:api\/projects|data\/[^/]+\.json)/.test(new URL(entry.name).pathname));
+          appResult = {
+            ok: !!state && state.stage === 'route-ready' && loaded && Number(opacity) > 0 && errors.length === 0,
+            lines: [
+              `首页启动阶段：${state ? state.stage : '未检测到启动保护脚本'}`,
+              `首页启动项目资料请求：${projectRequests.length} 次`,
+              `首页整页透明度：${opacity}（1 为可见，0 为透明）`,
+              `超时显示兜底：${state && state.fallback ? '已触发' : '未触发'}`,
+              `首页视频：${video ? `画面就绪 ${video.readyState}，${video.paused ? '暂停或未开始' : '播放中'}${video.error ? '，错误 ' + video.error.code : ''}` : '未取得'}`,
+              `启动错误：${errors.length ? errors.map(error => error.message + (error.source ? ' @ ' + error.source : '')).join('；') : '未记录到'}`,
+              `第三方脚本提示（单独记录）：${state && state.warnings && state.warnings.length ? state.warnings.map(warning => warning.message + ' @ ' + warning.source).join('；') : '无'}`
+            ]
+          };
+          updateReport();
+        } catch (error) {
+          clearInterval(timer);
+          appResult = { ok: false, lines: [`首页启动检查失败：${error.message}`] };
+          updateReport();
+        }
+      }, 250);
+    }
+    Promise.all(Array.from({ length: 5 }, async () => {
+      while (active < tests.length) {
+        const index = active++;
+        await run(tests[index], index);
+      }
+    })).then(checkHomepage);
+    document.querySelector('#copy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(document.querySelector('#report').textContent);
+        document.querySelector('#copy').textContent = '已复制';
+      } catch {
+        document.querySelector('#copy').textContent = '请长按下方文字复制';
+      }
+    });
+  </script>
+</body>
+</html>
