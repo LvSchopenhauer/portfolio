@@ -40,7 +40,7 @@
 
 `build-site.cjs` 生成内联首页；`build-github-pages.cjs` 接受 `--output` 与 `--media-source`，两条路径必须位于当前 checkout 内。构建器只复制公开 HTML、css/js/data 和其引用媒体，核对复制前后的 SHA-256，输出九个显式路由入口、404、CNAME 与旧测试路径跳转；不打包本地服务、历史或工具。六支备用主片取自既有 gh-pages 分支的媒体目录，保持原字节。完整产物检查 1 GiB 上限。
 
-`.github/workflows/deploy-pages.yml` 在 main 推送后执行构建和相关测试，以 GitHub Pages 官方 artifact/deploy Actions 发布。第二次 checkout 只读取 gh-pages 的备用媒体；域名由仓库 Pages 设置管理，Cloudflare 的根域名与 www 为 DNS-only。原 Cloudflare Pages 项目保留作回滚源。
+该 workflow 曾在 main 推送后自动发布，但切换后用户报告 Wi-Fi 无法访问，现已禁用并改为仅手动触发。正式 DNS 回退为原 Cloudflare Pages 的代理记录，GitHub Pages 恢复 legacy gh-pages 发布源且解绑自定义域名，独立测试快照保持可用。构建器保留作未来迁移准备；不得用其根域名产物覆盖当前独立测试站。第二次 checkout 读取的备用媒体仍保留于 gh-pages。
 
 ### Windows 本地启动
 

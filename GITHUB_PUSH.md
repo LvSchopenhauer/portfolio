@@ -1,5 +1,9 @@
 # GitHub Push
 
+## Current recovery state — 2026-10-31
+
+The custom-domain GitHub Pages cutover failed for the user's Wi-Fi connection and was rolled back. Formal DNS is restored to proxied `portfolio-t0w.pages.dev` for both apex and www. The independent GitHub snapshot is served from `gh-pages` at `https://lvschopenhauer.github.io/portfolio/network-test/`, with no GitHub custom-domain binding. The canonical-root workflow is disabled and manual-only; do not enable it or attach the formal domain until a new migration is explicitly authorized and tested on the affected network. Main pushes still update the original Cloudflare Pages project. The prepared migration instructions below describe the paused workflow, not the active hosting path.
+
 Use this command to commit all current local changes and push the current branch to GitHub:
 
 ```cmd
@@ -14,7 +18,7 @@ The helper script:
 
 For Codex runs, use this as the default fast path when the user asks to push the current version to GitHub.
 
-## GitHub Pages checks
+## Prepared GitHub Pages checks (paused)
 
 GitHub Pages deploys this portfolio as a static site through `.github/workflows/deploy-pages.yml` on pushes to `main`. Do not rely on `server.js` or local API routes being available in production. Cloudflare provides DNS only for `sphr.top` and `www.sphr.top`; its proxy must stay disabled for these two records so requests reach GitHub directly.
 

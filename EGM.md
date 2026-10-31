@@ -6,7 +6,7 @@
 
 本文件由已安装的 `egm-bootstrap` 工作流分析生成，目标文件名采用 `EGM.md`，保留原有 README。记录日期：2026-10-27。分析范围为当前工作树的根目录、`js/`、`scripts/`，并检查 `css/`、`data/`、被引用资源与部署辅助配置。`outputs/`、工具、缓存、历史备份与测试产物不逐层生成契约，也不代表其内容被逐一审查。
 
-2026-10-31 部署补充：正式域名 sphr.top 迁至 GitHub Pages，Cloudflare 仅为根域名和 www 提供 DNS，其他子站保持原配置。main 推送由 `.github/workflows/deploy-pages.yml` 构建、测试和发布；`scripts/build-github-pages.cjs` 给出独立的公开产物边界和九个直接访问入口，媒体复制逐项校验 SHA-256。原 gh-pages 分支保留备用主片源，旧 Cloudflare Pages 项目作为回滚源。GitHub Pages 不读取 `_headers`；其 CDN 响应缓存由平台管理，前台项目 JSON 请求仍使用 no-store，发布后需要验证实际内容。下文初始审查与传输优化记录保留原日期含义。
+2026-10-31 部署补充及回退：曾将正式域名迁至 GitHub Pages，平台 DNS/TLS 检查通过，但用户报告 Wi-Fi 也无法访问，因此回退正式域名至原 Cloudflare Pages 代理记录，并解除 GitHub 自定义域名绑定，恢复 `gh-pages` 中的独立 `/portfolio/network-test/` 快照。新规范根目录 workflow 已禁用且改为仅手动触发，避免覆盖恢复结果。`scripts/build-github-pages.cjs` 的公开产物边界、九个直接入口和媒体 SHA-256 校验保留作后续迁移准备；未经新的真实网络验收不得重启切换。GitHub Pages 不读取 `_headers`。下文初始审查与传输优化记录保留原日期含义。
 
 | 层 | 当前技术与边界 |
 | --- | --- |
