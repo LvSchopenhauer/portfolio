@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi/Satoshi-Light.woff2") format("woff2");
+  src: url("/portfolio/assets/fonts/satoshi/Satoshi-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi/Satoshi-Regular.woff2") format("woff2");
+  src: url("/portfolio/assets/fonts/satoshi/Satoshi-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi/Satoshi-Medium.woff2") format("woff2");
+  src: url("/portfolio/assets/fonts/satoshi/Satoshi-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -172,8 +172,8 @@ body.origin-active .brand::after {
   position: absolute;
   inset: 0;
   background: var(--origin-fg);
-  mask: url("/assets/sphr.svg") center / contain no-repeat;
-  -webkit-mask: url("/assets/sphr.svg") center / contain no-repeat;
+  mask: url("/portfolio/assets/sphr.svg") center / contain no-repeat;
+  -webkit-mask: url("/portfolio/assets/sphr.svg") center / contain no-repeat;
   pointer-events: none;
 }
 
@@ -1586,8 +1586,8 @@ main,
 .project-visual img[hidden] { display: none; }
 
 /* Remove the 20px gray strip baked into the left of this 1094px source. */
-.project-visual img[src$="/assets/covers/cover_6.png"],
-.project-visual img[src$="/assets/covers/cover_6.home.webp"] {
+.project-visual img[src$="/portfolio/assets/covers/cover_6.png"],
+.project-visual img[src$="/portfolio/assets/covers/cover_6.home.webp"] {
   width: calc(100% * 1094 / 1074);
   max-width: none;
   margin-left: calc(-100% * 20 / 1074);
@@ -1824,19 +1824,19 @@ main,
 
 /* These three source boards contain baked-in gray strips. Correct their display
    without changing the archived artwork or the editor's content settings. */
-.project-custom-block.image img[src="/assets/projects/361/04-ee1c3e223952027.680233fb20de0.webp"] {
+.project-custom-block.image img[src="/portfolio/assets/projects/361/04-ee1c3e223952027.680233fb20de0.webp"] {
   aspect-ratio: 1920 / 1073;
   object-fit: contain;
   object-position: top;
   background: #797979;
 }
 
-.project-custom-block.image img[src="/assets/projects/361/02-06e8ae223952027.680233fb223ee.webp"] {
+.project-custom-block.image img[src="/portfolio/assets/projects/361/02-06e8ae223952027.680233fb223ee.webp"] {
   aspect-ratio: 1920 / 744;
   object-position: bottom;
 }
 
-.project-custom-block.image img[src="/assets/projects/361/06-1f254f223952027.680233fb23016.webp"] {
+.project-custom-block.image img[src="/portfolio/assets/projects/361/06-1f254f223952027.680233fb23016.webp"] {
   aspect-ratio: 1920 / 722;
   object-position: bottom;
 }

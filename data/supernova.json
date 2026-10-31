@@ -3,12 +3,12 @@
   "title": "Supernova 2024",
   "copy": "这是一支结合实拍、CG 与动态图形的 adidas Supernova 产品宣传影像。影片围绕跑鞋的缓震、回弹与稳定支撑展开，通过材质形变、粒子与结构动画，将产品科技转化为直观的视觉表达，并与真实跑步场景衔接。",
   "secondary": "",
-  "image": "/assets/covers/cover_2.png",
+  "image": "/portfolio/assets/covers/cover_2.png",
   "blocks": [
     {
       "id": "1779707531884-4e91cb1bd135f",
       "type": "image",
-      "content": "/assets/projects/supernova/embedded-89e57923d12754ff.jpg",
+      "content": "/portfolio/assets/projects/supernova/embedded-89e57923d12754ff.jpg",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -64,7 +64,7 @@
     {
       "id": "04fec523-b840-4ced-b109-d924e3de29d8",
       "type": "image",
-      "content": "/assets/uploads/1793254798466-074c786aa263e8-861f47224722895.68106c14a2255.gif",
+      "content": "/portfolio/assets/uploads/1793254798466-074c786aa263e8-861f47224722895.68106c14a2255.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -77,7 +77,7 @@
     {
       "id": "9c72dce1-7d2f-44fb-a8e3-7a6b6f9b8c62",
       "type": "image",
-      "content": "/assets/uploads/1793254826770-8ecb44d791651-683604224722895.68106c14a3b1a.gif",
+      "content": "/portfolio/assets/uploads/1793254826770-8ecb44d791651-683604224722895.68106c14a3b1a.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -89,7 +89,7 @@
     {
       "id": "2567c3ec-4686-4f65-b937-272e95db6e19",
       "type": "image",
-      "content": "/assets/uploads/1793254843314-f3c984f49df95-ae5156224722895.68106c14a2ab5.gif",
+      "content": "/portfolio/assets/uploads/1793254843314-f3c984f49df95-ae5156224722895.68106c14a2ab5.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,

@@ -3,7 +3,7 @@
   "title": "ID. CODE",
   "copy": "本项目为大众 ID. CODE 概念车在 2024 北京车展的展示制作数字艺术影像。作品以粒子、流体等视觉语言，呈现材料的流动、形态变化与光泽，并与现场的实体车辆和 LED 展陈空间相结合，形成围绕产品展开的动态视觉体验。",
   "secondary": "在这个项目中我参与了粒子与流体部分的制作，完成其中大部分粒子模拟、动画和摄像机工作，并负责材质、灯光、Redshift 渲染，以及 AE 中的剪辑与合成。",
-  "image": "/assets/covers/cover_4.png",
+  "image": "/portfolio/assets/covers/cover_4.png",
   "blocks": [
     {
       "id": "auto-particles-title",
@@ -54,7 +54,7 @@
     {
       "id": "auto-particles",
       "type": "image",
-      "content": "/assets/projects/auto/particles-display.gif",
+      "content": "/portfolio/assets/projects/auto/particles-display.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -67,7 +67,7 @@
     {
       "id": "auto-curves",
       "type": "image",
-      "content": "/assets/projects/auto/curves-display.gif",
+      "content": "/portfolio/assets/projects/auto/curves-display.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -126,7 +126,7 @@
     {
       "id": "auto-liquid",
       "type": "image",
-      "content": "/assets/projects/auto/liquid-display.gif",
+      "content": "/portfolio/assets/projects/auto/liquid-display.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -185,7 +185,7 @@
     {
       "id": "auto-exhibition-wide",
       "type": "image",
-      "content": "/assets/uploads/1793268222138-a49fcd5ac0be6-f7eb537f67d54283323f8117a19f5d20.jpg",
+      "content": "/portfolio/assets/uploads/1793268222138-a49fcd5ac0be6-f7eb537f67d54283323f8117a19f5d20.jpg",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -198,7 +198,7 @@
     {
       "id": "auto-exhibition-detail",
       "type": "image",
-      "content": "/assets/projects/auto/exhibition-detail.jpg",
+      "content": "/portfolio/assets/projects/auto/exhibition-detail.jpg",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,

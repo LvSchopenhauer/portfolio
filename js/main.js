@@ -40,7 +40,7 @@ const projects = {
     title: "Multidimensional",
     client: "EQLZ",
     visual: "project-visual-a",
-    image: "/assets/covers/cover_1.png",
+    image: "/portfolio/assets/covers/cover_1.png",
     video: "https://player.vimeo.com/video/1022825186?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
     copy: "A close product study built around texture, compression and a controlled flash of green.",
     secondary: "The direction holds the object at a monumental scale, letting material detail and light gradients carry the rhythm before the wider brand system opens up."
@@ -49,7 +49,7 @@ const projects = {
     title: "Supernova 2024",
     client: "Adidas",
     visual: "project-visual-b",
-    image: "/assets/covers/cover_2.png",
+    image: "/portfolio/assets/covers/cover_2.png",
     video: "https://player.vimeo.com/video/1078557961?h=a8ec0282e8&title=0&byline=0&portrait=0&badge=0",
     copy: "A floating footwear composition set against an impossible landscape, balancing product clarity with a surreal environmental read.",
     secondary: "The frame keeps the silhouette legible while the reflected terrain adds a sense of movement, depth and outdoor performance without becoming literal."
@@ -58,7 +58,7 @@ const projects = {
     title: "MOVE ALPHA",
     client: "KOLON",
     visual: "project-visual-c",
-    image: "/assets/projects/kolon/10-board.webp",
+    image: "/portfolio/assets/projects/kolon/10-board.webp",
     video: "https://player.vimeo.com/video/1074185659?title=0&byline=0&portrait=0&badge=0",
     copy: "KOLON MOVE ALPHA 是一支以自然能量为主题的登山鞋 CG 宣传片。影片从鞋款的三种配色出发，构建森林矩阵、沙漠与火山熔岩三个幻想空间，将产品外观与自然环境中的形态、材质和运动相结合，呈现充满想象力的户外世界。",
     secondary: "我负责沙漠篇大部分镜头的 CG 制作，依据既定分镜完成场景搭建、摄像机动画、特效模拟、灯光材质、渲染及后期合成，并参与箭头标识与微粒交互效果的前期视觉开发。"
@@ -67,7 +67,7 @@ const projects = {
     title: "ID. CODE",
     client: "Volkswagen",
     visual: "project-visual-d",
-    image: "/assets/covers/cover_4.png",
+    image: "/portfolio/assets/covers/cover_4.png",
     video: "https://player.vimeo.com/video/1079755480?h=b0377a1ee5&title=0&byline=0&portrait=0&badge=0",
     copy: "本项目为大众 ID. CODE 概念车在 2024 北京车展的展示制作数字艺术影像。作品以粒子、液体与金属三种视觉语言，呈现材料的流动、形态变化与光泽，并与现场的实体车辆和 LED 展陈空间相结合，形成围绕产品展开的动态视觉体验。",
     secondary: "我参与了粒子与液体部分的制作，完成其中大部分粒子模拟、动画和摄像机工作，并负责材质、灯光、Redshift 渲染，以及 AE 中的剪辑与合成。摄像机动画依据既定分镜完成。"
@@ -76,7 +76,7 @@ const projects = {
     title: "Countdown Gift Box",
     client: "Helena Rubinstein",
     visual: "project-visual-e",
-    image: "/assets/covers/cover_5.png",
+    image: "/portfolio/assets/covers/cover_5.png",
     video: "https://player.vimeo.com/video/1079682226?h=1d4e238bca&title=0&byline=0&portrait=0&badge=0",
     copy: "这是为赫莲娜限量倒数礼盒制作的节日宣传影片。画面以白色层叠形态、金色流体与黑金礼盒构成视觉基调，通过蜡烛、护肤产品和礼盒展开的镜头，呈现节日礼赠的仪式感。",
     secondary: "我负责片中的金属流体与蜡烛火焰 Pyro 模拟，并依据既定分镜完成礼盒展开动画、Hero 镜头的布置和渲染。主要制作工具为 Houdini、Redshift 与 After Effects。"
@@ -85,7 +85,7 @@ const projects = {
     title: "Breathing underwater",
     client: "361",
     visual: "project-visual-f",
-    image: "/assets/covers/cover_6.png",
+    image: "/portfolio/assets/covers/cover_6.png",
     video: "https://player.bilibili.com/player.html?bvid=BV1Pexe6uE9q&p=1&autoplay=0&danmaku=0",
     copy: "本项目为 361° 第八代防水跑鞋制作数字影像，以“水下呼吸”为视觉概念，将鞋款置于悬浮的水立方中，通过水体包裹与破水亮相的过程，呈现产品兼顾防水与透气的特性。",
     secondary: "我负责雨滴落在鞋面的相关镜头制作，涵盖雨滴模拟、材质、灯光、渲染与合成。主要使用 Houdini、Redshift 和 After Effects，重点控制雨滴的真实质感，以及落点与溅落节奏。"
@@ -96,7 +96,7 @@ const projectSlugs = new Set(Object.keys(projects));
 const appRoutes = new Set(["", "origin", "info", "admin", ...projectSlugs]);
 const editableProjectSlugs = ["eqlz", "supernova", "kolon", "auto", "helena", "361"];
 // Independent media host: the backup must not depend on Vimeo or Cloudflare.
-for (const slug of editableProjectSlugs) projects[slug].videoFallback = `https://lvschopenhauer.github.io/portfolio/network-test/assets/films/${slug}.mp4`;
+for (const slug of editableProjectSlugs) projects[slug].videoFallback = `https://lvschopenhauer.github.io/portfolio/assets/films/${slug}.mp4`;
 const editableProjectData = {};
 const projectRequests = new Map();
 const localEditorHost = ['127.0.0.1', 'localhost'].includes(location.hostname);
@@ -128,7 +128,7 @@ function getEditableProjectStorageKey(slug) {
 }
 
 function getEditableProjectApi(slug = "") {
-  return slug ? `/api/projects/${slug}` : "/api/projects";
+  return slug ? `/portfolio/api/projects/${slug}` : "/portfolio/api/projects";
 }
 
 async function fetchJson(url) {
@@ -157,7 +157,7 @@ async function loadEditableProject(slug) {
         project = await fetchJson(getEditableProjectApi(slug));
       } catch { /* A local static preview may not provide the editor API. */ }
     }
-    if (!project) project = await fetchJson(`/data/${slug}.json`);
+    if (!project) project = await fetchJson(`/portfolio/data/${slug}.json`);
     if (!project || typeof project !== 'object' || Array.isArray(project) || !Object.keys(project).length) {
       throw new Error('Project data was empty or invalid');
     }
@@ -194,13 +194,13 @@ function getProject(slug) {
     project.image = project.image.replace(/^https?:\/\/(?:127\.0\.0\.1|localhost):\d+(\/assets\/)/, "$1");
     // Full-frame derivatives preserve the detail hero's crop at every viewport.
     const fullFrameCovers = {
-      '/assets/covers/cover_1.png': '/assets/covers/cover_1.detail.webp',
-      '/assets/covers/cover_2.png': '/assets/covers/cover_2.detail.webp',
-      '/assets/covers/cover_3.png': '/assets/covers/cover_3.home.webp',
-      '/assets/uploads/1793258782764-64fd59176e8268-cover_3.png': '/assets/covers/cover_3.home.webp',
-      '/assets/covers/cover_4.png': '/assets/covers/cover_4.home.webp',
-      '/assets/covers/cover_5.png': '/assets/covers/cover_5.home.webp',
-      '/assets/covers/cover_6.png': '/assets/covers/cover_6.home.webp'
+      '/portfolio/assets/covers/cover_1.png': '/portfolio/assets/covers/cover_1.detail.webp',
+      '/portfolio/assets/covers/cover_2.png': '/portfolio/assets/covers/cover_2.detail.webp',
+      '/portfolio/assets/covers/cover_3.png': '/portfolio/assets/covers/cover_3.home.webp',
+      '/portfolio/assets/uploads/1793258782764-64fd59176e8268-cover_3.png': '/portfolio/assets/covers/cover_3.home.webp',
+      '/portfolio/assets/covers/cover_4.png': '/portfolio/assets/covers/cover_4.home.webp',
+      '/portfolio/assets/covers/cover_5.png': '/portfolio/assets/covers/cover_5.home.webp',
+      '/portfolio/assets/covers/cover_6.png': '/portfolio/assets/covers/cover_6.home.webp'
     };
     project.image = fullFrameCovers[project.image] || project.image;
   }
@@ -322,7 +322,7 @@ function renderProjectBlocks(blocks = []) {
 }
 
 function getSlugFromPath(pathname = window.location.pathname) {
-  return pathname.replace(/^\/+|\/+$/g, "");
+  return (pathname.startsWith("/portfolio") ? pathname.slice(10) : pathname).replace(/^\/+|\/+$/g, "");
 }
 
 function scrollToHash(hash) {
@@ -742,7 +742,7 @@ async function showAdminPage() {
   resetProjectPlayback();
   document.querySelector('.hero video')?.pause();
   document.title = '作品编辑器 · sphr';
-  const editor = await import('/js/editor.js?v=20261030-bilibili');
+  const editor = await import('/portfolio/js/editor.js?v=20261030-bilibili');
   await editor.mountEditor(adminPage, { projects, initialSlug: new URLSearchParams(location.search).get('project') || getLastViewedProjectSlug() });
   updateHeader();
 }
@@ -857,7 +857,7 @@ if (['127.0.0.1', 'localhost'].includes(location.hostname) && !isEditorPreview) 
   editLink.className = 'local-edit-link'; editLink.textContent = '编辑此项目';
   document.body.append(editLink);
   const syncEditLink = () => {
-    const slug = getSlugFromPath(); editLink.hidden = !projectSlugs.has(slug); editLink.href = `/admin?project=${slug}`;
+    const slug = getSlugFromPath(); editLink.hidden = !projectSlugs.has(slug); editLink.href = `/portfolio/admin?project=${slug}`;
   };
   syncEditLink();
   window.addEventListener('popstate', syncEditLink);

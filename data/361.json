@@ -3,12 +3,12 @@
   "title": "Breathing Underwater",
   "copy": "本项目为 361° 第八代防水跑鞋制作数字影像，以“水下呼吸”为视觉概念，将鞋款置于悬浮的水立方中，通过水体包裹与破水亮相的过程，呈现产品兼顾防水与透气的特性。",
   "secondary": "",
-  "image": "/assets/covers/cover_6.png",
+  "image": "/portfolio/assets/covers/cover_6.png",
   "blocks": [
     {
       "id": "361-film-visual",
       "type": "image",
-      "content": "/assets/projects/361/05-c71e0c223952027.680233fb21590.webp",
+      "content": "/portfolio/assets/projects/361/05-c71e0c223952027.680233fb21590.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -67,7 +67,7 @@
     {
       "id": "361-rain-final",
       "type": "image",
-      "content": "/assets/projects/361/04-ee1c3e223952027.680233fb20de0.webp",
+      "content": "/portfolio/assets/projects/361/04-ee1c3e223952027.680233fb20de0.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -80,7 +80,7 @@
     {
       "id": "361-rain-process",
       "type": "image",
-      "content": "/assets/projects/361/08-29a2d5223952027.68023ff1d5417.gif",
+      "content": "/portfolio/assets/projects/361/08-29a2d5223952027.68023ff1d5417.gif",
       "size": 60,
       "fontSize": 24,
       "fontWeight": 400,
@@ -139,7 +139,7 @@
     {
       "id": "361-upper-detail",
       "type": "image",
-      "content": "/assets/projects/361/02-06e8ae223952027.680233fb223ee.webp",
+      "content": "/portfolio/assets/projects/361/02-06e8ae223952027.680233fb223ee.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -152,7 +152,7 @@
     {
       "id": "361-brand-ending",
       "type": "image",
-      "content": "/assets/projects/361/06-1f254f223952027.680233fb23016.webp",
+      "content": "/portfolio/assets/projects/361/06-1f254f223952027.680233fb23016.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
