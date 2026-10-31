@@ -1,0 +1,42 @@
+name: Deploy portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: .pages-media
+          sparse-checkout: network-test/assets/films
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/build-site.cjs
+      - run: node --test scripts/routes.test.cjs scripts/startup.test.cjs scripts/home-media.test.cjs scripts/project-playback.test.cjs scripts/video-embed.test.cjs scripts/editor-store.test.cjs
+      - run: node scripts/build-github-pages.cjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .pages-build
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

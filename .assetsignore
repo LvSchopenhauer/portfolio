@@ -6,6 +6,8 @@
 .local-history/
 .editor-test/
 outputs/
+.pages-build/
+.pages-media/
 dev-server.log
 dev-server.err.log
 assets/00086400.gif

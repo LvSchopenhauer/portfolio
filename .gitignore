@@ -9,3 +9,5 @@ assets/hero_new.mp4
 .local-history/
 .editor-test/
 outputs/
+.pages-build/
+.pages-media/
