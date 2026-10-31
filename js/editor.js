@@ -103,7 +103,7 @@ function normalizeVideo(value) {
   if (url.protocol !== 'https:') throw new Error('影片地址需要使用 HTTPS。');
   if (url.username || url.password) throw new Error('影片地址不能包含账号信息。');
   if (['player.bilibili.com', 'www.bilibili.com', 'bilibili.com'].includes(url.hostname)) {
-    const bvid = url.hostname === 'player.bilibili.com' && url.pathname === '/portfolio/player.html'
+    const bvid = url.hostname === 'player.bilibili.com' && url.pathname === '/player.html'
       ? url.searchParams.get('bvid') : url.pathname.match(/^\/video\/(BV[A-Za-z0-9]{10})\/?$/)?.[1];
     const page = url.searchParams.get('p') || url.searchParams.get('page') || '1';
     if (/^BV[A-Za-z0-9]{10}$/.test(bvid || '') && /^[1-9]\d*$/.test(page)) {
@@ -117,7 +117,7 @@ function normalizeVideo(value) {
   }
   if (url.hostname === 'player.vimeo.com' && /^\/video\/\d+$/.test(url.pathname)) return url.href;
   if (['vimeo.com', 'www.vimeo.com'].includes(url.hostname)) {
-    const parts = url.pathname.split('/portfolio/').filter(Boolean);
+    const parts = url.pathname.split('/').filter(Boolean);
     if (/^\d+$/.test(parts[0])) {
       const player = new URL(`https://player.vimeo.com/video/${parts[0]}`);
       const hash = parts[1] || url.searchParams.get('h');
@@ -140,7 +140,7 @@ class PortfolioEditor {
   build() {
     this.root.innerHTML = `
       <div class="ed-topbar">
-        <a class="ed-brand" href="/portfolio/" target="_blank" rel="noopener">sphr<span>作品编辑器</span></a>
+        <a class="ed-brand" href="/" target="_blank" rel="noopener">sphr<span>作品编辑器</span></a>
         <div class="ed-save-state" role="status" aria-live="polite" data-save-state>正在连接…</div>
         <div class="ed-top-actions"><button data-action="undo" title="撤销上一步">撤销</button><button data-action="redo" title="重做上一步">重做</button><button data-action="history">历史版本</button><button class="ed-primary" data-action="save">保存项目 <kbd>Ctrl S</kbd></button></div>
       </div>
@@ -217,7 +217,7 @@ class PortfolioEditor {
     }
     this.loading = true; this.updateStatus();
     try {
-      const result = await api(`/portfolio/api/projects/${slug}`);
+      const result = await api(`/api/projects/${slug}`);
       if (!result.revision) throw new Error('本地服务器需要重新启动后才能使用新版编辑器。');
       this.slug = slug; this.revision = result.revision;
       this.data = editableData(result.data, this.defaults[slug]);
@@ -235,9 +235,9 @@ class PortfolioEditor {
       this.draftSafe = true; this.history = [JSON.stringify(this.data)]; this.historyIndex = 0;
       this.root.querySelectorAll('[data-project]').forEach(button => { button.classList.toggle('is-active', button.dataset.project === slug); button.setAttribute('aria-current', button.dataset.project === slug ? 'page' : 'false'); });
       this.root.querySelector('[data-project-heading]').textContent = LABELS[slug][1];
-      this.root.querySelector('[data-view-link]').href = `/portfolio/${slug}`;
-      history.replaceState(null, '', `/portfolio/admin?project=${slug}`);
-      this.renderContent(); this.previewReady = false; this.frame.src = `/portfolio/${slug}?editor-preview=1`;
+      this.root.querySelector('[data-view-link]').href = `/${slug}`;
+      history.replaceState(null, '', `/admin?project=${slug}`);
+      this.renderContent(); this.previewReady = false; this.frame.src = `/${slug}?editor-preview=1`;
       if (this.dirty) await this.queueDraft().catch(() => {});
       this.refreshDraftDots();
     } catch (error) { this.toast(error.message, true); this.banner(error.message); }
@@ -337,7 +337,7 @@ class PortfolioEditor {
     const sent = clone(this.data), snapshot = JSON.stringify(sent), slug = this.slug;
     try {
       await this.queueDraft().catch(() => {});
-      const result = await api(`/portfolio/api/projects/${slug}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'If-Match': this.revision }, body: JSON.stringify(sent) });
+      const result = await api(`/api/projects/${slug}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'If-Match': this.revision }, body: JSON.stringify(sent) });
       this.revision = result.revision;
       const canonical = editableData(result.data, this.defaults[slug]);
       this.baseline = JSON.stringify(canonical);
@@ -382,7 +382,7 @@ class PortfolioEditor {
     if (this.busy || this.saving || this.loading) return;
     const targetSlug = this.slug;
     try {
-      const { data } = await api(`/portfolio/api/projects/${targetSlug}/history`);
+      const { data } = await api(`/api/projects/${targetSlug}/history`);
       if (this.slug !== targetSlug) return;
       const dialog = this.root.querySelector('[data-dialog]');
       dialog.querySelector('[data-dialog-body]').innerHTML = `<p class="ed-eyebrow">VERSION HISTORY</p><h2 id="ed-dialog-title">历史版本</h2><p>每次保存会保留之前的版本，最多 50 份。选择版本后先作为草稿预览，点击保存才会替换当前项目。</p><div class="ed-version-list">${data.length ? data.map(item => `<button data-version="${esc(item.id)}"><strong>${stamp(item.savedAt)}</strong><span>${Math.round(item.bytes / 1024)} KB · 载入为草稿</span></button>`).join('') : '<p class="ed-empty">暂无历史版本。完成一次保存后会自动建立。</p>'}</div><div class="ed-dialog-actions"><button data-close-history>关闭</button></div>`;
@@ -391,7 +391,7 @@ class PortfolioEditor {
         button.onclick = async () => {
           button.disabled = true;
           try {
-            const version = await api(`/portfolio/api/projects/${targetSlug}/history/${encodeURIComponent(button.dataset.version)}`);
+            const version = await api(`/api/projects/${targetSlug}/history/${encodeURIComponent(button.dataset.version)}`);
             if (this.slug !== targetSlug) return;
             dialog.close();
             if (this.dirty && !(await this.confirm('替换当前草稿？', '载入历史版本会替换正在编辑的内容。当前保存文件不会立即改变，请先导出需要保留的草稿。', '载入为草稿'))) return;
@@ -429,7 +429,7 @@ class PortfolioEditor {
     const extensions = type === 'image' ? /\.(jpe?g|png|webp|avif|gif)$/i : /\.(mp4|webm|mov|m4v|gif)$/i;
     if (!extensions.test(file.name)) throw new Error('不支持此文件类型。');
     this.toast(type === 'video' ? '正在上传视频，必要时自动转码，请稍候…' : '正在上传图片…');
-    const { data } = await api(`/portfolio/api/uploads/${type}`, { method: 'POST', headers: { 'Content-Type': file.type || (type === 'image' ? 'image/png' : 'video/mp4'), 'X-File-Name': encodeURIComponent(file.name) }, body: file });
+    const { data } = await api(`/api/uploads/${type}`, { method: 'POST', headers: { 'Content-Type': file.type || (type === 'image' ? 'image/png' : 'video/mp4'), 'X-File-Name': encodeURIComponent(file.name) }, body: file });
     return data.url;
   }
   async handleFiles(files, { cover = false, blockId = '' } = {}) {
@@ -575,7 +575,7 @@ class PortfolioEditor {
     document.addEventListener('visibilitychange', () => { if (document.hidden && this.dirty) this.queueDraft().catch(() => {}); });
   }
   async init(slug) {
-    try { const { data } = await api('/portfolio/api/editor'); this.writable = data.writable === true; }
+    try { const { data } = await api('/api/editor'); this.writable = data.writable === true; }
     catch { this.writable = false; this.banner('编辑功能需要本地服务器。请运行 start-local.cmd 后打开此页面。'); }
     await this.open(slug in LABELS ? slug : 'eqlz');
   }
@@ -585,7 +585,7 @@ export async function mountEditor(root, options) {
   // The preview must measure its first frame using the editor's actual grid styles.
   if (!stylesheetReady) stylesheetReady = new Promise(resolve => {
     const css = document.createElement('link');
-    css.rel = 'stylesheet'; css.href = '/portfolio/css/editor.css?v=20261027';
+    css.rel = 'stylesheet'; css.href = '/css/editor.css?v=20261027';
     css.onload = resolve; css.onerror = resolve;
     document.head.append(css);
   });

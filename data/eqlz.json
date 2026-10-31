@@ -3,12 +3,12 @@
   "title": "Multidimensional",
   "copy": "EQLZ 2023 是一支以昆虫为灵感的数字影像项目，延续了品牌对于自然主题的探索。项目将昆虫的结构、质感与生命感，转译为一个由 AI 想象出的多维空间。",
   "secondary": "不同空间彼此相连，又各自独立，像是一个不断分裂、扩展的数字宇宙。影片通过连续镜头进入其中，完成了一次关于自然、技术与想象力的视觉实验。",
-  "image": "/portfolio/assets/covers/cover_1.png",
+  "image": "/assets/covers/cover_1.png",
   "blocks": [
     {
       "id": "1779686288461-24736dd39808e",
       "type": "image",
-      "content": "/portfolio/assets/projects/eqlz/embedded-17d9b61b28b195b2.jpg",
+      "content": "/assets/projects/eqlz/embedded-17d9b61b28b195b2.jpg",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -38,7 +38,7 @@
     {
       "id": "1779686223933-226c874ce2be88",
       "type": "image",
-      "content": "/portfolio/assets/projects/eqlz/embedded-4b8dd3529a8b1e8e.jpg",
+      "content": "/assets/projects/eqlz/embedded-4b8dd3529a8b1e8e.jpg",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -68,7 +68,7 @@
     {
       "id": "1779694470497-6cb6c4b02701a",
       "type": "video",
-      "content": "/portfolio/assets/uploads/1779695848435-7ce37266fc74-compressed.mp4",
+      "content": "/assets/uploads/1779695848435-7ce37266fc74-compressed.mp4",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -98,7 +98,7 @@
     {
       "id": "1779697130533-585d10588b7f2",
       "type": "video",
-      "content": "/portfolio/assets/uploads/1779697154890-b650e16dd68c2-compressed.mp4",
+      "content": "/assets/uploads/1779697154890-b650e16dd68c2-compressed.mp4",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,

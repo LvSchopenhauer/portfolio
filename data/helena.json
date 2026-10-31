@@ -3,7 +3,7 @@
   "title": "Countdown Gift Box",
   "copy": "这个项目是为赫莲娜限量倒数礼盒制作的节日宣传影片。画面以白色为基调，以金色和黑色作为点缀以呼应礼盒的设计风格，通过金色流体、金色粒子等内容展示产品奢华的特征。",
   "secondary": "我负责片中的金属流体与蜡烛火焰 Pyro 模拟以及部分程序化建模，并完成礼盒展开动画、Hero 镜头的布置和渲染。主要制作在 Houdini中完成，Redshift 渲染，After Effects进行后期剪辑合成。",
-  "image": "/portfolio/assets/covers/cover_5.png",
+  "image": "/assets/covers/cover_5.png",
   "blocks": [
     {
       "id": "helena-fluid-title",
@@ -54,7 +54,7 @@
     {
       "id": "helena-fluid-motion",
       "type": "image",
-      "content": "/portfolio/assets/projects/helena/metal-fluid.gif",
+      "content": "/assets/projects/helena/metal-fluid.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -113,7 +113,7 @@
     {
       "id": "helena-flame",
       "type": "image",
-      "content": "/portfolio/assets/projects/helena/02-5a5363224726049.68107840764f6.webp",
+      "content": "/assets/projects/helena/02-5a5363224726049.68107840764f6.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -172,7 +172,7 @@
     {
       "id": "helena-closed-box",
       "type": "image",
-      "content": "/portfolio/assets/projects/helena/01-dd2653224726049.6810784075635.webp",
+      "content": "/assets/projects/helena/01-dd2653224726049.6810784075635.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -185,7 +185,7 @@
     {
       "id": "helena-product-detail",
       "type": "image",
-      "content": "/portfolio/assets/projects/helena/05-f5cb79224726049.6810784074f4c.webp",
+      "content": "/assets/projects/helena/05-f5cb79224726049.6810784074f4c.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -198,7 +198,7 @@
     {
       "id": "helena-hero",
       "type": "image",
-      "content": "/portfolio/assets/projects/helena/06-685ab5224726049.6810784076b76.webp",
+      "content": "/assets/projects/helena/06-685ab5224726049.6810784076b76.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,

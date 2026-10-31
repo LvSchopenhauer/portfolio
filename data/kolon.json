@@ -3,12 +3,12 @@
   "title": "MOVE ALPHA",
   "copy": "KOLON MOVE ALPHA 是一支以自然能量为主题的登山鞋 CG 宣传片。影片从鞋款的三种配色出发，构建森林矩阵、沙漠与火山熔岩三个幻想空间，将产品外观与自然环境中的形态、材质和运动相结合，呈现充满想象力的户外世界。",
   "secondary": "我负责沙漠篇大部分镜头的 CG 制作，依据既定分镜完成场景搭建、摄像机动画、特效模拟、灯光材质、渲染及后期合成，并参与箭头标识与微粒交互效果的前期视觉开发。",
-  "image": "/portfolio/assets/uploads/1793258782764-64fd59176e8268-cover_3.png",
+  "image": "/assets/uploads/1793258782764-64fd59176e8268-cover_3.png",
   "blocks": [
     {
       "id": "kolon-product",
       "type": "image",
-      "content": "/portfolio/assets/projects/kolon/10-board.webp",
+      "content": "/assets/projects/kolon/10-board.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -67,7 +67,7 @@
     {
       "id": "kolon-terrain",
       "type": "image",
-      "content": "/portfolio/assets/projects/kolon/07-board.webp",
+      "content": "/assets/projects/kolon/07-board.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -126,7 +126,7 @@
     {
       "id": "kolon-particle-still",
       "type": "image",
-      "content": "/portfolio/assets/projects/kolon/11-still.webp",
+      "content": "/assets/projects/kolon/11-still.webp",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -139,7 +139,7 @@
     {
       "id": "kolon-particle-motion",
       "type": "image",
-      "content": "/portfolio/assets/projects/kolon/12-gif.gif",
+      "content": "/assets/projects/kolon/12-gif.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -198,7 +198,7 @@
     {
       "id": "kolon-arrow",
       "type": "image",
-      "content": "/portfolio/assets/uploads/1793259859432-62699e4899ffe8-KOLON_arrow_fly-in_hover_28.12-30.32.gif",
+      "content": "/assets/uploads/1793259859432-62699e4899ffe8-KOLON_arrow_fly-in_hover_28.12-30.32.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -211,7 +211,7 @@
     {
       "id": "ec0b8418-a858-4d98-b155-1e83a84ee972",
       "type": "image",
-      "content": "/portfolio/assets/uploads/1793259288860-738db8464be328-20-gif.gif",
+      "content": "/assets/uploads/1793259288860-738db8464be328-20-gif.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
@@ -224,7 +224,7 @@
     {
       "id": "6f8adfaf-014c-4658-a2e1-ca737707c0a3",
       "type": "image",
-      "content": "/portfolio/assets/uploads/1793259493981-cd82c053241f88-18bbee224117385.6805f2ac108dc.gif",
+      "content": "/assets/uploads/1793259493981-cd82c053241f88-18bbee224117385.6805f2ac108dc.gif",
       "size": 100,
       "fontSize": 24,
       "fontWeight": 400,
